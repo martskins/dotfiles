@@ -21,6 +21,8 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     "Plugin 'tpope/vim-unimpaired.git'
     Plugin 'tpope/vim-abolish'
     Plugin 'tpope/vim-fugitive'
+    Plugin 'vim-hug-neovim-rpc'
+    Plugin 'nvim-yarp'
   "}}}
   "{{{ COLOR SCHEMES
     Plugin 'tomasr/molokai'
