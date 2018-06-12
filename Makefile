@@ -4,4 +4,4 @@ all:
 	rm -f ~/.tmux.conf
 	ln -s ~/dotfiles/nvim/init.vim ~/.config/nvim/init.vim
 	ln -s ~/dotfiles/nvim/init.vim ~/.vimrc
-	ln -s ~/dotfiles/nvim/tmux.conf ~/.tmux.conf
+	ln -s ~/dotfiles/tmux.conf ~/.tmux.conf

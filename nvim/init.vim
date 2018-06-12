@@ -24,6 +24,7 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'roxma/vim-hug-neovim-rpc'
     Plugin 'roxma/nvim-yarp'
     Plugin 'terryma/vim-multiple-cursors'
+    Plugin 'tpope/vim-dispatch'
   "}}}
   "{{{ COLOR SCHEMES
     Plugin 'tomasr/molokai'
@@ -87,7 +88,7 @@ filetype plugin indent on
   hi LineNr ctermfg=red
   hi LineNr guifg=#050505
   set background=dark
-  colorscheme molokayo
+  colorscheme molokai
 
   let g:airline#extensions#tabline#enabled = 1
   let g:airline_powerline_fonts = 1
@@ -98,7 +99,7 @@ filetype plugin indent on
 "hi CursorLine term=bold cterm=bold guibg=Grey40
   if (has("nvim"))
     "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
-    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+    "let $NVIM_TUI_ENABLE_TRUE_COLOR=1
   endif
 "}}}
 "{{{ NERDTREE
@@ -110,9 +111,10 @@ filetype plugin indent on
 "}}}
 "{{{ DEOPLETE
   let g:deoplete#enable_at_startup = 1
-  let g:deoplete#sources#rust#racer_binary='/Users/martin/.cargo/bin/racer'
+  let g:deoplete#sources#rust#racer_binary='~/.cargo/bin/racer'
   let g:deoplete#sources#rust#show_duplicates=1
-  let g:deoplete#sources#rust#rust_source_path='/Users/martin/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
+  let g:deoplete#sources#rust#rust_source_path='~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src'
+  let g:rustfmt_autosave = 1
 "}}}
 "{{{ JAVA
   autocmd FileType java setlocal omnifunc=javacomplete#Complete
@@ -232,6 +234,8 @@ filetype plugin indent on
   let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|\.git\|target\|web-app'
 "}}}
 "{{{ ACK
+  let g:ack_use_dispatch = 1
+
   nmap <leader>w :call FindUsages()<CR>
   function! FindUsages()
    let wordUnderCursor = expand("<cword>")
