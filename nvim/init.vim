@@ -21,8 +21,10 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     "Plugin 'tpope/vim-unimpaired.git'
     Plugin 'tpope/vim-abolish'
     Plugin 'tpope/vim-fugitive'
-    Plugin 'vim-hug-neovim-rpc'
-    Plugin 'nvim-yarp'
+    Plugin 'roxma/vim-hug-neovim-rpc'
+    Plugin 'roxma/nvim-yarp'
+    Plugin 'terryma/vim-multiple-cursors'
+    Plugin 'tpope/vim-dispatch'
   "}}}
   "{{{ COLOR SCHEMES
     Plugin 'tomasr/molokai'
@@ -46,6 +48,11 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'sebastianmarkow/deoplete-rust'
     Plugin 'rust-lang/rust.vim'
     Plugin 'racer-rust/vim-racer'
+  "}}}
+  "{{{ GRAILS
+    Plugin 'vim-scripts/grails-vim'
+    "Bundle 'sjurgemeyer/vimport'
+    Plugin 'thecodesmith/vim-groovy'
   "}}}
   call vundle#end()
 "}}}
@@ -75,12 +82,13 @@ filetype plugin indent on
   set guifont=Monaco
   set termguicolors
   set ttyfast
+  set t_ut=
   let mapleader = ','
 
   hi LineNr ctermfg=red
   hi LineNr guifg=#050505
   set background=dark
-  colorscheme molokayo
+  colorscheme molokai
 
   let g:airline#extensions#tabline#enabled = 1
   let g:airline_powerline_fonts = 1
@@ -88,9 +96,10 @@ filetype plugin indent on
   set fdm=expr
   set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
 
+"hi CursorLine term=bold cterm=bold guibg=Grey40
   if (has("nvim"))
     "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
-    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+    "let $NVIM_TUI_ENABLE_TRUE_COLOR=1
   endif
 "}}}
 "{{{ NERDTREE
@@ -102,18 +111,47 @@ filetype plugin indent on
 "}}}
 "{{{ DEOPLETE
   let g:deoplete#enable_at_startup = 1
-  let g:deoplete#sources#rust#racer_binary='/Users/martin/.cargo/bin/racer'
+  let g:deoplete#sources#rust#racer_binary='~/.cargo/bin/racer'
   let g:deoplete#sources#rust#show_duplicates=1
-  let g:deoplete#sources#rust#rust_source_path='/Users/martin/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
+  let g:deoplete#sources#rust#rust_source_path='~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src'
+  let g:rustfmt_autosave = 1
 "}}}
 "{{{ JAVA
   autocmd FileType java setlocal omnifunc=javacomplete#Complete
+  let g:JavaImpPaths = $HOME . "/Projects/billing"
+  let g:JavaImpDataDir = $HOME . "/vim/JavaImp"
+
+  au BufNewFile,BufRead *.gradle set filetype=groovy
+  au BufNewFile,BufRead *.coffee set filetype=groovy
+  au BufNewFile,BufRead *.scala set filetype=java
+  au BufNewFile,BufRead *.clj set filetype=clojure
+
+  function! Patch()
+    execute "e application.properties | g/app\.version"
+    execute ":normal $"
+    execute ":normal \<C-a>"
+    execute ":w"
+    execute ":bd"
+  endfunction
+  command! Patch :call Patch()
+
+  function! Minor()
+    execute "e application.properties | g/app\.version"
+    execute ":normal $"
+    execute ":normal cw0"
+    execute ":normal $bb"
+    execute ":normal \<C-a>"
+    execute ":w"
+    execute ":bd"
+  endfunction
+  command! Minor :call Minor()
 "}}}
 "{{{ GO
   let g:go_fmt_command = "goimports"
   let g:go_autodetect_gopath = 1
   let g:go_highlight_types = 1
   let g:go_highlight_fields = 1
+  let g:go_highlight_function_calls = 1
   let g:go_highlight_functions = 1
   let g:go_highlight_methods = 1
   let g:go_highlight_extra_types = 1
@@ -193,9 +231,10 @@ filetype plugin indent on
   nmap <leader>bd :bdelete<CR>
   nmap <leader>bq :bdelete!<CR>
   nmap <leader>bo :BufOnly<CR>
-
   nmap <Down> :cnext<cr>
   nmap <Up> :cprevious<cr>
+
+  tnoremap <leader>bd :bd!<CR>
 "}}}
 "{{{ SUPERTAB
   let g:SuperTabDefaultCompletionType = "<c-n>"
@@ -204,9 +243,26 @@ filetype plugin indent on
   let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|\.git\|target\|web-app'
 "}}}
 "{{{ ACK
+  let g:ack_use_dispatch = 1
+
   nmap <leader>w :call FindUsages()<CR>
   function! FindUsages()
    let wordUnderCursor = expand("<cword>")
    execute ":Ack " . wordUnderCursor
+  endfunction
+
+  autocmd FileType groovy nmap <leader>w :call FindUsagesGrails()<CR>
+  function! FindUsagesGrails()
+    let wordUnderCursor = expand("<cword>")
+    execute ":Ack " . wordUnderCursor . " grails-app test"
+  endfunction
+
+  autocmd FileType groovy nnoremap <leader>d :call GroovyJumpToDef()<CR>
+  function! GroovyJumpToDef()
+    let word = expand("<cword>")
+    execute ":Ack '(class|enum|def|Boolean|private|static|Integer|String) " . word . "' grails-app"
+    execute ":cfirst"
+    execute ":ccl"
+    execute ":normal zz"
   endfunction
 "}}}
