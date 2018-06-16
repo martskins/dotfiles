@@ -7,7 +7,6 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
   "{{{ GENERIC
     Plugin 'VundleVim/Vundle.vim'
     Plugin 'scrooloose/nerdTree'
-    "Plugin 'jistr/vim-nerdtree-tabs'
     Plugin 'scrooloose/nerdcommenter'
     Plugin 'vim-airline/vim-airline'
     Plugin 'git://github.com/jiangmiao/auto-pairs.git'
@@ -15,18 +14,25 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'mileszs/ack.vim'
     Plugin 'ervandew/supertab'
     Plugin 'w0rp/ale'
-    "Plugin 'majutsushi/tagbar'
-    "Plugin 'szw/vim-tags'
     Plugin 'kien/ctrlp.vim'
-    "Plugin 'tpope/vim-unimpaired.git'
     Plugin 'tpope/vim-abolish'
     Plugin 'tpope/vim-fugitive'
     Plugin 'roxma/vim-hug-neovim-rpc'
     Plugin 'roxma/nvim-yarp'
     Plugin 'terryma/vim-multiple-cursors'
     Plugin 'tpope/vim-dispatch'
+    "Plugin 'Valloric/YouCompleteMe'
+
+    if has('nvim')
+      Plugin 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    else
+      Plugin 'Shougo/deoplete.nvim'
+      Plugin 'roxma/nvim-yarp'
+      Plugin 'roxma/vim-hug-neovim-rpc'
+    endif
   "}}}
-  "{{{ COLOR SCHEMES
+  "{{{ COLORSCHEMES
+    Plugin 'morhetz/gruvbox'
     Plugin 'tomasr/molokai'
     Plugin 'tomasiser/vim-code-dark'
     Plugin 'vim-airline/vim-airline-themes'
@@ -41,7 +47,6 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
   "}}}
   "{{{ GO
     Plugin 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
-    Plugin 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
     Plugin 'zchee/deoplete-go', { 'do': 'make'}
   "}}}
   "{{{ RUST
@@ -88,7 +93,7 @@ filetype plugin indent on
   hi LineNr ctermfg=red
   hi LineNr guifg=#050505
   set background=dark
-  colorscheme molokai
+  colorscheme gruvbox
 
   let g:airline#extensions#tabline#enabled = 1
   let g:airline_powerline_fonts = 1
@@ -109,12 +114,11 @@ filetype plugin indent on
   let NERDTreeDirArrows = 1
   let g:nerdtree_tabs_open_on_gui_startup = 0
 "}}}
-"{{{ DEOPLETE
+""{{{ DEOPLETE
   let g:deoplete#enable_at_startup = 1
   let g:deoplete#sources#rust#racer_binary='~/.cargo/bin/racer'
   let g:deoplete#sources#rust#show_duplicates=1
-  let g:deoplete#sources#rust#rust_source_path='~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src'
-  let g:rustfmt_autosave = 1
+  let g:deoplete#sources#rust#rust_source_path='~/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
 "}}}
 "{{{ JAVA
   autocmd FileType java setlocal omnifunc=javacomplete#Complete
@@ -168,8 +172,8 @@ filetype plugin indent on
   let g:go_addtags_transform = "camelcase"
   let g:go_gocode_unimported_packages = 1
 
-  let g:deoplete#sources#go#gocode_binary = '/Users/martin/go/bin/gocode'
-  let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+  "let g:deoplete#sources#go#gocode_binary = '/Users/martin/go/bin/gocode'
+  "let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
   autocmd FileType go nmap <silent> <Leader>d <Plug>(go-def)
   autocmd FileType go nmap <leader>r <Plug>(go-run)
@@ -200,12 +204,18 @@ filetype plugin indent on
 "}}}
 "{{{ RUST
   let g:rustfmt_autosave = 1
+  let g:racer_experimental_completer = 1
 
   au FileType rust nmap <leader>d <Plug>(rust-def)
   au FileType rust nmap gd <Plug>(rust-def)
   au FileType rust nmap gs <Plug>(rust-def-split)
   au FileType rust nmap gx <Plug>(rust-def-vertical)
   au FileType rust nmap <leader>gd <Plug>(rust-doc)
+
+  augroup vimrc-rust-autopairs                                                              
+   autocmd!
+   autocmd FileType rust let g:AutoPairs = {'(':')', '[':']', '{':'}','"':'"', '`':'`'}
+  augroup END
 "}}}
 "{{{ ALE
   let g:ale_fixers = { 'javascript': ['eslint'] }
