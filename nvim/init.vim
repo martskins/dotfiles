@@ -21,7 +21,7 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'roxma/nvim-yarp'
     Plugin 'terryma/vim-multiple-cursors'
     Plugin 'tpope/vim-dispatch'
-    "Plugin 'Valloric/YouCompleteMe'
+    Plugin 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
 
     if has('nvim')
       Plugin 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -116,9 +116,9 @@ filetype plugin indent on
 "}}}
 ""{{{ DEOPLETE
   let g:deoplete#enable_at_startup = 1
-  let g:deoplete#sources#rust#racer_binary='~/.cargo/bin/racer'
+  let g:deoplete#sources#rust#racer_binary='/Users/martin/.cargo/bin/racer'
   let g:deoplete#sources#rust#show_duplicates=1
-  let g:deoplete#sources#rust#rust_source_path='~/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
+  let g:deoplete#sources#rust#rust_source_path='/Users/martin/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
 "}}}
 "{{{ JAVA
   autocmd FileType java setlocal omnifunc=javacomplete#Complete
@@ -275,4 +275,16 @@ filetype plugin indent on
     execute ":ccl"
     execute ":normal zz"
   endfunction
+"}}}
+"{{{ LSP
+let g:LanguageClient_autoStart = 1
+nnoremap <leader>lcs :LanguageClientStart<CR>
+
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['rustup', 'run', 'nightly', 'rls'] }
+
+noremap <silent> H :call LanguageClient_textDocument_hover()<CR>
+noremap <silent> Z :call LanguageClient_textDocument_definition()<CR>
+noremap <silent> R :call LanguageClient_textDocument_rename()<CR>
+noremap <silent> S :call LanugageClient_textDocument_documentSymbol()<CR>
 "}}}
