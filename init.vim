@@ -50,9 +50,7 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'zchee/deoplete-go', { 'do': 'make'}
   "}}}
   "{{{ RUST
-    Plugin 'sebastianmarkow/deoplete-rust'
     Plugin 'rust-lang/rust.vim'
-    Plugin 'racer-rust/vim-racer'
   "}}}
   "{{{ GRAILS
     Plugin 'vim-scripts/grails-vim'
@@ -104,7 +102,7 @@ filetype plugin indent on
 "hi CursorLine term=bold cterm=bold guibg=Grey40
   if (has("nvim"))
     "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
-    "let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
   endif
 "}}}
 "{{{ NERDTREE
@@ -117,7 +115,7 @@ filetype plugin indent on
 ""{{{ DEOPLETE
   let g:deoplete#enable_at_startup = 1
   let g:deoplete#sources#rust#racer_binary='/Users/martin/.cargo/bin/racer'
-  let g:deoplete#sources#rust#show_duplicates=1
+  let g:deoplete#sources#rust#show_duplicates=0
   let g:deoplete#sources#rust#rust_source_path='/Users/martin/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
 "}}}
 "{{{ JAVA
@@ -204,13 +202,8 @@ filetype plugin indent on
 "}}}
 "{{{ RUST
   let g:rustfmt_autosave = 1
-  let g:racer_experimental_completer = 1
 
-  au FileType rust nmap <leader>d <Plug>(rust-def)
-  au FileType rust nmap gd <Plug>(rust-def)
-  au FileType rust nmap gs <Plug>(rust-def-split)
-  au FileType rust nmap gx <Plug>(rust-def-vertical)
-  au FileType rust nmap <leader>gd <Plug>(rust-doc)
+  au FileType rust nmap <leader>d gd
 
   augroup vimrc-rust-autopairs                                                              
    autocmd!
@@ -221,7 +214,7 @@ filetype plugin indent on
   let g:ale_fixers = { 'javascript': ['eslint'] }
   let g:ale_fix_on_save = 1
   let g:ale_emit_conflict_warnings = 0
-  let g:ale_linters = { 'javascript': ['eslint'], 'go': ['goimports', 'govet']}
+  let g:ale_linters = { 'javascript': ['eslint'], 'go': ['goimports', 'govet'], 'rust': ['rls'] }
 "}}}
 "{{{ ULTISNIPS
   let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"
@@ -281,7 +274,7 @@ let g:LanguageClient_autoStart = 1
 nnoremap <leader>lcs :LanguageClientStart<CR>
 
 let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rustup', 'run', 'nightly', 'rls'] }
+    \ 'rust': ['rustup', 'run', 'stable', 'rls'] }
 
 noremap <silent> H :call LanguageClient_textDocument_hover()<CR>
 noremap <silent> Z :call LanguageClient_textDocument_definition()<CR>
