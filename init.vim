@@ -54,7 +54,7 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
   "}}}
   "{{{ GRAILS
     Plugin 'vim-scripts/grails-vim'
-    "Bundle 'sjurgemeyer/vimport'
+    Bundle 'sjurgemeyer/vimport'
     Plugin 'thecodesmith/vim-groovy'
   "}}}
   call vundle#end()
