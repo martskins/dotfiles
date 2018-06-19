@@ -5,3 +5,7 @@ all:
 	ln -s ~/dotfiles/init.vim ~/.config/nvim/init.vim
 	ln -s ~/dotfiles/init.vim ~/.vimrc
 	ln -s ~/dotfiles/tmux.conf ~/.tmux.conf
+
+deps:
+	rustup update
+	rustup component add rls-preview rust-analysis rust-src

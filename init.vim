@@ -114,9 +114,15 @@ filetype plugin indent on
 "}}}
 ""{{{ DEOPLETE
   let g:deoplete#enable_at_startup = 1
-  let g:deoplete#sources#rust#racer_binary='/Users/martin/.cargo/bin/racer'
   let g:deoplete#sources#rust#show_duplicates=0
-  let g:deoplete#sources#rust#rust_source_path='/Users/martin/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
+  if has('mac')
+    let g:deoplete#sources#rust#racer_binary='/Users/martin/.cargo/bin/racer'
+    let g:deoplete#sources#rust#rust_source_path='/Users/martin/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
+  else
+    let g:deoplete#sources#rust#racer_binary='/home/martin/.cargo/bin/racer'
+    let g:deoplete#sources#rust#rust_source_path='/home/martin/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
+  endif
+
 "}}}
 "{{{ JAVA
   autocmd FileType java setlocal omnifunc=javacomplete#Complete
@@ -238,6 +244,10 @@ filetype plugin indent on
   nmap <Up> :cprevious<cr>
 
   tnoremap <leader>bd :bd!<CR>
+  nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+  nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+  nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+  nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 "}}}
 "{{{ SUPERTAB
   let g:SuperTabDefaultCompletionType = "<c-n>"
