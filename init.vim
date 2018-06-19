@@ -17,8 +17,6 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'kien/ctrlp.vim'
     Plugin 'tpope/vim-abolish'
     Plugin 'tpope/vim-fugitive'
-    Plugin 'roxma/vim-hug-neovim-rpc'
-    Plugin 'roxma/nvim-yarp'
     Plugin 'terryma/vim-multiple-cursors'
     Plugin 'tpope/vim-dispatch'
     Plugin 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
@@ -120,7 +118,7 @@ filetype plugin indent on
     let g:deoplete#sources#rust#rust_source_path='/Users/martin/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
   else
     let g:deoplete#sources#rust#racer_binary='/home/martin/.cargo/bin/racer'
-    let g:deoplete#sources#rust#rust_source_path='/home/martin/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
+    let g:deoplete#sources#rust#rust_source_path='/home/martin/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src'
   endif
 
 "}}}
