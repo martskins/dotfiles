@@ -234,14 +234,15 @@ filetype plugin indent on
   nmap <s-tab> :bprevious<CR>
   nnoremap Q @q
   nnoremap Q :norm @q<cr>
-  nmap <leader>. :TagbarToggle<CR>
   nmap <leader>bd :bdelete<CR>
   nmap <leader>bq :bdelete!<CR>
   nmap <leader>bo :BufOnly<CR>
   nmap <Down> :cnext<cr>
   nmap <Up> :cprevious<cr>
 
-  tnoremap <leader>bd :bd!<CR>
+  if has('nvim')
+    tnoremap <leader>bd :bd!<CR>
+  endif
   nnoremap <F5> :call LanguageClient_contextMenu()<CR>
   nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
   nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
@@ -282,7 +283,9 @@ let g:LanguageClient_autoStart = 1
 nnoremap <leader>lcs :LanguageClientStart<CR>
 
 let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rustup', 'run', 'stable', 'rls'] }
+    \ 'rust': ['rustup', 'run', 'stable', 'rls'],
+    \ 'cpp' : ['clangd']
+    \ }
 
 noremap <silent> H :call LanguageClient_textDocument_hover()<CR>
 noremap <silent> Z :call LanguageClient_textDocument_definition()<CR>
