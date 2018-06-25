@@ -415,3 +415,19 @@ key_bindings:
   - { key: F10,      mods: Super,   chars: "\x1b[21;3~"                  }
   - { key: F11,      mods: Super,   chars: "\x1b[23;3~"                  }
   - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                  }
+
+    # macOS spanish keyboard bindings
+  - { key: Semicolon,     mods: Alt,      chars: "~"                    }
+  - { key: Key1,          mods: Alt,      chars: "|"                    }
+  - { key: Key2,          mods: Alt,      chars: "@"                    }
+  - { key: Key3,          mods: Alt,      chars: "#"                    }
+  - { key: LBracket,                      chars: "`"                    }
+  - { key: LBracket,      mods: Shift,    chars: "^"                    }
+  - { key: LBracket,      mods: Alt,      chars: "["                    }
+  - { key: RBracket,      mods: Alt,      chars: "]"                    }
+  - { key: Apostrophe,                    chars: "´"                    }
+  - { key: Apostrophe,    mods: Shift,    chars: "¨"                    }
+  - { key: Apostrophe,    mods: Alt,      chars: "{"                    }
+  - { key: Backslash,     mods: Alt,      chars: "}"                    }
+  - { key: Caret,         mods: Alt,      chars: "\\"                   }
+
