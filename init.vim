@@ -6,6 +6,7 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
   call vundle#begin()
   "{{{ GENERIC
     Plugin 'VundleVim/Vundle.vim'
+    Plugin 'vim-scripts/VisIncr'
     Plugin 'scrooloose/nerdTree'
     Plugin 'scrooloose/nerdcommenter'
     Plugin 'vim-airline/vim-airline'
