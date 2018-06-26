@@ -98,6 +98,14 @@ filetype plugin indent on
   set fdm=expr
   set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
 
+  if (has("mac"))
+    let g:python_host_prog=/home/linuxbrew/.linuxbrew/bin/python
+    let g:python3_host_prog=/home/linuxbrew/.linuxbrew/bin/python3
+  "else
+  "  let g:python_host_prog=//.linuxbrew/bin/python
+  "  let g:python3_host_prog=/home/linuxbrew/.linuxbrew/bin/python3
+  endif
+
 "hi CursorLine term=bold cterm=bold guibg=Grey40
   if (has("nvim"))
     "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
