@@ -20,6 +20,8 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'tpope/vim-fugitive'
     Plugin 'terryma/vim-multiple-cursors'
     Plugin 'tpope/vim-dispatch'
+    Plugin 'xolox/vim-misc'
+    Plugin 'xolox/vim-notes'
     Plugin 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
 
     if has('nvim')
