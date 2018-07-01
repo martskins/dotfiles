@@ -22,6 +22,7 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'tpope/vim-dispatch'
     Plugin 'xolox/vim-misc'
     Plugin 'xolox/vim-notes'
+    Plugin 'dhruvasagar/vim-table-mode'
     Plugin 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
 
     if has('nvim')
