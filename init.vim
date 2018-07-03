@@ -79,6 +79,7 @@ filetype plugin indent on
   set clipboard=unnamed
   set cursorcolumn
   set colorcolumn=150
+  set cursorline
   set hidden
   set history=100
   set hlsearch
