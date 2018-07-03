@@ -94,7 +94,11 @@ filetype plugin indent on
   hi LineNr ctermfg=red
   hi LineNr guifg=#050505
   set background=dark
-  colorscheme gruvbox
+  "colorscheme happy_hacking
+  "colorscheme OceanicNext
+  colorscheme codedark
+  "colorscheme gruvbox
+  set t_Co=256
 
   let g:airline#extensions#tabline#enabled = 1
   let g:airline_powerline_fonts = 1
@@ -320,3 +324,4 @@ if executable('clangd')
     augroup end
 endif
 "}}}
+"
