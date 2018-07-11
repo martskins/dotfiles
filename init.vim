@@ -18,8 +18,11 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'kien/ctrlp.vim'
     Plugin 'tpope/vim-abolish'
     Plugin 'tpope/vim-fugitive'
-    Plugin 'terryma/vim-multiple-cursors'
     Plugin 'tpope/vim-dispatch'
+    Plugin 'tpope/vim-surround'
+    Plugin 'airblade/vim-gitgutter'
+    Plugin 'mattn/emmet-vim'
+    Plugin 'terryma/vim-multiple-cursors'
     Plugin 'xolox/vim-misc'
     Plugin 'xolox/vim-notes'
     Plugin 'dhruvasagar/vim-table-mode'
@@ -90,15 +93,16 @@ filetype plugin indent on
   set ttyfast
   set t_ut=
   let mapleader = ','
+  set mouse=a
 
   hi LineNr ctermfg=red
   hi LineNr guifg=#050505
   set background=dark
-  "colorscheme happy_hacking
-  "colorscheme OceanicNext
-  colorscheme codedark
-  "colorscheme gruvbox
-  set t_Co=256
+  "colorscheme molokayo
+  colorscheme gruvbox
+  "colorscheme apprentice
+  "set t_Co=256
+  "colorscheme codedark
 
   let g:airline#extensions#tabline#enabled = 1
   let g:airline_powerline_fonts = 1
@@ -119,6 +123,17 @@ filetype plugin indent on
     "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
   endif
+
+  function! GrepQuickFix(pat)
+    let all = getqflist()
+    for d in all
+      if bufname(d['bufnr']) !~ a:pat && d['text'] !~ a:pat
+          call remove(all, index(all,d))
+      endif
+    endfor
+    call setqflist(all)
+  endfunction
+  command! -nargs=* GrepQF call GrepQuickFix(<q-args>)
 "}}}
 "{{{ NERDTREE
   nnoremap <Leader>f :NERDTreeToggle<Enter>
@@ -234,6 +249,7 @@ filetype plugin indent on
 "{{{ ALE
   let g:ale_fixers = { 'javascript': ['eslint'] }
   let g:ale_fix_on_save = 1
+  let g:ale_lint_on_enter = 0
   let g:ale_emit_conflict_warnings = 0
   let g:ale_linters = { 'javascript': ['eslint'], 'go': ['goimports', 'govet'], 'rust': ['rls'] }
 "}}}
