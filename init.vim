@@ -23,6 +23,7 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'xolox/vim-misc'
     Plugin 'xolox/vim-notes'
     Plugin 'dhruvasagar/vim-table-mode'
+    Plugin 'digitaltoad/vim-pug'
     Plugin 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
 
     if has('nvim')
@@ -56,7 +57,7 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
   "}}}
   "{{{ GRAILS
     Plugin 'vim-scripts/grails-vim'
-    Bundle 'sjurgemeyer/vimport'
+    Plugin 'sjurgemeyer/vimport'
     Plugin 'thecodesmith/vim-groovy'
   "}}}
   call vundle#end()
@@ -68,6 +69,7 @@ filetype plugin indent on
 
   autocmd FileType vim setlocal foldmethod=marker
   set shell=/bin/zsh
+  set hid
   set ignorecase
   set number relativenumber
   set backspace=indent,eol,start
@@ -96,8 +98,7 @@ filetype plugin indent on
   set background=dark
   "colorscheme happy_hacking
   "colorscheme OceanicNext
-  colorscheme codedark
-  "colorscheme gruvbox
+  colorscheme gruvbox
   set t_Co=256
 
   let g:airline#extensions#tabline#enabled = 1
@@ -234,8 +235,9 @@ filetype plugin indent on
 "{{{ ALE
   let g:ale_fixers = { 'javascript': ['eslint'] }
   let g:ale_fix_on_save = 1
+  let g:ale_lint_on_enter = 0
   let g:ale_emit_conflict_warnings = 0
-  let g:ale_linters = { 'javascript': ['eslint'], 'go': ['goimports', 'govet'], 'rust': ['rls'] }
+  let g:ale_linters = { 'javascript': ['eslint'], 'go': ['gometalinter'], 'rust': ['rls'] }
 "}}}
 "{{{ ULTISNIPS
   let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"
