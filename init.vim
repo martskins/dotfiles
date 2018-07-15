@@ -25,15 +25,9 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'xolox/vim-notes'
     Plugin 'dhruvasagar/vim-table-mode'
     Plugin 'digitaltoad/vim-pug'
+    Plugin 'ncm2/ncm2'
+    Plugin 'roxma/nvim-yarp'
     Plugin 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
-
-    if has('nvim')
-      Plugin 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-    else
-      Plugin 'Shougo/deoplete.nvim'
-      Plugin 'roxma/nvim-yarp'
-      Plugin 'roxma/vim-hug-neovim-rpc'
-    endif
     Plugin 'Shougo/neosnippet.vim'
     Plugin 'Shougo/neosnippet-snippets'
   "}}}
@@ -53,7 +47,6 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
   "}}}
   "{{{ GO
     Plugin 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
-    Plugin 'zchee/deoplete-go', { 'do': 'make'}
   "}}}
   "{{{ RUST
     Plugin 'rust-lang/rust.vim'
@@ -142,19 +135,6 @@ filetype plugin indent on
   let NERDTreeDirArrows = 1
   let g:nerdtree_tabs_open_on_gui_startup = 0
 "}}}
-""{{{ DEOPLETE
-  let g:deoplete#enable_at_startup = 1
-  let g:deoplete#auto_complete_delay = 20
-  let g:deoplete#sources#rust#show_duplicates=0
-  if has('mac')
-    let g:deoplete#sources#rust#racer_binary='/Users/martin/.cargo/bin/racer'
-    let g:deoplete#sources#rust#rust_source_path='/Users/martin/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
-  else
-    let g:deoplete#sources#rust#racer_binary='/home/martin/.cargo/bin/racer'
-    let g:deoplete#sources#rust#rust_source_path='/home/martin/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src'
-  endif
-
-"}}}
 "{{{ JAVA
   autocmd FileType java setlocal omnifunc=javacomplete#Complete
   let g:JavaImpPaths = $HOME . "/Projects/billing"
@@ -206,9 +186,6 @@ filetype plugin indent on
   let g:go_def_reuse_buffer = 1
   let g:go_addtags_transform = "camelcase"
   let g:go_gocode_unimported_packages = 1
-
-  "let g:deoplete#sources#go#gocode_binary = '/Users/martin/go/bin/gocode'
-  "let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
   autocmd FileType go nmap <silent> <Leader>d <Plug>(go-def)
   autocmd FileType go nmap <leader>r <Plug>(go-run)
