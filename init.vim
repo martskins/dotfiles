@@ -11,15 +11,16 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'scrooloose/nerdcommenter'
     Plugin 'vim-airline/vim-airline'
     Plugin 'git://github.com/jiangmiao/auto-pairs.git'
-    Plugin 'SirVer/ultisnips'
     Plugin 'mileszs/ack.vim'
-    Plugin 'ervandew/supertab'
     Plugin 'w0rp/ale'
     Plugin 'kien/ctrlp.vim'
     Plugin 'tpope/vim-abolish'
     Plugin 'tpope/vim-fugitive'
-    Plugin 'terryma/vim-multiple-cursors'
     Plugin 'tpope/vim-dispatch'
+    Plugin 'tpope/vim-surround'
+    Plugin 'airblade/vim-gitgutter'
+    Plugin 'mattn/emmet-vim'
+    Plugin 'terryma/vim-multiple-cursors'
     Plugin 'xolox/vim-misc'
     Plugin 'xolox/vim-notes'
     Plugin 'dhruvasagar/vim-table-mode'
@@ -33,6 +34,8 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
       Plugin 'roxma/nvim-yarp'
       Plugin 'roxma/vim-hug-neovim-rpc'
     endif
+    Plugin 'Shougo/neosnippet.vim'
+    Plugin 'Shougo/neosnippet-snippets'
   "}}}
   "{{{ COLORSCHEMES
     Plugin 'morhetz/gruvbox'
@@ -79,9 +82,9 @@ filetype plugin indent on
   set cmdheight=2
   set expandtab
   set clipboard=unnamed
-  set cursorcolumn
+  set nocursorcolumn
+  set nocursorline
   set colorcolumn=150
-  set cursorline
   set hidden
   set history=100
   set hlsearch
@@ -92,14 +95,14 @@ filetype plugin indent on
   set ttyfast
   set t_ut=
   let mapleader = ','
+  set noruler
+  set synmaxcol=128
+  "set mouse=a
 
   hi LineNr ctermfg=red
   hi LineNr guifg=#050505
   set background=dark
-  "colorscheme happy_hacking
-  "colorscheme OceanicNext
   colorscheme gruvbox
-  set t_Co=256
 
   let g:airline#extensions#tabline#enabled = 1
   let g:airline_powerline_fonts = 1
@@ -120,6 +123,17 @@ filetype plugin indent on
     "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
   endif
+
+  function! GrepQuickFix(pat)
+    let all = getqflist()
+    for d in all
+      if bufname(d['bufnr']) !~ a:pat && d['text'] !~ a:pat
+          call remove(all, index(all,d))
+      endif
+    endfor
+    call setqflist(all)
+  endfunction
+  command! -nargs=* GrepQF call GrepQuickFix(<q-args>)
 "}}}
 "{{{ NERDTREE
   nnoremap <Leader>f :NERDTreeToggle<Enter>
@@ -130,6 +144,7 @@ filetype plugin indent on
 "}}}
 ""{{{ DEOPLETE
   let g:deoplete#enable_at_startup = 1
+  let g:deoplete#auto_complete_delay = 20
   let g:deoplete#sources#rust#show_duplicates=0
   if has('mac')
     let g:deoplete#sources#rust#racer_binary='/Users/martin/.cargo/bin/racer'
@@ -239,9 +254,6 @@ filetype plugin indent on
   let g:ale_emit_conflict_warnings = 0
   let g:ale_linters = { 'javascript': ['eslint'], 'go': ['gometalinter'], 'rust': ['rls'] }
 "}}}
-"{{{ ULTISNIPS
-  let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"
-"}}}
 "{{{ MAPPINGS
   nmap <leader>o :only<CR>
   nnoremap <S-F5> ggvG=
@@ -266,9 +278,6 @@ filetype plugin indent on
   nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
   nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
   nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-"}}}
-"{{{ SUPERTAB
-  let g:SuperTabDefaultCompletionType = "<c-n>"
 "}}}
 "{{{ CTRL-P 
   let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|\.git\|target\|web-app'
@@ -326,4 +335,18 @@ if executable('clangd')
     augroup end
 endif
 "}}}
-"
+"{{{ NEOSNIPPET
+  let g:neocomplete#enable_at_startup = 1
+
+  imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+  smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+  xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+  smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+  \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+  " For conceal markers.
+  if has('conceal')
+    set conceallevel=2 concealcursor=niv
+  endif
+"}}}
