@@ -18,6 +18,7 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'tpope/vim-fugitive'
     Plugin 'tpope/vim-dispatch'
     Plugin 'tpope/vim-surround'
+    Plugin 'tpope/vim-speeddating'
     Plugin 'airblade/vim-gitgutter'
     Plugin 'mattn/emmet-vim'
     Plugin 'terryma/vim-multiple-cursors'
@@ -85,6 +86,8 @@ filetype plugin indent on
   set signcolumn=yes
   set guifont=Monaco
   set termguicolors
+  set autoread          "autoload file changes
+  set autoindent        "copy indentation from last line on <CR>
   set ttyfast
   set t_ut=
   let mapleader = ','
@@ -111,7 +114,11 @@ filetype plugin indent on
     let g:python3_host_prog="/home/linuxbrew/.linuxbrew/bin/python3"
   endif
 
-"hi CursorLine term=bold cterm=bold guibg=Grey40
+  " Use <C-L> to clear the highlighting of :set hlsearch.
+  if maparg('<C-L>', 'n') ==# ''
+    nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+  endif
+
   if (has("nvim"))
     "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
