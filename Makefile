@@ -13,6 +13,8 @@ clean:
 deps:
 	rustup update
 	rustup component add rls-preview rust-analysis rust-src
+	# SOLARGRAPH [RUBY LSP CLIENT]
+	gem install rest-client json solargraph
 	
 	####### MACOS ONLY #######
 	# Get clangd.. somehow

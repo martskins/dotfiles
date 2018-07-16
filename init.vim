@@ -26,11 +26,16 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'xolox/vim-notes'
     Plugin 'dhruvasagar/vim-table-mode'
     Plugin 'digitaltoad/vim-pug'
+    Plugin 'dbakker/vim-projectroot'
     Plugin 'ncm2/ncm2'
     Plugin 'roxma/nvim-yarp'
     Plugin 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
     Plugin 'Shougo/neosnippet.vim'
     Plugin 'Shougo/neosnippet-snippets'
+  "}}}
+  "{{{ RUBY
+    Plugin 'hackhowtofaq/vim-solargraph'
+
   "}}}
   "{{{ COLORSCHEMES
     Plugin 'morhetz/gruvbox'
@@ -333,4 +338,6 @@ endif
   if has('conceal')
     set conceallevel=2 concealcursor=niv
   endif
+
+  autocmd Filetype ruby,eruby setlocal omnifunc=solargraph#CompleteSolar
 "}}}
