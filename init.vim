@@ -27,9 +27,15 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'dhruvasagar/vim-table-mode'
     Plugin 'digitaltoad/vim-pug'
     Plugin 'dbakker/vim-projectroot'
+  "}}}
+  "{{{ NCM2
     Plugin 'ncm2/ncm2'
     Plugin 'roxma/nvim-yarp'
+  "}}}
+  "{{{ LSP
     Plugin 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
+  "}}}
+  "{{{ NEOSNIPPET
     Plugin 'Shougo/neosnippet.vim'
     Plugin 'Shougo/neosnippet-snippets'
   "}}}
@@ -148,14 +154,13 @@ filetype plugin indent on
   let g:nerdtree_tabs_open_on_gui_startup = 0
 "}}}
 "{{{ JAVA
-  autocmd FileType java setlocal omnifunc=javacomplete#Complete
   let g:JavaImpPaths = $HOME . "/Projects/billing"
   let g:JavaImpDataDir = $HOME . "/vim/JavaImp"
 
-  au BufNewFile,BufRead *.gradle set filetype=groovy
-  au BufNewFile,BufRead *.coffee set filetype=groovy
-  au BufNewFile,BufRead *.scala set filetype=java
-  au BufNewFile,BufRead *.clj set filetype=clojure
+  "au BufNewFile,BufRead *.gradle set filetype=groovy
+  "au BufNewFile,BufRead *.coffee set filetype=groovy
+  "au BufNewFile,BufRead *.scala set filetype=java
+  "au BufNewFile,BufRead *.clj set filetype=clojure
 
   function! Patch()
     execute "e application.properties | g/app\.version"
@@ -263,10 +268,6 @@ filetype plugin indent on
   if has('nvim')
     tnoremap <leader>bd :bd!<CR>
   endif
-  nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-  nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-  nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-  nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 "}}}
 "{{{ CTRL-P 
   let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|\.git\|target\|web-app'
@@ -279,50 +280,48 @@ filetype plugin indent on
    let wordUnderCursor = expand("<cword>")
    execute ":Ack " . wordUnderCursor
   endfunction
-
-  autocmd FileType groovy nmap <leader>w :call FindUsagesGrails()<CR>
-  function! FindUsagesGrails()
-    let wordUnderCursor = expand("<cword>")
-    execute ":Ack " . wordUnderCursor . " grails-app test"
-  endfunction
-
-  autocmd FileType groovy nnoremap <leader>d :call GroovyJumpToDef()<CR>
-  function! GroovyJumpToDef()
-    let word = expand("<cword>")
-    execute ":Ack '(class|enum|def|Boolean|private|static|Integer|String) " . word . "' grails-app"
-    execute ":cfirst"
-    execute ":ccl"
-    execute ":normal zz"
-  endfunction
 "}}}
 "{{{ LSP
-let g:LanguageClient_autoStart = 1
-nnoremap <leader>lcs :LanguageClientStart<CR>
+  nnoremap <leader>lcs :LanguageClientStart<CR>
 
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-    \ 'cpp' : ['clangd']
-    \ }
+  let g:LanguageClient_serverCommands = {
+      \ 'rust': ['rustup', 'run', 'stable', 'rls'],
+      \ 'cpp' : ['clangd'],
+      \ 'groovy': ['tcp://127.0.0.1:9291'] 
+      \ }
 
-noremap <silent> H :call LanguageClient_textDocument_hover()<CR>
-noremap <silent> Z :call LanguageClient_textDocument_definition()<CR>
-noremap <silent> R :call LanguageClient_textDocument_rename()<CR>
-noremap <silent> S :call LanugageClient_textDocument_documentSymbol()<CR>
+  nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+  nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+  nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+  nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+  noremap <silent> H :call LanguageClient_textDocument_hover()<CR>
+  noremap <silent> Z :call LanguageClient_textDocument_definition()<CR>
+  noremap <silent> R :call LanguageClient_textDocument_rename()<CR>
+  noremap <silent> S :call LanugageClient_textDocument_documentSymbol()<CR>
 
-if executable('clangd')
-    augroup lsp_clangd
-        autocmd!
-        autocmd User lsp_setup call lsp#register_server({
-                    \ 'name': 'clangd',
-                    \ 'cmd': {server_info->['clangd']},
-                    \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
-                    \ })
-        autocmd FileType c setlocal omnifunc=lsp#complete
-        autocmd FileType cpp setlocal omnifunc=lsp#complete
-        autocmd FileType objc setlocal omnifunc=lsp#complete
-        autocmd FileType objcpp setlocal omnifunc=lsp#complete
-    augroup end
-endif
+  if executable('clangd')
+      augroup lsp_clangd
+          autocmd!
+          autocmd User lsp_setup call lsp#register_server({
+                      \ 'name': 'clangd',
+                      \ 'cmd': {server_info->['clangd']},
+                      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp']
+                      \ })
+          autocmd FileType c setlocal omnifunc=lsp#complete
+          autocmd FileType cpp setlocal omnifunc=lsp#complete
+          autocmd FileType objc setlocal omnifunc=lsp#complete
+          autocmd FileType objcpp setlocal omnifunc=lsp#complete
+      augroup end
+  endif
+
+  autocmd User lsp_setup call lsp#register_server({
+              \ 'name': 'groovy',
+              \ 'cmd': {server_info->['tcp://127.0.0.1:9291']},
+              \ 'whitelist': ['groovy']
+              \ })
+  autocmd FileType groovy setlocal omnifunc=lsp#complete
+
+  let g:LanguageClient_autoStart = 1
 "}}}
 "{{{ NEOSNIPPET
   let g:neocomplete#enable_at_startup = 1
