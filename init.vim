@@ -27,17 +27,24 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'dhruvasagar/vim-table-mode'
     Plugin 'digitaltoad/vim-pug'
     Plugin 'dbakker/vim-projectroot'
+    if has('nvim')
+      Plugin 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    else
+      Plugin 'Shougo/deoplete.nvim'
+      Plugin 'roxma/nvim-yarp'
+      Plugin 'roxma/vim-hug-neovim-rpc'
+    endif
   "}}}
   "{{{ NCM2
-    Plugin 'ncm2/ncm2'
-    Plugin 'roxma/nvim-yarp'
+    "Plugin 'ncm2/ncm2'
+    "Plugin 'roxma/nvim-yarp'
   "}}}
   "{{{ LSP
     Plugin 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
   "}}}
   "{{{ NEOSNIPPET
-    Plugin 'Shougo/neosnippet.vim'
-    Plugin 'Shougo/neosnippet-snippets'
+    Plugin 'Shougo/neosnippet.vim', { 'for': 'go' }
+    Plugin 'Shougo/neosnippet-snippets', { 'for': 'go' }
   "}}}
   "{{{ RUBY
     Plugin 'hackhowtofaq/vim-solargraph'
@@ -67,6 +74,9 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
     Plugin 'vim-scripts/grails-vim'
     Plugin 'sjurgemeyer/vimport'
     Plugin 'thecodesmith/vim-groovy'
+  "}}}
+  "{{{ KOTLIN
+    Plugin 'udalov/kotlin-vim'
   "}}}
   call vundle#end()
 "}}}
@@ -287,7 +297,7 @@ filetype plugin indent on
   let g:LanguageClient_serverCommands = {
       \ 'rust': ['rustup', 'run', 'stable', 'rls'],
       \ 'cpp' : ['clangd'],
-      \ 'groovy': ['tcp://127.0.0.1:9291'] 
+      \ 'groovy': ['tcp://127.0.0.1:8080'] 
       \ }
 
   nnoremap <F5> :call LanguageClient_contextMenu()<CR>
@@ -316,27 +326,21 @@ filetype plugin indent on
 
   autocmd User lsp_setup call lsp#register_server({
               \ 'name': 'groovy',
-              \ 'cmd': {server_info->['tcp://127.0.0.1:9291']},
+              \ 'cmd': {server_info->['tcp://127.0.0.1:8080']},
               \ 'whitelist': ['groovy']
               \ })
   autocmd FileType groovy setlocal omnifunc=lsp#complete
 
   let g:LanguageClient_autoStart = 1
 "}}}
+"{{{ DEOPLETE
+  let g:deoplete#enable_at_startup = 1
+"}}}
 "{{{ NEOSNIPPET
-  let g:neocomplete#enable_at_startup = 1
 
   imap <C-k>     <Plug>(neosnippet_expand_or_jump)
   smap <C-k>     <Plug>(neosnippet_expand_or_jump)
   xmap <C-k>     <Plug>(neosnippet_expand_target)
 
-  smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-  \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-  " For conceal markers.
-  if has('conceal')
-    set conceallevel=2 concealcursor=niv
-  endif
-
-  autocmd Filetype ruby,eruby setlocal omnifunc=solargraph#CompleteSolar
+  set conceallevel=2 concealcursor=niv
 "}}}
