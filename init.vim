@@ -1,84 +1,79 @@
 set nocompatible
 filetype off
-set rtp+=~/.config/nvim/bundle/Vundle.vim
 
 "{{{ PLUGINS
-  call vundle#begin()
+  call plug#begin('~/.vim/plugged')
   "{{{ GENERIC
-    Plugin 'VundleVim/Vundle.vim'
-    Plugin 'vim-scripts/VisIncr'
-    Plugin 'scrooloose/nerdTree'
-    Plugin 'scrooloose/nerdcommenter'
-    Plugin 'vim-airline/vim-airline'
-    Plugin 'git://github.com/jiangmiao/auto-pairs.git'
-    Plugin 'mileszs/ack.vim'
-    Plugin 'w0rp/ale'
-    Plugin 'kien/ctrlp.vim'
-    Plugin 'tpope/vim-abolish'
-    Plugin 'tpope/vim-fugitive'
-    Plugin 'tpope/vim-dispatch'
-    Plugin 'tpope/vim-surround'
-    Plugin 'tpope/vim-speeddating'
-    Plugin 'airblade/vim-gitgutter'
-    Plugin 'mattn/emmet-vim'
-    Plugin 'terryma/vim-multiple-cursors'
-    Plugin 'xolox/vim-misc'
-    Plugin 'xolox/vim-notes'
-    Plugin 'dhruvasagar/vim-table-mode'
-    Plugin 'digitaltoad/vim-pug'
-    Plugin 'dbakker/vim-projectroot'
+    Plug 'VundleVim/Vundle.vim'
+    Plug 'vim-scripts/VisIncr'
+    Plug 'scrooloose/nerdTree'
+    Plug 'scrooloose/nerdcommenter'
+    Plug 'vim-airline/vim-airline'
+    Plug 'git://github.com/jiangmiao/auto-pairs.git'
+    Plug 'mileszs/ack.vim'
+    Plug 'w0rp/ale'
+    Plug 'kien/ctrlp.vim'
+    Plug 'tpope/vim-abolish'
+    Plug 'tpope/vim-fugitive'
+    Plug 'tpope/vim-dispatch'
+    Plug 'tpope/vim-surround'
+    Plug 'tpope/vim-speeddating'
+    Plug 'airblade/vim-gitgutter'
+    Plug 'mattn/emmet-vim'
+    Plug 'terryma/vim-multiple-cursors'
+    Plug 'xolox/vim-misc'
+    Plug 'xolox/vim-notes'
+    Plug 'dhruvasagar/vim-table-mode'
+    Plug 'digitaltoad/vim-pug'
+    Plug 'dbakker/vim-projectroot'
+    Plug 'junegunn/vim-github-dashboard'
     if has('nvim')
-      Plugin 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+      Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
     else
-      Plugin 'Shougo/deoplete.nvim'
-      Plugin 'roxma/nvim-yarp'
-      Plugin 'roxma/vim-hug-neovim-rpc'
+      Plug 'Shougo/deoplete.nvim'
+      Plug 'roxma/nvim-yarp'
+      Plug 'roxma/vim-hug-neovim-rpc'
     endif
   "}}}
-  "{{{ NCM2
-    "Plugin 'ncm2/ncm2'
-    "Plugin 'roxma/nvim-yarp'
-  "}}}
   "{{{ LSP
-    Plugin 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
+    Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
   "}}}
   "{{{ NEOSNIPPET
-    Plugin 'Shougo/neosnippet.vim', { 'for': 'go' }
-    Plugin 'Shougo/neosnippet-snippets', { 'for': 'go' }
+    Plug 'Shougo/neosnippet.vim', { 'for': 'go' }
+    Plug 'Shougo/neosnippet-snippets', { 'for': 'go' }
   "}}}
   "{{{ RUBY
-    Plugin 'hackhowtofaq/vim-solargraph'
-
+    Plug 'hackhowtofaq/vim-solargraph'
   "}}}
   "{{{ COLORSCHEMES
-    Plugin 'morhetz/gruvbox'
-    Plugin 'tomasr/molokai'
-    Plugin 'tomasiser/vim-code-dark'
-    Plugin 'vim-airline/vim-airline-themes'
-    Plugin 'ayu-theme/ayu-vim'
-    Plugin 'sickill/vim-monokai'
-    Plugin 'drewtempelmeyer/palenight.vim'
-    Plugin 'tyrannicaltoucan/vim-quantum'
-    Plugin 'rafi/awesome-vim-colorschemes'
-    Plugin 'dunstontc/vim-vscode-theme'
-    Plugin 'olivertaylor/vacme'
-    Plugin 'mhartington/oceanic-next'
+    Plug 'morhetz/gruvbox'
+    Plug 'tomasr/molokai'
+    Plug 'tomasiser/vim-code-dark'
+    Plug 'vim-airline/vim-airline-themes'
+    Plug 'ayu-theme/ayu-vim'
+    Plug 'sickill/vim-monokai'
+    Plug 'drewtempelmeyer/palenight.vim'
+    Plug 'tyrannicaltoucan/vim-quantum'
+    Plug 'rafi/awesome-vim-colorschemes'
+    Plug 'dunstontc/vim-vscode-theme'
+    Plug 'olivertaylor/vacme'
+    Plug 'mhartington/oceanic-next'
   "}}}
   "{{{ GO
-    Plugin 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+    Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' , 'for': 'go' }
   "}}}
   "{{{ RUST
-    Plugin 'rust-lang/rust.vim'
+    Plug 'rust-lang/rust.vim', { 'for': 'rust' }
   "}}}
   "{{{ GRAILS
-    Plugin 'vim-scripts/grails-vim'
-    Plugin 'sjurgemeyer/vimport'
-    Plugin 'thecodesmith/vim-groovy'
+    Plug 'vim-scripts/grails-vim'
+    Plug 'sjurgemeyer/vimport'
+    Plug 'thecodesmith/vim-groovy'
   "}}}
   "{{{ KOTLIN
-    Plugin 'udalov/kotlin-vim'
+    Plug 'udalov/kotlin-vim', { 'for': 'kotlin' }
   "}}}
-  call vundle#end()
+  call plug#end()
 "}}}
 filetype plugin indent on
 "{{{ MISC
@@ -337,10 +332,8 @@ filetype plugin indent on
   let g:deoplete#enable_at_startup = 1
 "}}}
 "{{{ NEOSNIPPET
-
-  imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-  smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-  xmap <C-k>     <Plug>(neosnippet_expand_target)
-
-  set conceallevel=2 concealcursor=niv
+  au FileType go imap <C-k> <Plug>(neosnippet_expand_or_jump)
+  au FileType go smap <C-k> <Plug>(neosnippet_expand_or_jump)
+  au FileType go xmap <C-k> <Plug>(neosnippet_expand_target)
+  au FileType go set conceallevel=2 concealcursor=niv
 "}}}
