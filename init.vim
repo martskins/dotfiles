@@ -292,7 +292,11 @@ filetype plugin indent on
   let g:LanguageClient_serverCommands = {
       \ 'rust': ['rustup', 'run', 'stable', 'rls'],
       \ 'cpp' : ['clangd'],
-      \ 'groovy': ['tcp://127.0.0.1:8080'] 
+      \ 'javascript': ['flow-language-server', '--stdio'],
+      \ 'groovy': ['tcp://127.0.0.1:8080'],
+      \ 'kotlin': ['tcp://127.0.0.1:8080'],
+      \ 'scala': ['tcp://127.0.0.1:8080'],
+      \ 'java': ['tcp://127.0.0.1:8080'] 
       \ }
 
   nnoremap <F5> :call LanguageClient_contextMenu()<CR>
@@ -322,9 +326,8 @@ filetype plugin indent on
   autocmd User lsp_setup call lsp#register_server({
               \ 'name': 'groovy',
               \ 'cmd': {server_info->['tcp://127.0.0.1:8080']},
-              \ 'whitelist': ['groovy']
+              \ 'whitelist': ['groovy', 'java', 'kotlin', 'scala']
               \ })
-  autocmd FileType groovy setlocal omnifunc=lsp#complete
 
   let g:LanguageClient_autoStart = 1
 "}}}
