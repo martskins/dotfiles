@@ -27,6 +27,7 @@ filetype off
     Plug 'digitaltoad/vim-pug'
     Plug 'dbakker/vim-projectroot'
     Plug 'junegunn/vim-github-dashboard'
+    Plug 'ashisha/image.vim'
     if has('nvim')
       Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
     else
@@ -58,6 +59,7 @@ filetype off
     Plug 'dunstontc/vim-vscode-theme'
     Plug 'olivertaylor/vacme'
     Plug 'mhartington/oceanic-next'
+    Plug 'ervandew/supertab'
   "}}}
   "{{{ GO
     Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' , 'for': 'go' }
@@ -114,7 +116,7 @@ filetype plugin indent on
   hi LineNr ctermfg=red
   hi LineNr guifg=#050505
   set background=dark
-  colorscheme gruvbox
+  colorscheme vacme
 
   let g:airline#extensions#tabline#enabled = 1
   let g:airline_powerline_fonts = 1
@@ -209,13 +211,6 @@ filetype plugin indent on
   let g:go_addtags_transform = "camelcase"
   let g:go_gocode_unimported_packages = 1
 
-  autocmd FileType go nmap <silent> <Leader>d <Plug>(go-def)
-  autocmd FileType go nmap <leader>r <Plug>(go-run)
-  autocmd FileType go nmap <leader>t <Plug>(go-test)
-  autocmd FileType go nmap <leader>a <Plug>(go-alternate-edit)
-  autocmd FileType go nmap <leader>g <Plug>(go-generate)
-  autocmd FileType go nmap <leader>b <Plug>(go-build)
-
   function! s:build_go_files()
     let l:file = expand('%')
     if l:file =~# '^\f\+_test\.go$'
@@ -270,6 +265,21 @@ filetype plugin indent on
   nmap <Down> :cnext<cr>
   nmap <Up> :cprevious<cr>
 
+  " RENAME
+  autocmd FileType groovy,scala,java,kotlin,rust,c,cpp nmap <leader>rn :call LanguageClient_textDocument_rename()<CR>
+  autocmd FileType go     nmap <leader>rn <Plug>(go-rename)
+
+  " DEFINITION
+  autocmd FileType groovy,scala,java,kotlin,rust,c,cpp
+        \ nmap <silent> <leader>d :call LanguageClient_textDocument_definition()<CR>
+  autocmd FileType go     nmap <silent> <Leader>d <Plug>(go-def)
+
+  autocmd FileType go nmap <leader>r <Plug>(go-run)
+  autocmd FileType go nmap <leader>t <Plug>(go-test)
+  autocmd FileType go nmap <leader>a <Plug>(go-alternate-edit)
+  autocmd FileType go nmap <leader>g <Plug>(go-generate)
+  autocmd FileType go nmap <leader>b <Plug>(go-build)
+
   if has('nvim')
     tnoremap <leader>bd :bd!<CR>
   endif
@@ -293,10 +303,10 @@ filetype plugin indent on
       \ 'rust': ['rustup', 'run', 'stable', 'rls'],
       \ 'cpp' : ['clangd'],
       \ 'javascript': ['flow-language-server', '--stdio'],
-      \ 'groovy': ['tcp://127.0.0.1:8080'],
-      \ 'kotlin': ['tcp://127.0.0.1:8080'],
-      \ 'scala': ['tcp://127.0.0.1:8080'],
-      \ 'java': ['tcp://127.0.0.1:8080'] 
+      \ 'groovy': ['tcp://127.0.0.1:8888'],
+      \ 'kotlin': ['tcp://127.0.0.1:8888'],
+      \ 'scala': ['tcp://127.0.0.1:8888'],
+      \ 'java': ['tcp://127.0.0.1:8888'] 
       \ }
 
   nnoremap <F5> :call LanguageClient_contextMenu()<CR>
@@ -324,10 +334,17 @@ filetype plugin indent on
   endif
 
   autocmd User lsp_setup call lsp#register_server({
-              \ 'name': 'groovy',
-              \ 'cmd': {server_info->['tcp://127.0.0.1:8080']},
+              \ 'name': 'intelli-lsp-server',
+              \ 'cmd': {server_info->['tcp://127.0.0.1:8888']},
               \ 'whitelist': ['groovy', 'java', 'kotlin', 'scala']
               \ })
+
+  let g:LanguageClient_rootMarkers = {
+        \ 'grooy': ['.idea'],
+        \ 'scala': ['.idea'],
+        \ 'java': ['.idea'],
+        \ 'kotlin': ['.idea'],
+        \  }
 
   let g:LanguageClient_autoStart = 1
 "}}}
