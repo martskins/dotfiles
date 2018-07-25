@@ -287,6 +287,11 @@ nmap <leader>bo :BufOnly<CR>
 nmap <Down> :cnext<cr>
 nmap <Up> :cprevious<cr>
 
+autocmd FileType rust nmap <leader>r :!cargo run<CR>
+
+autocmd FileType go inoremap <Leader>err <ESC>:GoIfErr<CR>O
+autocmd FileType go nmap <leader>r :!go run *.go<CR>
+
 " RENAME
 autocmd FileType groovy,scala,java,kotlin,rust,c,cpp nmap <leader>rn :call LanguageClient_textDocument_rename()<CR>
 autocmd FileType go     nmap <leader>rn <Plug>(go-rename)
@@ -296,7 +301,7 @@ autocmd FileType groovy,scala,java,kotlin,rust,c,cpp
             \ nmap <silent> <leader>d :call LanguageClient_textDocument_definition()<CR>
 autocmd FileType go     nmap <silent> <Leader>d <Plug>(go-def)
 
-autocmd FileType go nmap <leader>r <Plug>(go-run)
+"autocmd FileType go nmap <leader>r <Plug>(go-run)
 autocmd FileType go nmap <leader>t <Plug>(go-test)
 autocmd FileType go nmap <leader>a <Plug>(go-alternate-edit)
 autocmd FileType go nmap <leader>g <Plug>(go-generate)
