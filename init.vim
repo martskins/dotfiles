@@ -268,7 +268,7 @@ let g:ale_fixers = { 'javascript': ['eslint'] }
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 0
 let g:ale_emit_conflict_warnings = 0
-let g:ale_linters = { 'javascript': ['eslint'], 'go': ['gometalinter'], 'rust': ['rls'] }
+let g:ale_linters = { 'javascript': ['eslint'], 'go': ['gometalinter'], 'rust': ['cargo'] }
 "}}}
 "{{{ MAPPINGS
 nmap <leader>o :only<CR>
@@ -289,9 +289,6 @@ nmap <Up> :cprevious<cr>
 
 autocmd FileType rust nmap <leader>r :!cargo run<CR>
 
-autocmd FileType go inoremap <Leader>err <ESC>:GoIfErr<CR>O
-autocmd FileType go nmap <leader>r :!go run *.go<CR>
-
 " RENAME
 autocmd FileType groovy,scala,java,kotlin,rust,c,cpp nmap <leader>rn :call LanguageClient_textDocument_rename()<CR>
 autocmd FileType go     nmap <leader>rn <Plug>(go-rename)
@@ -301,7 +298,7 @@ autocmd FileType groovy,scala,java,kotlin,rust,c,cpp
             \ nmap <silent> <leader>d :call LanguageClient_textDocument_definition()<CR>
 autocmd FileType go     nmap <silent> <Leader>d <Plug>(go-def)
 
-"autocmd FileType go nmap <leader>r <Plug>(go-run)
+autocmd FileType go nmap <leader>r <Plug>(go-run)
 autocmd FileType go nmap <leader>t <Plug>(go-test)
 autocmd FileType go nmap <leader>a <Plug>(go-alternate-edit)
 autocmd FileType go nmap <leader>g <Plug>(go-generate)
@@ -330,10 +327,10 @@ let g:LanguageClient_serverCommands = {
             \ 'rust': ['rustup', 'run', 'stable', 'rls'],
             \ 'cpp' : ['clangd'],
             \ 'javascript': ['flow-language-server', '--stdio'],
-            \ 'groovy': ['tcp://127.0.0.1:8888'],
-            \ 'kotlin': ['tcp://127.0.0.1:8888'],
-            \ 'scala': ['tcp://127.0.0.1:8888'],
-            \ 'java': ['tcp://127.0.0.1:8888'] 
+            \ 'groovy': ['tcp://127.0.0.1:8890'],
+            \ 'kotlin': ['tcp://127.0.0.1:8890'],
+            \ 'scala': ['tcp://127.0.0.1:8890'],
+            \ 'java': ['tcp://127.0.0.1:8890'] 
             \ }
 
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
@@ -362,7 +359,7 @@ endif
 
 autocmd User lsp_setup call lsp#register_server({
             \ 'name': 'intelli-lsp-server',
-            \ 'cmd': {server_info->['tcp://127.0.0.1:8888']},
+            \ 'cmd': {server_info->['tcp://127.0.0.1:8890']},
             \ 'whitelist': ['groovy', 'java', 'kotlin', 'scala']
             \ })
 
