@@ -27,6 +27,7 @@ Plug 'dhruvasagar/vim-table-mode'
 Plug 'digitaltoad/vim-pug'
 Plug 'junegunn/vim-github-dashboard'
 Plug 'ashisha/image.vim'
+Plug 'jceb/vim-orgmode'
 Plug 'lkdjiin/vim-foldcomments'
 if has('nvim')
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
