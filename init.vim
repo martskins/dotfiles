@@ -141,7 +141,7 @@ if has("mac")
     let g:python3_host_prog="/usr/local/bin/python3"
 else
     let g:python_host_prog="/home/linuxbrew/.linuxbrew/bin/python"
-    let g:python3_host_prog="/home/linuxbrew/.linuxbrew/bin/python3"
+    let g:python3_host_prog="/home/linuxbrew/.linuxbrew/bin/python3.7"
 endif
 
 " Use <C-L> to clear the highlighting of :set hlsearch.
@@ -187,11 +187,6 @@ let g:nerdtree_tabs_open_on_gui_startup = 0
 let g:JavaImpPaths = $HOME . "/Projects/billing"
 let g:JavaImpDataDir = $HOME . "/vim/JavaImp"
 
-"au BufNewFile,BufRead *.gradle set filetype=groovy
-"au BufNewFile,BufRead *.coffee set filetype=groovy
-"au BufNewFile,BufRead *.scala set filetype=java
-"au BufNewFile,BufRead *.clj set filetype=clojure
-
 function! Patch()
     execute "e application.properties | g/app\.version"
     execute ":normal $"
@@ -211,6 +206,8 @@ function! Minor()
     execute ":bd"
 endfunction
 command! Minor :call Minor()
+
+au FileType groovy syn region groovyComment start="@PropertyHelp" end=")"
 "}}}
 "{{{ GO
 let g:go_fmt_command = "goimports"
@@ -288,7 +285,14 @@ nmap <leader>bo :BufOnly<CR>
 nmap <Down> :cnext<cr>
 nmap <Up> :cprevious<cr>
 
+" BUILD
+autocmd FileType cpp nmap <leader>b :!make build<CR>
+autocmd FileType go nmap <leader>b <Plug>(go-build)
+
+" RUN
 autocmd FileType rust nmap <leader>r :!cargo run<CR>
+autocmd FileType cpp nmap <leader>r :!./a.out<CR>
+autocmd FileType go nmap <leader>r <Plug>(go-run)
 
 " RENAME
 autocmd FileType groovy,scala,java,kotlin,rust,c,cpp nmap <leader>rn :call LanguageClient_textDocument_rename()<CR>
@@ -299,15 +303,22 @@ autocmd FileType groovy,scala,java,kotlin,rust,c,cpp
             \ nmap <silent> <leader>d :call LanguageClient_textDocument_definition()<CR>
 autocmd FileType go     nmap <silent> <Leader>d <Plug>(go-def)
 
-autocmd FileType go nmap <leader>r <Plug>(go-run)
 autocmd FileType go nmap <leader>t <Plug>(go-test)
 autocmd FileType go nmap <leader>a <Plug>(go-alternate-edit)
 autocmd FileType go nmap <leader>g <Plug>(go-generate)
-autocmd FileType go nmap <leader>b <Plug>(go-build)
 
 if has('nvim')
     tnoremap <leader>bd :bd!<CR>
 endif
+
+function! UncommitedChanges()
+    let files=split(system("git diff --name-only"), '\n')
+    for f in files
+        execute ":e " . f
+    endfor
+endfunction
+command! UncommitedChanges :call UncommitedChanges()
+
 "}}}
 "{{{ CTRL-P 
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|\.git\|target\|web-app'
@@ -336,7 +347,7 @@ let g:LanguageClient_serverCommands = {
 
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>zz
 nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 noremap <silent> H :call LanguageClient_textDocument_hover()<CR>
 noremap <silent> Z :call LanguageClient_textDocument_definition()<CR>
