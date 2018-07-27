@@ -297,6 +297,7 @@ autocmd FileType go nmap <leader>r <Plug>(go-run)
 " RENAME
 autocmd FileType groovy,scala,java,kotlin,rust,c,cpp nmap <leader>rn :call LanguageClient_textDocument_rename()<CR>
 autocmd FileType go     nmap <leader>rn <Plug>(go-rename)
+autocmd FileType go inoremap <Leader>err <ESC>:GoIfErr<CR>O
 
 " DEFINITION
 autocmd FileType groovy,scala,java,kotlin,rust,c,cpp
