@@ -11,8 +11,12 @@ clean:
 	rm -f ~/.config/alacritty/alacritty.yml
 
 deps:
+	curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	rustup update
 	rustup component add rls-preview rust-analysis rust-src
+	# SOLARGRAPH [RUBY LSP CLIENT]
+	gem install rest-client json solargraph
 	
 	####### MACOS ONLY #######
 	# Get clangd.. somehow

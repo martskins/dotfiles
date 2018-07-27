@@ -421,11 +421,11 @@ key_bindings:
   - { key: Key1,          mods: Alt,      chars: "|"                    }
   - { key: Key2,          mods: Alt,      chars: "@"                    }
   - { key: Key3,          mods: Alt,      chars: "#"                    }
-  - { key: LBracket,                      chars: "`"                    }
+  #- { key: LBracket,                      chars: "`"                    }
   - { key: LBracket,      mods: Shift,    chars: "^"                    }
   - { key: LBracket,      mods: Alt,      chars: "["                    }
   - { key: RBracket,      mods: Alt,      chars: "]"                    }
-  - { key: Apostrophe,                    chars: "´"                    }
+  #- { key: Apostrophe,                    chars: "´"                    }
   - { key: Apostrophe,    mods: Shift,    chars: "¨"                    }
   - { key: Apostrophe,    mods: Alt,      chars: "{"                    }
   - { key: Backslash,     mods: Alt,      chars: "}"                    }
