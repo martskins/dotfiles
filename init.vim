@@ -29,6 +29,7 @@ Plug 'junegunn/vim-github-dashboard'
 Plug 'ashisha/image.vim'
 Plug 'jceb/vim-orgmode'
 Plug 'lkdjiin/vim-foldcomments'
+Plug 'ervandew/supertab'
 if has('nvim')
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
@@ -37,35 +38,12 @@ else
     Plug 'roxma/vim-hug-neovim-rpc'
 endif
 "}}}
+"{{{ LANGUAGE-SPECIFIC
 "{{{ PYTHON
 Plug 'zchee/deoplete-jedi', { 'for': 'python' }
 "}}}
-"{{{ LSP
-Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
-Plug 'dbakker/vim-projectroot'
-"}}}
-"{{{ NEOSNIPPET
-Plug 'Shougo/neosnippet.vim', { 'for': 'go' }
-Plug 'Shougo/neosnippet-snippets', { 'for': 'go' }
-"}}}
 "{{{ RUBY
 "Plug 'hackhowtofaq/vim-solargraph'
-"}}}
-"{{{ COLORSCHEMES
-Plug 'hzchirs/vim-material'
-Plug 'morhetz/gruvbox'
-Plug 'tomasr/molokai'
-Plug 'tomasiser/vim-code-dark'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'ayu-theme/ayu-vim'
-Plug 'sickill/vim-monokai'
-Plug 'drewtempelmeyer/palenight.vim'
-Plug 'tyrannicaltoucan/vim-quantum'
-Plug 'rafi/awesome-vim-colorschemes'
-Plug 'dunstontc/vim-vscode-theme'
-Plug 'olivertaylor/vacme'
-Plug 'mhartington/oceanic-next'
-Plug 'ervandew/supertab'
 "}}}
 "{{{ GO
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' , 'for': 'go' }
@@ -77,10 +55,30 @@ Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 "{{{ GRAILS
 Plug 'vim-scripts/grails-vim'
 Plug 'sjurgemeyer/vimport'
-Plug 'thecodesmith/vim-groovy'
+Plug 'thecodesmith/vim-groovy', { 'for': 'groovy' }
 "}}}
 "{{{ KOTLIN
 Plug 'udalov/kotlin-vim', { 'for': 'kotlin' }
+"}}}
+"}}}
+"{{{ LSP
+Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
+Plug 'dbakker/vim-projectroot'
+"}}}
+"{{{ NEOSNIPPET
+Plug 'Shougo/neosnippet.vim', { 'for': 'go' }
+Plug 'Shougo/neosnippet-snippets', { 'for': 'go' }
+"}}}
+"{{{ COLORSCHEMES
+Plug 'hzchirs/vim-material'
+Plug 'morhetz/gruvbox'
+Plug 'tomasr/molokai'
+Plug 'tomasiser/vim-code-dark'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'ayu-theme/ayu-vim'
+Plug 'sickill/vim-monokai'
+Plug 'rafi/awesome-vim-colorschemes'
+Plug 'olivertaylor/vacme'
 "}}}
 call plug#end()
 "}}}
@@ -96,8 +94,8 @@ set ignorecase
 set number relativenumber
 set backspace=indent,eol,start
 set pastetoggle=<leader>z
-set tabstop=4
-set shiftwidth=4
+set tabstop=2
+set shiftwidth=2
 set cmdheight=2
 set expandtab
 set clipboard=unnamed
@@ -118,20 +116,12 @@ set noruler
 set synmaxcol=128
 set cursorcolumn
 set cursorline
-"set nocursorcolumn
-"set nocursorline
-"set mouse=a
-
 
 hi LineNr ctermfg=red
 hi LineNr guifg=#050505
 set background=dark
-"colorscheme vacme
-colorscheme vim-material
-let g:airline_theme='material'
-
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
+"colorscheme vim-material
+colorscheme gruvbox
 
 set fdm=expr
 set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
@@ -175,6 +165,24 @@ autocmd FileType groovy,java,scala,javascript,go
             \ set foldexpr=getline(v:lnum)=~'^\\s*//' |
             \ exe "normal zM``"
 
+" ==== SUPERTAB
+let g:SuperTabDefaultCompletionType = "<c-n>"
+" ==== DEOPLETE
+let g:deoplete#enable_at_startup = 1
+" ==== ACK
+let g:ack_use_dispatch = 1
+" ==== CTRLP
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|\.git\|target\|web-app'
+" ==== AIRLINE
+let g:airline_theme='gruvbox'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+" ==== ALE
+let g:ale_fixers = { 'javascript': ['eslint'] }
+let g:ale_fix_on_save = 1
+let g:ale_lint_on_enter = 0
+let g:ale_emit_conflict_warnings = 0
+let g:ale_linters = { 'javascript': ['eslint'], 'go': ['gometalinter'], 'rust': ['cargo'] }
 "}}}
 "{{{ NERDTREE
 nnoremap <Leader>f :NERDTreeToggle<Enter>
@@ -183,6 +191,7 @@ let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 let g:nerdtree_tabs_open_on_gui_startup = 0
 "}}}
+"{{{ LANGUAGE-SPECIFIC
 "{{{ JAVA
 let g:JavaImpPaths = $HOME . "/Projects/billing"
 let g:JavaImpDataDir = $HOME . "/vim/JavaImp"
@@ -231,42 +240,46 @@ let g:go_def_reuse_buffer = 1
 let g:go_addtags_transform = "camelcase"
 let g:go_gocode_unimported_packages = 1
 
-function! s:build_go_files()
-    let l:file = expand('%')
-    if l:file =~# '^\f\+_test\.go$'
-        call go#cmd#Test(0, 1)
-    elseif l:file =~# '^\f\+\.go$'
-        call go#cmd#Build(0)
-    endif
-endfunction
-autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
+augroup filetype_go
+    autocmd!
 
-function! s:toggle_coverage()
-    call go#coverage#BufferToggle(!g:go_jump_to_error)
-    highlight ColorColumn ctermbg=235
-    highlight NonText ctermfg=239
-    highlight SpecialKey ctermfg=239
-    highlight goSameId term=bold cterm=bold ctermbg=250 ctermfg=239
-endfunction
+    "VIM-GO
+    au FileType go     nmap <leader>c <Plug>(go-coverage)
+    au FileType go     nmap <leader>ct <Plug>(go-coverage-toggle)
+    au FileType go     nmap <Leader>d <Plug>(go-def)
+    au FileType go     nmap <leader>rn <Plug>(go-rename)
+    au FileType go     nmap <leader>r <Plug>(go-run)
+    au FileType go     nmap <leader>b <Plug>(go-build)
+    au FileType go     nmap <leader>t <Plug>(go-test)
+    au FileType go     nmap <leader>a <Plug>(go-alternate-edit)
+    au FileType go     nmap <leader>g <Plug>(go-generate)
+    au FileType go     inoremap <Leader>err <ESC>:GoIfErr<CR>O
 
-autocmd FileType go nmap <leader>c :<C-u>call <SID>toggle_coverage()<CR>
+    "NEOSNIPPET CONFIG
+    au FileType go      imap <C-k> <Plug>(neosnippet_expand_or_jump)
+    au FileType go      smap <C-k> <Plug>(neosnippet_expand_or_jump)
+    au FileType go      xmap <C-k> <Plug>(neosnippet_expand_target)
+    au FileType go      set conceallevel=2 concealcursor=niv
+augroup END
+"}}}
+"{{{ CPP
+augroup filetype_c
+    autocmd!
+    autocmd FileType c,cpp,objc    nmap <leader>b :!make build<CR>
+    autocmd FileType c,cpp,objc    nmap <leader>r :!make build && ./a.out<CR>
+augroup END
 "}}}
 "{{{ RUST
 let g:rustfmt_autosave = 1
 
-au FileType rust nmap <leader>d gd
-
-augroup vimrc-rust-autopairs                                                              
+augroup filetype_rust
     autocmd!
-    autocmd FileType rust let g:AutoPairs = {'(':')', '[':']', '{':'}','"':'"', '`':'`'}
+    au FileType rust nmap <leader>r :!cargo run<CR>
+
+    "AUTO-PAIRS
+    au FileType rust let g:AutoPairs = {'(':')', '[':']', '{':'}','"':'"', '`':'`'}
 augroup END
 "}}}
-"{{{ ALE
-let g:ale_fixers = { 'javascript': ['eslint'] }
-let g:ale_fix_on_save = 1
-let g:ale_lint_on_enter = 0
-let g:ale_emit_conflict_warnings = 0
-let g:ale_linters = { 'javascript': ['eslint'], 'go': ['gometalinter'], 'rust': ['cargo'] }
 "}}}
 "{{{ MAPPINGS
 nmap <leader>o :only<CR>
@@ -285,29 +298,6 @@ nmap <leader>bo :BufOnly<CR>
 nmap <Down> :cnext<cr>
 nmap <Up> :cprevious<cr>
 
-" BUILD
-autocmd FileType cpp nmap <leader>b :!make build<CR>
-autocmd FileType go nmap <leader>b <Plug>(go-build)
-
-" RUN
-autocmd FileType rust nmap <leader>r :!cargo run<CR>
-autocmd FileType cpp nmap <leader>r :!./a.out<CR>
-autocmd FileType go nmap <leader>r <Plug>(go-run)
-
-" RENAME
-autocmd FileType groovy,scala,java,kotlin,rust,c,cpp nmap <leader>rn :call LanguageClient_textDocument_rename()<CR>
-autocmd FileType go     nmap <leader>rn <Plug>(go-rename)
-autocmd FileType go inoremap <Leader>err <ESC>:GoIfErr<CR>O
-
-" DEFINITION
-autocmd FileType groovy,scala,java,kotlin,rust,c,cpp
-            \ nmap <silent> <leader>d :call LanguageClient_textDocument_definition()<CR>
-autocmd FileType go     nmap <silent> <Leader>d <Plug>(go-def)
-
-autocmd FileType go nmap <leader>t <Plug>(go-test)
-autocmd FileType go nmap <leader>a <Plug>(go-alternate-edit)
-autocmd FileType go nmap <leader>g <Plug>(go-generate)
-
 if has('nvim')
     tnoremap <leader>bd :bd!<CR>
 endif
@@ -319,23 +309,11 @@ function! UncommitedChanges()
     endfor
 endfunction
 command! UncommitedChanges :call UncommitedChanges()
-
-"}}}
-"{{{ CTRL-P 
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|\.git\|target\|web-app'
-"}}}
-"{{{ ACK
-let g:ack_use_dispatch = 1
-
-nmap <leader>w :call FindUsages()<CR>
-function! FindUsages()
-    let wordUnderCursor = expand("<cword>")
-    execute ":Ack " . wordUnderCursor
-endfunction
 "}}}
 "{{{ LSP
 nnoremap <leader>lcs :LanguageClientStart<CR>
 
+let g:LanguageClient_autoStart = 1
 let g:LanguageClient_serverCommands = {
             \ 'rust': ['rustup', 'run', 'stable', 'rls'],
             \ 'cpp' : ['clangd'],
@@ -346,14 +324,24 @@ let g:LanguageClient_serverCommands = {
             \ 'java': ['tcp://127.0.0.1:8890'] 
             \ }
 
-nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>zz
-nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-noremap <silent> H :call LanguageClient_textDocument_hover()<CR>
-noremap <silent> Z :call LanguageClient_textDocument_definition()<CR>
-noremap <silent> R :call LanguageClient_textDocument_rename()<CR>
-noremap <silent> S :call LanugageClient_textDocument_documentSymbol()<CR>
+augroup lsp_langs
+    autocmd!
+    au FileType groovy,scala,java,kotlin,rust,c,cpp nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+    au FileType groovy,scala,java,kotlin,rust,c,cpp nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+    au FileType groovy,scala,java,kotlin,rust,c,cpp nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>zz
+    au FileType groovy,scala,java,kotlin,rust,c,cpp nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+    au FileType groovy,scala,java,kotlin,rust,c,cpp noremap <silent> H :call LanguageClient_textDocument_hover()<CR>
+    au FileType groovy,scala,java,kotlin,rust,c,cpp noremap <silent> Z :call LanguageClient_textDocument_definition()<CR>
+    au FileType groovy,scala,java,kotlin,rust,c,cpp noremap <silent> R :call LanguageClient_textDocument_rename()<CR>
+    au FileType groovy,scala,java,kotlin,rust,c,cpp noremap <silent> S :call LanugageClient_textDocument_documentSymbol()<CR>
+    au FileType groovy,scala,java,kotlin,rust,c,cpp nmap <leader>rn :call LanguageClient_textDocument_rename()<CR>
+    au FileType groovy,scala,java,kotlin,rust,c,cpp nmap <silent> <leader>d :call LanguageClient_textDocument_definition()<CR>
+    au User lsp_setup call lsp#register_server({
+            \ 'name': 'intelli-lsp-server',
+            \ 'cmd': {server_info->['tcp://127.0.0.1:8890']},
+            \ 'whitelist': ['groovy', 'java', 'kotlin', 'scala']
+            \ })
+augroup END
 
 if executable('clangd')
     augroup lsp_clangd
@@ -363,18 +351,9 @@ if executable('clangd')
                     \ 'cmd': {server_info->['clangd']},
                     \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp']
                     \ })
-        autocmd FileType c setlocal omnifunc=lsp#complete
-        autocmd FileType cpp setlocal omnifunc=lsp#complete
-        autocmd FileType objc setlocal omnifunc=lsp#complete
-        autocmd FileType objcpp setlocal omnifunc=lsp#complete
+        autocmd FileType c,cpp,objc,objcpp setlocal omnifunc=lsp#complete
     augroup end
 endif
-
-autocmd User lsp_setup call lsp#register_server({
-            \ 'name': 'intelli-lsp-server',
-            \ 'cmd': {server_info->['tcp://127.0.0.1:8890']},
-            \ 'whitelist': ['groovy', 'java', 'kotlin', 'scala']
-            \ })
 
 let g:LanguageClient_rootMarkers = {
             \ 'grooy': ['.idea'],
@@ -382,18 +361,4 @@ let g:LanguageClient_rootMarkers = {
             \ 'java': ['.idea'],
             \ 'kotlin': ['.idea'],
             \  }
-
-let g:LanguageClient_autoStart = 1
-"}}}
-"{{{ DEOPLETE
-let g:deoplete#enable_at_startup = 1
-"}}}
-"{{{ NEOSNIPPET
-au FileType go imap <C-k> <Plug>(neosnippet_expand_or_jump)
-au FileType go smap <C-k> <Plug>(neosnippet_expand_or_jump)
-au FileType go xmap <C-k> <Plug>(neosnippet_expand_target)
-au FileType go set conceallevel=2 concealcursor=niv
-"}}}
-"{{{ SUPERTAB
-let g:SuperTabDefaultCompletionType = "<c-n>"
 "}}}
