@@ -6,7 +6,7 @@ call plug#begin('~/.vim/plugged')
 "{{{ GENERIC
 Plug 'VundleVim/Vundle.vim'
 Plug 'vim-scripts/VisIncr'
-Plug 'scrooloose/nerdTree'
+Plug 'tpope/vim-vinegar'
 Plug 'scrooloose/nerdcommenter'
 Plug 'vim-airline/vim-airline'
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
@@ -165,10 +165,20 @@ autocmd FileType groovy,java,scala,javascript,go
             \ set foldexpr=getline(v:lnum)=~'^\\s*//' |
             \ exe "normal zM``"
 
+augroup netrw_buf_hidden_fix
+    autocmd!
+    set nohidden
+    autocmd BufWinEnter *
+                \  if &ft != 'netrw'
+                \|     set bufhidden=hide
+                \| endif
+augroup end
+
 " ==== SUPERTAB
 let g:SuperTabDefaultCompletionType = "<c-n>"
 " ==== DEOPLETE
 let g:deoplete#enable_at_startup = 1
+set completeopt-=preview
 " ==== ACK
 let g:ack_use_dispatch = 1
 " ==== CTRLP
@@ -183,13 +193,6 @@ let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 0
 let g:ale_emit_conflict_warnings = 0
 let g:ale_linters = { 'javascript': ['eslint'], 'go': ['gometalinter'], 'rust': ['cargo'] }
-"}}}
-"{{{ NERDTREE
-nnoremap <Leader>f :NERDTreeToggle<Enter>
-let NERDTreeQuitOnOpen = 1
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
-let g:nerdtree_tabs_open_on_gui_startup = 0
 "}}}
 "{{{ LANGUAGE-SPECIFIC
 "{{{ JAVA
@@ -253,7 +256,7 @@ augroup filetype_go
     au FileType go     nmap <leader>t <Plug>(go-test)
     au FileType go     nmap <leader>a <Plug>(go-alternate-edit)
     au FileType go     nmap <leader>g <Plug>(go-generate)
-    au FileType go     inoremap <Leader>err <ESC>:GoIfErr<CR>O
+    au FileType go     inoremap ;err <ESC>:GoIfErr<CR>O
 
     "NEOSNIPPET CONFIG
     au FileType go      imap <C-k> <Plug>(neosnippet_expand_or_jump)
@@ -362,3 +365,4 @@ let g:LanguageClient_rootMarkers = {
             \ 'kotlin': ['.idea'],
             \  }
 "}}}
+

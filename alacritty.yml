@@ -65,16 +65,16 @@ antialias: true
 # * file:///usr/share/doc/fontconfig/fontconfig-user.html
 font:
   normal:
-    family: Menlo # should be "Menlo" or something on macOS.
-    #style: Light
+    family: Hack # should be "Menlo" or something on macOS.
+    style: Regular
 
   bold:
-    family: Menlo # should be "Menlo" or something on macOS.
-  #  style: Bold
+    family: Hack # should be "Menlo" or something on macOS.
+    style: Bold
 
   italic:
-    family: Menlo # should be "Menlo" or something on macOS.
-    #style: Italic
+    family: Hack # should be "Menlo" or something on macOS.
+    style: Italic
 
   size: 12
 
