@@ -12,7 +12,9 @@ Plug 'vim-airline/vim-airline'
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
 Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
-Plug 'kien/ctrlp.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'}
+Plug 'junegunn/fzf.vim'
+"Plug 'kien/ctrlp.vim'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-dispatch'
@@ -285,6 +287,7 @@ augroup END
 "}}}
 "}}}
 "{{{ MAPPINGS
+nmap <c-p> :Files<CR>
 nmap <leader>o :only<CR>
 nnoremap <S-F5> ggvG=
 noremap <Up> <NOP>
@@ -321,10 +324,10 @@ let g:LanguageClient_serverCommands = {
             \ 'rust': ['rustup', 'run', 'stable', 'rls'],
             \ 'cpp' : ['clangd'],
             \ 'javascript': ['flow-language-server', '--stdio'],
-            \ 'groovy': ['tcp://127.0.0.1:8890'],
-            \ 'kotlin': ['tcp://127.0.0.1:8890'],
-            \ 'scala': ['tcp://127.0.0.1:8890'],
-            \ 'java': ['tcp://127.0.0.1:8890'] 
+            \ 'groovy': ['tcp://127.0.0.1:8888'],
+            \ 'kotlin': ['tcp://127.0.0.1:8888'],
+            \ 'scala': ['tcp://127.0.0.1:8888'],
+            \ 'java': ['tcp://127.0.0.1:8888'] 
             \ }
 
 augroup lsp_langs
@@ -341,7 +344,7 @@ augroup lsp_langs
     au FileType groovy,scala,java,kotlin,rust,c,cpp nmap <silent> <leader>d :call LanguageClient_textDocument_definition()<CR>
     au User lsp_setup call lsp#register_server({
             \ 'name': 'intelli-lsp-server',
-            \ 'cmd': {server_info->['tcp://127.0.0.1:8890']},
+            \ 'cmd': {server_info->['tcp://127.0.0.1:8888']},
             \ 'whitelist': ['groovy', 'java', 'kotlin', 'scala']
             \ })
 augroup END
@@ -366,3 +369,4 @@ let g:LanguageClient_rootMarkers = {
             \  }
 "}}}
 
+let g:fzf_prefer_tmux = 1
