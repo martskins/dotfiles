@@ -32,6 +32,8 @@ Plug 'ashisha/image.vim'
 Plug 'jceb/vim-orgmode'
 Plug 'lkdjiin/vim-foldcomments'
 Plug 'ervandew/supertab'
+Plug 'majutsushi/tagbar'
+
 if has('nvim')
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
@@ -62,6 +64,9 @@ Plug 'thecodesmith/vim-groovy', { 'for': 'groovy' }
 "{{{ KOTLIN
 Plug 'udalov/kotlin-vim', { 'for': 'kotlin' }
 "}}}
+" {{{ HASKELL
+Plug 'neovimhaskell/haskell-vim'
+" }}}
 "}}}
 "{{{ LSP
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
@@ -115,7 +120,7 @@ set ttyfast
 set t_ut=
 let mapleader = ','
 set noruler
-set synmaxcol=128
+set synmaxcol=150
 set cursorcolumn
 set cursorline
 
@@ -190,11 +195,11 @@ let g:airline_theme='gruvbox'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 " ==== ALE
-let g:ale_fixers = { 'javascript': ['eslint'] }
+let g:ale_fixers = { 'javascript': ['eslint'], 'haskell': ['brittany'] }
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 0
 let g:ale_emit_conflict_warnings = 0
-let g:ale_linters = { 'javascript': ['eslint'], 'go': ['gometalinter'], 'rust': ['cargo'] }
+let g:ale_linters = { 'javascript': ['eslint'], 'go': ['gometalinter'], 'rust': ['cargo'], 'haskell': ['stack-ghc', 'ghc-mod', 'hlint', 'hdevtools', 'hfmt'] }
 "}}}
 "{{{ LANGUAGE-SPECIFIC
 "{{{ JAVA
@@ -263,7 +268,7 @@ augroup filetype_go
     "NEOSNIPPET CONFIG
     au FileType go      imap <C-k> <Plug>(neosnippet_expand_or_jump)
     au FileType go      smap <C-k> <Plug>(neosnippet_expand_or_jump)
-    au FileType go      xmap <C-k> <Plug>(neosnippet_expand_target)
+    au FileType go      xmap <C-k> <Plug>(neosnippet_expand_target)<c-w><c-w>
     au FileType go      set conceallevel=2 concealcursor=niv
 augroup END
 "}}}
@@ -303,6 +308,9 @@ nmap <leader>bq :bdelete!<CR>
 nmap <leader>bo :BufOnly<CR>
 nmap <Down> :cnext<cr>
 nmap <Up> :cprevious<cr>
+
+nmap <leader>lg :term lazygit<CR>i
+nmap <F8> :TagbarToggle<CR>
 
 if has('nvim')
     tnoremap <leader>bd :bd!<CR>
@@ -368,5 +376,63 @@ let g:LanguageClient_rootMarkers = {
             \ 'kotlin': ['.idea'],
             \  }
 "}}}
+"{{{ CTAGS
+let g:tagbar_type_groovy = {
+    \ 'ctagstype' : 'groovy',
+    \ 'kinds'     : [
+        \ 'p:package:1',
+        \ 'c:classes',
+        \ 'i:interfaces',
+        \ 't:traits',
+        \ 'e:enums',
+        \ 'm:methods',
+        \ 'f:fields:1'
+    \ ]
+\ }
 
-let g:fzf_prefer_tmux = 1
+let g:tagbar_type_typescript = {
+  \ 'ctagstype': 'typescript',
+  \ 'kinds': [
+    \ 'c:classes',
+    \ 'n:modules',
+    \ 'f:functions',
+    \ 'v:variables',
+    \ 'v:varlambdas',
+    \ 'm:members',
+    \ 'i:interfaces',
+    \ 'e:enums',
+  \ ]
+\ }
+
+let g:tagbar_type_haskell = {
+    \ 'ctagsbin'  : 'hasktags',
+    \ 'ctagsargs' : '-x -c -o-',
+    \ 'kinds'     : [
+        \  'm:modules:0:1',
+        \  'd:data: 0:1',
+        \  'd_gadt: data gadt:0:1',
+        \  't:type names:0:1',
+        \  'nt:new types:0:1',
+        \  'c:classes:0:1',
+        \  'cons:constructors:1:1',
+        \  'c_gadt:constructor gadt:1:1',
+        \  'c_a:constructor accessors:1:1',
+        \  'ft:function types:1:1',
+        \  'fi:function implementations:0:1',
+        \  'o:others:0:1'
+    \ ],
+    \ 'sro'        : '.',
+    \ 'kind2scope' : {
+        \ 'm' : 'module',
+        \ 'c' : 'class',
+        \ 'd' : 'data',
+        \ 't' : 'type'
+    \ },
+    \ 'scope2kind' : {
+        \ 'module' : 'm',
+        \ 'class'  : 'c',
+        \ 'data'   : 'd',
+        \ 'type'   : 't'
+    \ }
+\ }
+"}}}

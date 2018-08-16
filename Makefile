@@ -3,8 +3,10 @@ all: clean
 	ln -s ~/dotfiles/init.vim ~/.vimrc
 	ln -s ~/dotfiles/tmux.conf ~/.tmux.conf
 	ln -s ~/dotfiles/alacritty.yml ~/.config/alacritty/alacritty.yml
+	ln -s ~/dotfiles/ctags ~/.ctags
 
 clean:
+	rm -f ~/.ctags
 	rm -f ~/.config/nvim/init.vim
 	rm -f ~/.vimrc
 	rm -f ~/.tmux.conf
