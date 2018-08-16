@@ -67,6 +67,9 @@ Plug 'udalov/kotlin-vim', { 'for': 'kotlin' }
 " {{{ HASKELL
 Plug 'neovimhaskell/haskell-vim'
 " }}}
+" {{{ JAVASCRIPT
+Plug 'posva/vim-vue'
+" }}}
 "}}}
 "{{{ LSP
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
