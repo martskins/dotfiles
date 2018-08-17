@@ -33,6 +33,7 @@ Plug 'jceb/vim-orgmode'
 Plug 'lkdjiin/vim-foldcomments'
 Plug 'ervandew/supertab'
 Plug 'majutsushi/tagbar'
+Plug 'christoomey/vim-tmux-navigator'
 
 if has('nvim')
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -132,6 +133,7 @@ hi LineNr guifg=#050505
 set background=dark
 "colorscheme vim-material
 colorscheme gruvbox
+"colorscheme peachpuff
 
 set fdm=expr
 set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
@@ -184,6 +186,8 @@ augroup netrw_buf_hidden_fix
                 \| endif
 augroup end
 
+" ==== TAGBAR
+let g:tagbar_autofocus = 1
 " ==== SUPERTAB
 let g:SuperTabDefaultCompletionType = "<c-n>"
 " ==== DEOPLETE
@@ -314,6 +318,7 @@ nmap <Up> :cprevious<cr>
 
 nmap <leader>lg :term lazygit<CR>i
 nmap <F8> :TagbarToggle<CR>
+nmap <leader>. :TagbarToggle<CR>
 
 if has('nvim')
     tnoremap <leader>bd :bd!<CR>
