@@ -38,7 +38,7 @@ rust:
 	curl https://sh.rustup.rs -sSf | sh
 	rustup update
 	rustup component add rls-preview rust-analysis rust-src
-	source $$HOME/.cargo/env
+	source ~/.cargo/env
 
 go:
 	wget https://dl.google.com/go/go1.10.3.linux-amd64.tar.gz -O /tmp/golang.tar.gz
@@ -71,18 +71,19 @@ endif
 
 
 alacritty:
-	git clone https://github.com/jwilm/alacritty.git -o /tmp/alacritty
-	cd /tmp/alacritty
-	rustup override set stable
-	rustup update stable
-	cargo build --release
+	cargo install --git https://github.com/jwilm/alacritty.git
+#  git clone https://github.com/jwilm/alacritty.git /tmp/alacritty
+#  rustup override set stable
+#  rustup update stable
 
-ifeq ($(UNAME), Linux)
-	cp target/release/alacritty ~/usr/local/bin/alacritty
-else ifeq ($(UNAME), Darwin)
-	make app
-	cp -r target/release/osx/Alacritty.app /Applications/
-endif
+#ifeq ($(UNAME), Linux)
+#  sudo apt-get install -y cmake build-essential pkg-config libfreetype6-dev libfontconfig1-dev xclip
+#  cd /tmp/alacritty; cargo build --release
+#  cp /tmp/alacritty/target/release/alacritty ~/usr/local/bin/alacritty
+#else ifeq ($(UNAME), Darwin)
+#  make app
+#  cp -r /tmp/alacritty/target/release/osx/Alacritty.app /Applications/
+#endif
 
 nvim:
 ifeq ($(UNAME), Linux)
@@ -124,7 +125,7 @@ lazygit:
 ifeq ($(UNAME), Linux)
 	sudo add-apt-repository ppa:lazygit-team/daily
 	sudo apt-get -y update
-	sudo apt-get -y install lazygit
+	sudo apt-get -y --allow-unauthenticated install lazygit
 else ifeq ($(UNAME), Darwin)
 	brew tap jesseduffield/lazygit
 	brew install lazygit

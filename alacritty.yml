@@ -66,17 +66,17 @@ antialias: true
 font:
   normal:
     family: Hack # should be "Menlo" or something on macOS.
-    style: Regular
+    #style: Light
 
   bold:
-    family: Hack # should be "Menlo" or something on macOS.
-    style: Bold
+    family: Menlo # should be "Menlo" or something on macOS.
+  #  style: Bold
 
   italic:
     family: Hack # should be "Menlo" or something on macOS.
     style: Italic
 
-  size: 12
+  size: 9
 
   offset:
     x: 0
@@ -265,10 +265,10 @@ live_config_reload: true
 # then run `showkey -a` to get the sequence associated to a key combination.
 
 key_bindings:
-  - { key: V,        mods: Command,    action: Paste               }
-  - { key: C,        mods: Command,    action: Copy                }
-  - { key: Q,        mods: Command, action: Quit                         }
-  - { key: W,        mods: Command, action: Quit                         }
+  - { key: V,        mods: Control|Shift,    action: Paste               }
+  - { key: C,        mods: Control|Shift,    action: Copy                }
+  - { key: Q,        mods: Control|Shift, action: Quit                         }
+  - { key: W,        mods: Control|Shift, action: Quit                         }
   - { key: Insert,   mods: Shift,   action: PasteSelection               }
   - { key: Key0,     mods: Control, action: ResetFontSize                }
   - { key: Equals,   mods: Control, action: IncreaseFontSize             }
