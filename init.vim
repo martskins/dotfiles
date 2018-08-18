@@ -43,7 +43,6 @@ else
     Plug 'roxma/vim-hug-neovim-rpc'
 endif
 "}}}
-"{{{ LANGUAGE-SPECIFIC
 "{{{ PYTHON
 Plug 'zchee/deoplete-jedi', { 'for': 'python' }
 "}}}
@@ -66,12 +65,12 @@ Plug 'thecodesmith/vim-groovy', { 'for': 'groovy' }
 Plug 'udalov/kotlin-vim', { 'for': 'kotlin' }
 "}}}
 " {{{ HASKELL
-Plug 'neovimhaskell/haskell-vim'
+Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
+Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 " }}}
 " {{{ JAVASCRIPT
-Plug 'posva/vim-vue'
+Plug 'posva/vim-vue', { 'for': 'vue' }
 " }}}
-"}}}
 "{{{ LSP
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
 Plug 'dbakker/vim-projectroot'
@@ -186,6 +185,9 @@ augroup netrw_buf_hidden_fix
                 \| endif
 augroup end
 
+" ==== NECO-GHC
+let g:haskellmode_completion_ghc = 0
+autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 " ==== TAGBAR
 let g:tagbar_autofocus = 1
 " ==== SUPERTAB
@@ -206,7 +208,7 @@ let g:ale_fixers = { 'javascript': ['eslint'], 'haskell': ['brittany'] }
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 0
 let g:ale_emit_conflict_warnings = 0
-let g:ale_linters = { 'javascript': ['eslint'], 'go': ['gometalinter'], 'rust': ['cargo'], 'haskell': ['stack-ghc', 'ghc-mod', 'hlint', 'hdevtools', 'hfmt'] }
+let g:ale_linters = { 'javascript': ['eslint'], 'go': ['gometalinter'], 'rust': ['cargo'], 'haskell': ['hlint'] }
 "}}}
 "{{{ LANGUAGE-SPECIFIC
 "{{{ JAVA
