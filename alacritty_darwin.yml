@@ -70,11 +70,11 @@ font:
 
   bold:
     family: Hack # should be "Menlo" or something on macOS.
-    style: Bold
+    #style: Bold
 
   italic:
     family: Hack # should be "Menlo" or something on macOS.
-    style: Italic
+    #style: Italic
 
   size: 12
 
@@ -89,7 +89,7 @@ font:
   # OS X only: use thin stroke font rendering. Thin strokes are suitable
   # for retina displays, but for non-retina you probably want this set to
   # false.
-  use_thin_strokes: false
+  use_thin_strokes: true
   scale_with_dpi: true
 
 # Should display the render timer
@@ -270,9 +270,9 @@ key_bindings:
   - { key: Q,        mods: Command, action: Quit                         }
   - { key: W,        mods: Command, action: Quit                         }
   - { key: Insert,   mods: Shift,   action: PasteSelection               }
-  - { key: Key0,     mods: Control, action: ResetFontSize                }
-  - { key: Equals,   mods: Control, action: IncreaseFontSize             }
-  - { key: Subtract, mods: Control, action: DecreaseFontSize             }
+  - { key: Key0,     mods: Command, action: ResetFontSize                }
+  - { key: Equals,   mods: Command, action: IncreaseFontSize             }
+  - { key: Subtract, mods: Command, action: DecreaseFontSize             }
   - { key: Home,                    chars: "\x1bOH",   mode: AppCursor   }
   - { key: Home,                    chars: "\x1b[H",   mode: ~AppCursor  }
   - { key: End,                     chars: "\x1bOF",   mode: AppCursor   }
@@ -290,12 +290,10 @@ key_bindings:
   - { key: Delete,                  chars: "\x1b[3~"                     }
   - { key: Left,     mods: Shift,   chars: "\x1b[1;2D"                   }
   - { key: Left,     mods: Control, chars: "\x1b[1;5D"                   }
-  #- { key: Left,     mods: Alt,     chars: "\x1b[1;3D"                   }
   - { key: Left,                    chars: "\x1b[D",   mode: ~AppCursor  }
   - { key: Left,                    chars: "\x1bOD",   mode: AppCursor   }
   - { key: Right,    mods: Shift,   chars: "\x1b[1;2C"                   }
   - { key: Right,    mods: Control, chars: "\x1b[1;5C"                   }
-  #- { key: Right,    mods: Alt,     chars: "\x1b[1;3C"                   }
   - { key: Right,                   chars: "\x1b[C",   mode: ~AppCursor  }
   - { key: Right,                   chars: "\x1bOC",   mode: AppCursor   }
   - { key: Up,       mods: Shift,   chars: "\x1b[1;2A"                   }
@@ -370,15 +368,12 @@ key_bindings:
   - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                  }
 
     # macOS spanish keyboard bindings
-  #- { key: Semicolon,     mods: Alt,      chars: "~"                    }
   - { key: Key1,          mods: Alt,      chars: "|"                    }
   - { key: Key2,          mods: Alt,      chars: "@"                    }
   - { key: Key3,          mods: Alt,      chars: "#"                    }
-  #- { key: LBracket,                      chars: "`"                    }
   - { key: LBracket,      mods: Shift,    chars: "^"                    }
   - { key: LBracket,      mods: Alt,      chars: "["                    }
   - { key: RBracket,      mods: Alt,      chars: "]"                    }
-  #- { key: Apostrophe,                    chars: "´"                    }
   - { key: Apostrophe,    mods: Shift,    chars: "¨"                    }
   - { key: Apostrophe,    mods: Alt,      chars: "{"                    }
   - { key: Backslash,     mods: Alt,      chars: "}"                    }

@@ -12,7 +12,7 @@ link: clean
 ifeq ($(UNAME), Linux)
 	ln -s ~/dotfiles/alacritty.yml ~/.config/alacritty/alacritty.yml
 else ifeq ($(UNAME), Darwin)
-	ln -s ~/dotfiles/alacritty.yml ~/.config/alacritty/alacritty_darwin.yml
+	ln -s ~/dotfiles/alacritty_darwin.yml ~/.config/alacritty/alacritty.yml
 endif
 	ln -s ~/dotfiles/ctags ~/.ctags
 
@@ -29,7 +29,7 @@ vimplug:
 	curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-languages: rust go haskell cpp
+languages: rust go haskell cpp python
 
 git:
 	sudo apt-get -y install git
@@ -51,6 +51,10 @@ ifeq ($(UNAME), Linux)
 else ifeq ($(UNAME), Darwin)
 	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 endif
+
+python:
+	pip install --upgrade pip
+	pip install autopep8 flake8 isort
 
 cpp:
 	# MACOS
