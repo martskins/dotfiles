@@ -6,7 +6,6 @@ call plug#begin('~/.vim/plugged')
 "{{{ GENERIC
 Plug 'VundleVim/Vundle.vim'
 Plug 'vim-scripts/VisIncr'
-Plug 'tpope/vim-vinegar'
 Plug 'scrooloose/nerdcommenter'
 Plug 'vim-airline/vim-airline'
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
@@ -14,7 +13,7 @@ Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'}
 Plug 'junegunn/fzf.vim'
-"Plug 'kien/ctrlp.vim'
+Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-dispatch'
@@ -25,15 +24,14 @@ Plug 'mattn/emmet-vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-notes'
-Plug 'dhruvasagar/vim-table-mode'
 Plug 'digitaltoad/vim-pug'
 Plug 'junegunn/vim-github-dashboard'
 Plug 'ashisha/image.vim'
-Plug 'jceb/vim-orgmode'
 Plug 'lkdjiin/vim-foldcomments'
 Plug 'ervandew/supertab'
 Plug 'majutsushi/tagbar'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'godlygeek/tabular'
 
 if has('nvim')
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
