@@ -32,6 +32,7 @@ Plug 'ervandew/supertab'
 Plug 'majutsushi/tagbar'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'godlygeek/tabular'
+Plug 'ntpeters/vim-better-whitespace'
 
 if has('nvim')
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -209,6 +210,10 @@ let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 0
 let g:ale_emit_conflict_warnings = 0
 let g:ale_linters = { 'javascript': ['eslint'], 'go': ['gometalinter'], 'rust': ['cargo'], 'haskell': ['hlint', 'ghc-mod'], 'python': ['flake8']}
+" ==== BETTER-WHITESPACE
+let g:better_whitespace_enabled=1
+let g:strip_whitespace_on_save=1
+
 "}}}
 "{{{ LANGUAGE-SPECIFIC
 "{{{ JAVA
@@ -345,7 +350,7 @@ let g:LanguageClient_serverCommands = {
             \ 'groovy': ['tcp://127.0.0.1:8888'],
             \ 'kotlin': ['tcp://127.0.0.1:8888'],
             \ 'scala': ['tcp://127.0.0.1:8888'],
-            \ 'java': ['tcp://127.0.0.1:8888'] 
+            \ 'java': ['tcp://127.0.0.1:8888']
             \ }
 
 augroup lsp_langs
