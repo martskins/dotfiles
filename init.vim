@@ -34,6 +34,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'godlygeek/tabular'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'unblevable/quick-scope'
+Plug 'tpope/vim-markdown'
 
 if has('nvim')
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -323,6 +324,7 @@ nmap <leader>bq :bdelete!<CR>
 nmap <leader>bo :BufOnly<CR>
 nmap <Down> :cnext<cr>
 nmap <Up> :cprevious<cr>
+nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 
 nmap <leader>lg :term lazygit<CR>i
 nmap <F8> :TagbarToggle<CR>
