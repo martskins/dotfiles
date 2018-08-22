@@ -324,8 +324,9 @@ nmap <leader>bq :bdelete!<CR>
 nmap <leader>bo :BufOnly<CR>
 nmap <Down> :cnext<cr>
 nmap <Up> :cprevious<cr>
-nnoremap <Leader>s :,$s/\<<C-r><C-w>\>//gc<Left><Left>
-nnoremap <Leader>S :%s/\<<C-r><C-w>\>//gc<Left><Left>
+nnoremap <leader>s :,$s/\<<C-r><C-w>\>//gc<Left><Left>
+nnoremap <leader>S :%s/\<<C-r><C-w>\>//gc<Left><Left>
+nmap <leader>tab :Tabularize /|
 
 nmap <leader>lg :term lazygit<CR>i
 nmap <F8> :TagbarToggle<CR>
