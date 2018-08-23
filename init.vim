@@ -101,74 +101,61 @@ syntax on
 syntax enable
 
 autocmd FileType vim setlocal foldmethod=marker
-set shell=/bin/zsh
-set hid
-set ignorecase
+"shell
+set shell=/bin/zsh    "shell type for :term
+set cmdheight=2       "command line height
+
+"visuals
 set number relativenumber
-set backspace=indent,eol,start
-set pastetoggle=<leader>z
-set tabstop=2
-set shiftwidth=2
-set cmdheight=2
-set expandtab
-set clipboard=unnamed
+set hid
 set colorcolumn=150
-set hidden
-set history=100
-set hlsearch
-set showmatch
 set signcolumn=yes
 set guifont=Monaco
 set termguicolors
-set autoread          "autoload file changes
-set autoindent        "copy indentation from last line on <CR>
-set ttyfast
-set t_ut=
-let mapleader = ','
-set noruler
-set synmaxcol=150
 set cursorcolumn
 set cursorline
-
+set synmaxcol=150
 hi LineNr ctermfg=red
 hi LineNr guifg=#050505
-set background=dark
-"colorscheme vim-material
-colorscheme gruvbox
-"colorscheme peachpuff
-
-set fdm=expr
-set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
-
-if has("mac")
-    let g:python_host_prog="/usr/local/bin/python"
-    let g:python3_host_prog="/usr/local/bin/python3"
-else
-    let g:python_host_prog="/home/linuxbrew/.linuxbrew/bin/python"
-    let g:python3_host_prog="/home/linuxbrew/.linuxbrew/bin/python3.7"
-endif
-
-" Use <C-L> to clear the highlighting of :set hlsearch.
-if maparg('<F3>', 'n') ==# ''
-    nnoremap <silent> <F3> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
-endif
-
 if (has("nvim"))
     "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 
-function! GrepQuickFix(pat)
-    let all = getqflist()
-    for d in all
-        if bufname(d['bufnr']) !~ a:pat && d['text'] !~ a:pat
-            call remove(all, index(all,d))
-        endif
-    endfor
-    call setqflist(all)
-endfunction
-command! -nargs=* GrepQF call GrepQuickFix(<q-args>)
+"colors
+set background=dark
+colorscheme gruvbox
 
+"indentation
+set tabstop=2                   "number of visual spaces per TAB
+set shiftwidth=2                "number of spaces for auto-indent
+set expandtab                   "tabs to spaces
+set backspace=indent,eol,start
+set autoindent                  "copy indentation from last line on <CR>
+
+"pasting
+set pastetoggle=<leader>z
+set clipboard=unnamed
+
+"search
+set ignorecase    "case insensitive search
+set history=100   "command lines to be remembered
+set hlsearch      "highlight matches of current search
+set showmatch     "when inserting a bracket jump to the matching one to show it's position
+" Use <F3> to clear the highlighting of :set hlsearch.
+if maparg('<F3>', 'n') ==# ''
+    nnoremap <silent> <F3> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+endif
+
+"behavior
+set autoread          "autoload file changes
+set ttyfast
+set t_ut=
+let mapleader = ','
+
+"folding
+set fdm=expr
+set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
 autocmd FileType ruby,eruby
             \ set foldmethod=expr |
             \ set foldexpr=getline(v:lnum)=~'^\\s*#' |
@@ -178,6 +165,14 @@ autocmd FileType groovy,java,scala,javascript,go
             \ set foldmethod=expr |
             \ set foldexpr=getline(v:lnum)=~'^\\s*//' |
             \ exe "normal zM``"
+
+if has("mac")
+    let g:python_host_prog="/usr/local/bin/python"
+    let g:python3_host_prog="/usr/local/bin/python3"
+else
+    let g:python_host_prog="/home/linuxbrew/.linuxbrew/bin/python"
+    let g:python3_host_prog="/home/linuxbrew/.linuxbrew/bin/python3.7"
+endif
 
 augroup netrw_buf_hidden_fix
     autocmd!
@@ -327,6 +322,7 @@ nmap <Up> :cprevious<cr>
 nnoremap <leader>s :,$s/\<<C-r><C-w>\>//gc<Left><Left>
 nnoremap <leader>S :%s/\<<C-r><C-w>\>//gc<Left><Left>
 nmap <leader>tab :Tabularize /|
+nmap <space> ,
 
 nmap <leader>lg :term lazygit<CR>i
 nmap <F8> :TagbarToggle<CR>
