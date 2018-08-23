@@ -59,7 +59,7 @@ Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 "}}}
 "{{{ GRAILS
 Plug 'vim-scripts/grails-vim'
-Plug 'sjurgemeyer/vimport'
+Plug 'sjurgemeyer/vimport', { 'for': 'groovy' }
 Plug 'thecodesmith/vim-groovy', { 'for': 'groovy' }
 "}}}
 "{{{ KOTLIN
@@ -152,6 +152,7 @@ set autoread          "autoload file changes
 set ttyfast
 set t_ut=
 let mapleader = ','
+" set mouse=a
 
 "folding
 set fdm=expr
@@ -319,9 +320,9 @@ nmap <leader>bq :bdelete!<CR>
 nmap <leader>bo :BufOnly<CR>
 nmap <Down> :cnext<cr>
 nmap <Up> :cprevious<cr>
-nnoremap <leader>s :,$s/\<<C-r><C-w>\>//gc<Left><Left>
+nnoremap <leader>s :,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 nnoremap <leader>S :%s/\<<C-r><C-w>\>//gc<Left><Left>
-nmap <leader>tab :Tabularize /|
+nmap <leader>tab :Tabularize /\|<CR>
 nmap <space> ,
 
 nmap <leader>lg :term lazygit<CR>i
@@ -505,4 +506,149 @@ let g:intero_vertical_split = 1
 
 " OPTIONAL: Make the update time shorter, so the type info will trigger faster.
 set updatetime=1000
+" }}}
+" {{{ VMATH
+" Vim global plugin for math on visual regions
+" Maintainer:	Damian Conway
+" License:	This file is placed in the public domain.
+
+"######################################################################
+"##                                                                  ##
+"##  To use:                                                         ##
+"##                                                                  ##
+"##     vmap <expr>  ++  VMATH_YankAndAnalyse()                      ##
+"##     nmap         ++  vip++                                       ##
+"##                                                                  ##
+"##  (or whatever keys you prefer to remap these actions to)         ##
+"##                                                                  ##
+"######################################################################
+
+
+" If already loaded, we're done...
+if exists("loaded_vmath")
+    finish
+endif
+let loaded_vmath = 1
+
+" Preserve external compatibility options, then enable full vim compatibility...
+let s:save_cpo = &cpo
+set cpo&vim
+
+" Grab visual selection and do simple math on it...
+function! VMATH_YankAndAnalyse ()
+    return "y:call VMATH_Analyse()\<CR>gv"
+endfunction
+
+" What to consider a number...
+let s:NUM_PAT = '^[+-]\?\d\+\%([.]\d\+\)\?\([eE][+-]\?\d\+\)\?$'
+
+" How widely to space the report components...
+let s:REPORT_GAP = 5  "spaces between components
+
+" Do simple math on current yank buffer...
+function! VMATH_Analyse ()
+    " Extract data from selection...
+    let selection = getreg('')
+    let raw_numbers = filter(split(selection), 'v:val =~ s:NUM_PAT')
+    let numbers = map(copy(raw_numbers), 'str2float(v:val)')
+
+    " Results include a newline if original selection did...
+    let newline = selection =~ "\n" ? "\n" : ""
+
+    " Calculate and en-register various interesting metrics...
+    let summation = len(numbers) ? join( numbers, ' + ') : '0'
+    call setreg('s', s:tidy( eval( summation )      ))   " Sum     --> register s
+    call setreg('a',         s:average(raw_numbers)  )   " Average --> register a
+    call setreg('x', s:tidy( s:max(numbers)         ))   " Max     --> register x
+    call setreg('n', s:tidy( s:min(numbers)         ))   " Min     --> register n
+    call setreg('r',         @n . ' to ' . @x        )   " Range   --> register r
+
+    " Default paste buffer should depend on original contents (TODO)
+    call setreg('', @s )
+
+    " Report...
+    let gap = repeat(" ", s:REPORT_GAP)
+    highlight NormalUnderlined term=underline cterm=underline gui=underline
+    echohl NormalUnderlined
+    echo  's'
+    echohl NONE
+    echon  'um: ' . @s . gap
+    echohl NormalUnderlined
+    echon 'a'
+    echohl NONE
+    echon  'vg: ' . @a . gap
+    echon 'mi'
+    echohl NormalUnderlined
+    echon   'n'
+    echohl NONE
+    echon    ': ' . @n . gap
+    echon 'ma'
+    echohl NormalUnderlined
+    echon   'x'
+    echohl NONE
+    echon    ': ' . @x . gap
+
+endfunction
+
+" Prettify numbers...
+function! s:tidy (number)
+    let tidied = printf('%g', a:number)
+    return substitute(tidied, '[.]0\+$', '', '')
+endfunction
+
+" Compute average with meaningful number of decimal places...
+function! s:average (numbers)
+    " Compute average...
+    let summation = eval( len(a:numbers) ? join( a:numbers, ' + ') : '0' )
+    let avg = 1.0 * summation / s:max([len(a:numbers), 1])
+
+    " Determine significant figures...
+    let min_decimals = 15
+    for num in a:numbers
+        let decimals = strlen(matchstr(num, '[.]\d\+$')) - 1
+        if decimals < min_decimals
+            let min_decimals = decimals
+        endif
+    endfor
+
+    " Adjust answer...
+    return min_decimals > 0 ? printf('%0.'.min_decimals.'f', avg)
+    \                       : string(avg)
+endfunction
+
+" Reimplement these because the builtins don't handle floats (!!!)
+function! s:max (numbers)
+    if !len(a:numbers)
+        return 0
+    endif
+    let numbers = copy(a:numbers)
+    let maxnum = numbers[0]
+    for nextnum in numbers[1:]
+        if nextnum > maxnum
+            let maxnum = nextnum
+        endif
+    endfor
+    return maxnum
+endfunction
+
+function! s:min (numbers)
+    if !len(a:numbers)
+        return 0
+    endif
+    let numbers = copy(a:numbers)
+    let minnum = numbers[0]
+    for nextnum in numbers[1:]
+        if nextnum < minnum
+            let minnum = nextnum
+        endif
+    endfor
+    return minnum
+endfunction
+
+
+" Restore previous external compatibility options
+let &cpo = s:save_cpo
+
+xnoremap <expr> ++ VMATH_YankAndAnalyse()
+nmap ++  vip++
 " }}}
