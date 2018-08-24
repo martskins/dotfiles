@@ -6,7 +6,8 @@ call plug#begin('~/.vim/plugged')
 "{{{ GENERIC
 Plug 'VundleVim/Vundle.vim'
 Plug 'vim-scripts/VisIncr'
-Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline'
+Plug 'itchyny/lightline.vim'
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
 Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
@@ -26,7 +27,6 @@ Plug 'xolox/vim-misc'
 Plug 'xolox/vim-notes'
 Plug 'digitaltoad/vim-pug'
 Plug 'junegunn/vim-github-dashboard'
-Plug 'ashisha/image.vim'
 Plug 'lkdjiin/vim-foldcomments'
 Plug 'ervandew/supertab'
 Plug 'majutsushi/tagbar'
@@ -37,11 +37,11 @@ Plug 'unblevable/quick-scope'
 Plug 'tpope/vim-markdown'
 
 if has('nvim')
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
-    Plug 'Shougo/deoplete.nvim'
-    Plug 'roxma/nvim-yarp'
-    Plug 'roxma/vim-hug-neovim-rpc'
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
 endif
 "}}}
 "{{{ PYTHON
@@ -112,11 +112,12 @@ set termguicolors
 set cursorcolumn
 set cursorline
 set synmaxcol=128
+set laststatus=2                "lightline
 hi LineNr ctermfg=red
 hi LineNr guifg=#050505
 if (has("nvim"))
-    "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
-    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 "colors
 set background=dark
@@ -137,7 +138,7 @@ set hlsearch      "highlight matches of current search
 set showmatch     "when inserting a bracket jump to the matching one to show it's position
 " Use <F3> to clear the highlighting of :set hlsearch.
 if maparg('<F3>', 'n') ==# ''
-    nnoremap <silent> <F3> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+  nnoremap <silent> <F3> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 endif
 "behavior
 set autoread          "autoload file changes
@@ -152,31 +153,31 @@ augroup folding
   autocmd!
   autocmd FileType vim setlocal foldmethod=marker
   autocmd FileType ruby,eruby
-              \ set foldmethod=expr |
-              \ set foldexpr=getline(v:lnum)=~'^\\s*#' |
-              \ exe "normal zM``"
+        \ set foldmethod=expr |
+        \ set foldexpr=getline(v:lnum)=~'^\\s*#' |
+        \ exe "normal zM``"
 
   autocmd FileType groovy,java,scala,javascript,go
-              \ set foldmethod=expr |
-              \ set foldexpr=getline(v:lnum)=~'^\\s*//' |
-            \ exe "normal zM``"
+        \ set foldmethod=expr |
+        \ set foldexpr=getline(v:lnum)=~'^\\s*//' |
+        \ exe "normal zM``"
 augroup end
 
 if has("mac")
-    let g:python_host_prog="/usr/local/bin/python"
-    let g:python3_host_prog="/usr/local/bin/python3"
+  let g:python_host_prog="/usr/local/bin/python"
+  let g:python3_host_prog="/usr/local/bin/python3"
 else
-    let g:python_host_prog="/home/linuxbrew/.linuxbrew/bin/python"
-    let g:python3_host_prog="/home/linuxbrew/.linuxbrew/bin/python3.7"
+  let g:python_host_prog="/home/linuxbrew/.linuxbrew/bin/python"
+  let g:python3_host_prog="/home/linuxbrew/.linuxbrew/bin/python3.7"
 endif
 
 augroup netrw_buf_hidden_fix
-    autocmd!
-    set nohidden
-    autocmd BufWinEnter *
-                \  if &ft != 'netrw'
-                \|     set bufhidden=hide
-                \| endif
+  autocmd!
+  set nohidden
+  autocmd BufWinEnter *
+        \  if &ft != 'netrw'
+        \|     set bufhidden=hide
+        \| endif
 augroup end
 
 " ==== NECO-GHC
@@ -214,22 +215,22 @@ let g:JavaImpPaths = $HOME . "/Projects/billing"
 let g:JavaImpDataDir = $HOME . "/vim/JavaImp"
 
 function! Patch()
-    execute "e application.properties | g/app\.version"
-    execute ":normal $"
-    execute ":normal \<C-a>"
-    execute ":w"
-    execute ":bd"
+  execute "e application.properties | g/app\.version"
+  execute ":normal $"
+  execute ":normal \<C-a>"
+  execute ":w"
+  execute ":bd"
 endfunction
 command! Patch :call Patch()
 
 function! Minor()
-    execute "e application.properties | g/app\.version"
-    execute ":normal $"
-    execute ":normal cw0"
-    execute ":normal $bb"
-    execute ":normal \<C-a>"
-    execute ":w"
-    execute ":bd"
+  execute "e application.properties | g/app\.version"
+  execute ":normal $"
+  execute ":normal cw0"
+  execute ":normal $bb"
+  execute ":normal \<C-a>"
+  execute ":w"
+  execute ":bd"
 endfunction
 command! Minor :call Minor()
 
@@ -331,14 +332,14 @@ nmap <F8> :TagbarToggle<CR>
 nmap <leader>. :TagbarToggle<CR>
 
 if has('nvim')
-    tnoremap <leader>bd :bd!<CR>
+  tnoremap <leader>bd :bd!<CR>
 endif
 
 function! UncommitedChanges()
-    let files=split(system("git diff --name-only"), '\n')
-    for f in files
-        execute ":e " . f
-    endfor
+  let files=split(system("git diff --name-only"), '\n')
+  for f in files
+    execute ":e " . f
+  endfor
 endfunction
 command! UncommitedChanges :call UncommitedChanges()
 "}}}
@@ -347,14 +348,14 @@ nnoremap <leader>lcs :LanguageClientStart<CR>
 
 let g:LanguageClient_autoStart = 1
 let g:LanguageClient_serverCommands = {
-            \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-            \ 'cpp' : ['clangd'],
-            \ 'javascript': ['flow-language-server', '--stdio'],
-            \ 'groovy': ['tcp://127.0.0.1:8888'],
-            \ 'kotlin': ['tcp://127.0.0.1:8888'],
-            \ 'scala': ['tcp://127.0.0.1:8888'],
-            \ 'java': ['tcp://127.0.0.1:8888']
-            \ }
+      \ 'rust': ['rustup', 'run', 'stable', 'rls'],
+      \ 'cpp' : ['clangd'],
+      \ 'javascript': ['flow-language-server', '--stdio'],
+      \ 'groovy': ['tcp://127.0.0.1:8888'],
+      \ 'kotlin': ['tcp://127.0.0.1:8888'],
+      \ 'scala': ['tcp://127.0.0.1:8888'],
+      \ 'java': ['tcp://127.0.0.1:8888']
+      \ }
 
 augroup lsp_langs
   autocmd!
@@ -388,71 +389,71 @@ if executable('clangd')
 endif
 
 let g:LanguageClient_rootMarkers = {
-            \ 'grooy': ['.idea'],
-            \ 'scala': ['.idea'],
-            \ 'java': ['.idea'],
-            \ 'kotlin': ['.idea'],
-            \  }
+      \ 'grooy': ['.idea'],
+      \ 'scala': ['.idea'],
+      \ 'java': ['.idea'],
+      \ 'kotlin': ['.idea'],
+      \  }
 "}}}
 "{{{ CTAGS
 let g:tagbar_type_groovy = {
-    \ 'ctagstype' : 'groovy',
-    \ 'kinds'     : [
-        \ 'p:package:1',
-        \ 'c:classes',
-        \ 'i:interfaces',
-        \ 't:traits',
-        \ 'e:enums',
-        \ 'm:methods',
-        \ 'f:fields:1'
-    \ ]
-\ }
+      \ 'ctagstype' : 'groovy',
+      \ 'kinds'     : [
+      \ 'p:package:1',
+      \ 'c:classes',
+      \ 'i:interfaces',
+      \ 't:traits',
+      \ 'e:enums',
+      \ 'm:methods',
+      \ 'f:fields:1'
+      \ ]
+      \ }
 
 let g:tagbar_type_typescript = {
-  \ 'ctagstype': 'typescript',
-  \ 'kinds': [
-    \ 'c:classes',
-    \ 'n:modules',
-    \ 'f:functions',
-    \ 'v:variables',
-    \ 'v:varlambdas',
-    \ 'm:members',
-    \ 'i:interfaces',
-    \ 'e:enums',
-  \ ]
-\ }
+      \ 'ctagstype': 'typescript',
+      \ 'kinds': [
+      \ 'c:classes',
+      \ 'n:modules',
+      \ 'f:functions',
+      \ 'v:variables',
+      \ 'v:varlambdas',
+      \ 'm:members',
+      \ 'i:interfaces',
+      \ 'e:enums',
+      \ ]
+      \ }
 
 let g:tagbar_type_haskell = {
-    \ 'ctagsbin'  : 'hasktags',
-    \ 'ctagsargs' : '-x -c -o-',
-    \ 'kinds'     : [
-        \  'm:modules:0:1',
-        \  'd:data: 0:1',
-        \  'd_gadt: data gadt:0:1',
-        \  't:type names:0:1',
-        \  'nt:new types:0:1',
-        \  'c:classes:0:1',
-        \  'cons:constructors:1:1',
-        \  'c_gadt:constructor gadt:1:1',
-        \  'c_a:constructor accessors:1:1',
-        \  'ft:function types:1:1',
-        \  'fi:function implementations:0:1',
-        \  'o:others:0:1'
-    \ ],
-    \ 'sro'        : '.',
-    \ 'kind2scope' : {
-        \ 'm' : 'module',
-        \ 'c' : 'class',
-        \ 'd' : 'data',
-        \ 't' : 'type'
-    \ },
-    \ 'scope2kind' : {
-        \ 'module' : 'm',
-        \ 'class'  : 'c',
-        \ 'data'   : 'd',
-        \ 'type'   : 't'
-    \ }
-\ }
+      \ 'ctagsbin'  : 'hasktags',
+      \ 'ctagsargs' : '-x -c -o-',
+      \ 'kinds'     : [
+      \  'm:modules:0:1',
+      \  'd:data: 0:1',
+      \  'd_gadt: data gadt:0:1',
+      \  't:type names:0:1',
+      \  'nt:new types:0:1',
+      \  'c:classes:0:1',
+      \  'cons:constructors:1:1',
+      \  'c_gadt:constructor gadt:1:1',
+      \  'c_a:constructor accessors:1:1',
+      \  'ft:function types:1:1',
+      \  'fi:function implementations:0:1',
+      \  'o:others:0:1'
+      \ ],
+      \ 'sro'        : '.',
+      \ 'kind2scope' : {
+      \ 'm' : 'module',
+      \ 'c' : 'class',
+      \ 'd' : 'data',
+      \ 't' : 'type'
+      \ },
+      \ 'scope2kind' : {
+      \ 'module' : 'm',
+      \ 'class'  : 'c',
+      \ 'data'   : 'd',
+      \ 'type'   : 't'
+      \ }
+      \ }
 "}}}
 " {{{ INTERO
 augroup interoMaps
@@ -527,7 +528,7 @@ set updatetime=1000
 
 " If already loaded, we're done...
 if exists("loaded_vmath")
-    finish
+  finish
 endif
 let loaded_vmath = 1
 
@@ -537,7 +538,7 @@ set cpo&vim
 
 " Grab visual selection and do simple math on it...
 function! VMATH_YankAndAnalyse ()
-    return "y:call VMATH_Analyse()\<CR>gv"
+  return "y:call VMATH_Analyse()\<CR>gv"
 endfunction
 
 " What to consider a number...
@@ -548,102 +549,102 @@ let s:REPORT_GAP = 5  "spaces between components
 
 " Do simple math on current yank buffer...
 function! VMATH_Analyse ()
-    " Extract data from selection...
-    let selection = getreg('')
-    let raw_numbers = filter(split(selection), 'v:val =~ s:NUM_PAT')
-    let numbers = map(copy(raw_numbers), 'str2float(v:val)')
+  " Extract data from selection...
+  let selection = getreg('')
+  let raw_numbers = filter(split(selection), 'v:val =~ s:NUM_PAT')
+  let numbers = map(copy(raw_numbers), 'str2float(v:val)')
 
-    " Results include a newline if original selection did...
-    let newline = selection =~ "\n" ? "\n" : ""
+  " Results include a newline if original selection did...
+  let newline = selection =~ "\n" ? "\n" : ""
 
-    " Calculate and en-register various interesting metrics...
-    let summation = len(numbers) ? join( numbers, ' + ') : '0'
-    call setreg('s', s:tidy( eval( summation )      ))   " Sum     --> register s
-    call setreg('a',         s:average(raw_numbers)  )   " Average --> register a
-    call setreg('x', s:tidy( s:max(numbers)         ))   " Max     --> register x
-    call setreg('n', s:tidy( s:min(numbers)         ))   " Min     --> register n
-    call setreg('r',         @n . ' to ' . @x        )   " Range   --> register r
+  " Calculate and en-register various interesting metrics...
+  let summation = len(numbers) ? join( numbers, ' + ') : '0'
+  call setreg('s', s:tidy( eval( summation )      ))   " Sum     --> register s
+  call setreg('a',         s:average(raw_numbers)  )   " Average --> register a
+  call setreg('x', s:tidy( s:max(numbers)         ))   " Max     --> register x
+  call setreg('n', s:tidy( s:min(numbers)         ))   " Min     --> register n
+  call setreg('r',         @n . ' to ' . @x        )   " Range   --> register r
 
-    " Default paste buffer should depend on original contents (TODO)
-    call setreg('', @s )
+  " Default paste buffer should depend on original contents (TODO)
+  call setreg('', @s )
 
-    " Report...
-    let gap = repeat(" ", s:REPORT_GAP)
-    highlight NormalUnderlined term=underline cterm=underline gui=underline
-    echohl NormalUnderlined
-    echo  's'
-    echohl NONE
-    echon  'um: ' . @s . gap
-    echohl NormalUnderlined
-    echon 'a'
-    echohl NONE
-    echon  'vg: ' . @a . gap
-    echon 'mi'
-    echohl NormalUnderlined
-    echon   'n'
-    echohl NONE
-    echon    ': ' . @n . gap
-    echon 'ma'
-    echohl NormalUnderlined
-    echon   'x'
-    echohl NONE
-    echon    ': ' . @x . gap
+  " Report...
+  let gap = repeat(" ", s:REPORT_GAP)
+  highlight NormalUnderlined term=underline cterm=underline gui=underline
+  echohl NormalUnderlined
+  echo  's'
+  echohl NONE
+  echon  'um: ' . @s . gap
+  echohl NormalUnderlined
+  echon 'a'
+  echohl NONE
+  echon  'vg: ' . @a . gap
+  echon 'mi'
+  echohl NormalUnderlined
+  echon   'n'
+  echohl NONE
+  echon    ': ' . @n . gap
+  echon 'ma'
+  echohl NormalUnderlined
+  echon   'x'
+  echohl NONE
+  echon    ': ' . @x . gap
 
 endfunction
 
 " Prettify numbers...
 function! s:tidy (number)
-    let tidied = printf('%g', a:number)
-    return substitute(tidied, '[.]0\+$', '', '')
+  let tidied = printf('%g', a:number)
+  return substitute(tidied, '[.]0\+$', '', '')
 endfunction
 
 " Compute average with meaningful number of decimal places...
 function! s:average (numbers)
-    " Compute average...
-    let summation = eval( len(a:numbers) ? join( a:numbers, ' + ') : '0' )
-    let avg = 1.0 * summation / s:max([len(a:numbers), 1])
+  " Compute average...
+  let summation = eval( len(a:numbers) ? join( a:numbers, ' + ') : '0' )
+  let avg = 1.0 * summation / s:max([len(a:numbers), 1])
 
-    " Determine significant figures...
-    let min_decimals = 15
-    for num in a:numbers
-        let decimals = strlen(matchstr(num, '[.]\d\+$')) - 1
-        if decimals < min_decimals
-            let min_decimals = decimals
-        endif
-    endfor
+  " Determine significant figures...
+  let min_decimals = 15
+  for num in a:numbers
+    let decimals = strlen(matchstr(num, '[.]\d\+$')) - 1
+    if decimals < min_decimals
+      let min_decimals = decimals
+    endif
+  endfor
 
-    " Adjust answer...
-    return min_decimals > 0 ? printf('%0.'.min_decimals.'f', avg)
-    \                       : string(avg)
+  " Adjust answer...
+  return min_decimals > 0 ? printf('%0.'.min_decimals.'f', avg)
+        \                       : string(avg)
 endfunction
 
 " Reimplement these because the builtins don't handle floats (!!!)
 function! s:max (numbers)
-    if !len(a:numbers)
-        return 0
+  if !len(a:numbers)
+    return 0
+  endif
+  let numbers = copy(a:numbers)
+  let maxnum = numbers[0]
+  for nextnum in numbers[1:]
+    if nextnum > maxnum
+      let maxnum = nextnum
     endif
-    let numbers = copy(a:numbers)
-    let maxnum = numbers[0]
-    for nextnum in numbers[1:]
-        if nextnum > maxnum
-            let maxnum = nextnum
-        endif
-    endfor
-    return maxnum
+  endfor
+  return maxnum
 endfunction
 
 function! s:min (numbers)
-    if !len(a:numbers)
-        return 0
+  if !len(a:numbers)
+    return 0
+  endif
+  let numbers = copy(a:numbers)
+  let minnum = numbers[0]
+  for nextnum in numbers[1:]
+    if nextnum < minnum
+      let minnum = nextnum
     endif
-    let numbers = copy(a:numbers)
-    let minnum = numbers[0]
-    for nextnum in numbers[1:]
-        if nextnum < minnum
-            let minnum = nextnum
-        endif
-    endfor
-    return minnum
+  endfor
+  return minnum
 endfunction
 
 
