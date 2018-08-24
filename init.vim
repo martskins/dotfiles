@@ -99,44 +99,37 @@ filetype plugin indent on
 "{{{ MISC
 syntax on
 syntax enable
-
-autocmd FileType vim setlocal foldmethod=marker
 "shell
 set shell=/bin/zsh    "shell type for :term
 set cmdheight=2       "command line height
-
 "visuals
 set number relativenumber
 set hid
-set colorcolumn=150
+set colorcolumn=128
 set signcolumn=yes
 set guifont=Monaco
 set termguicolors
 set cursorcolumn
 set cursorline
-set synmaxcol=150
+set synmaxcol=128
 hi LineNr ctermfg=red
 hi LineNr guifg=#050505
 if (has("nvim"))
     "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
-
 "colors
 set background=dark
 colorscheme gruvbox
-
 "indentation
 set tabstop=2                   "number of visual spaces per TAB
 set shiftwidth=2                "number of spaces for auto-indent
 set expandtab                   "tabs to spaces
 set backspace=indent,eol,start
 set autoindent                  "copy indentation from last line on <CR>
-
 "pasting
 set pastetoggle=<leader>z
 set clipboard=unnamed
-
 "search
 set ignorecase    "case insensitive search
 set history=100   "command lines to be remembered
@@ -146,26 +139,28 @@ set showmatch     "when inserting a bracket jump to the matching one to show it'
 if maparg('<F3>', 'n') ==# ''
     nnoremap <silent> <F3> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 endif
-
 "behavior
 set autoread          "autoload file changes
 set ttyfast
 set t_ut=
 let mapleader = ','
-" set mouse=a
-
+" set lazyredraw
 "folding
 set fdm=expr
 set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
-autocmd FileType ruby,eruby
-            \ set foldmethod=expr |
-            \ set foldexpr=getline(v:lnum)=~'^\\s*#' |
-            \ exe "normal zM``"
+augroup folding
+  autocmd!
+  autocmd FileType vim setlocal foldmethod=marker
+  autocmd FileType ruby,eruby
+              \ set foldmethod=expr |
+              \ set foldexpr=getline(v:lnum)=~'^\\s*#' |
+              \ exe "normal zM``"
 
-autocmd FileType groovy,java,scala,javascript,go
-            \ set foldmethod=expr |
-            \ set foldexpr=getline(v:lnum)=~'^\\s*//' |
+  autocmd FileType groovy,java,scala,javascript,go
+              \ set foldmethod=expr |
+              \ set foldexpr=getline(v:lnum)=~'^\\s*//' |
             \ exe "normal zM``"
+augroup end
 
 if has("mac")
     let g:python_host_prog="/usr/local/bin/python"
@@ -238,7 +233,10 @@ function! Minor()
 endfunction
 command! Minor :call Minor()
 
-au FileType groovy syn region groovyComment start="@PropertyHelp" end=")"
+augroup custom_hl
+  autocmd!
+  au FileType groovy syn region groovyComment start="@PropertyHelp" end=")"
+augroup end
 "}}}
 "{{{ GO
 let g:go_fmt_command = "goimports"
@@ -263,44 +261,44 @@ let g:go_addtags_transform = "camelcase"
 let g:go_gocode_unimported_packages = 1
 
 augroup filetype_go
-    autocmd!
+  autocmd!
 
-    "VIM-GO
-    au FileType go     nmap <leader>c <Plug>(go-coverage)
-    au FileType go     nmap <leader>ct <Plug>(go-coverage-toggle)
-    au FileType go     nmap <Leader>d <Plug>(go-def)
-    au FileType go     nmap <leader>rn <Plug>(go-rename)
-    au FileType go     nmap <leader>r <Plug>(go-run)
-    au FileType go     nmap <leader>b <Plug>(go-build)
-    au FileType go     nmap <leader>t <Plug>(go-test)
-    au FileType go     nmap <leader>a <Plug>(go-alternate-edit)
-    au FileType go     nmap <leader>g <Plug>(go-generate)
-    au FileType go     inoremap ;err <ESC>:GoIfErr<CR>O
+  "VIM-GO
+  au FileType go     nmap <leader>c <Plug>(go-coverage)
+  au FileType go     nmap <leader>ct <Plug>(go-coverage-toggle)
+  au FileType go     nmap <Leader>d <Plug>(go-def)
+  au FileType go     nmap <leader>rn <Plug>(go-rename)
+  au FileType go     nmap <leader>r <Plug>(go-run)
+  au FileType go     nmap <leader>b <Plug>(go-build)
+  au FileType go     nmap <leader>t <Plug>(go-test)
+  au FileType go     nmap <leader>a <Plug>(go-alternate-edit)
+  au FileType go     nmap <leader>g <Plug>(go-generate)
+  au FileType go     inoremap ;err <ESC>:GoIfErr<CR>O
 
-    "NEOSNIPPET CONFIG
-    au FileType go      imap <C-k> <Plug>(neosnippet_expand_or_jump)
-    au FileType go      smap <C-k> <Plug>(neosnippet_expand_or_jump)
-    au FileType go      xmap <C-k> <Plug>(neosnippet_expand_target)<c-w><c-w>
-    au FileType go      set conceallevel=2 concealcursor=niv
-augroup END
+  "NEOSNIPPET CONFIG
+  au FileType go      imap <C-k> <Plug>(neosnippet_expand_or_jump)
+  au FileType go      smap <C-k> <Plug>(neosnippet_expand_or_jump)
+  au FileType go      xmap <C-k> <Plug>(neosnippet_expand_target)<c-w><c-w>
+  au FileType go      set conceallevel=2 concealcursor=niv
+augroup end
 "}}}
 "{{{ CPP
 augroup filetype_c
-    autocmd!
-    autocmd FileType c,cpp,objc    nmap <leader>b :!make build<CR>
-    autocmd FileType c,cpp,objc    nmap <leader>r :!make build && ./a.out<CR>
-augroup END
+  autocmd!
+  autocmd FileType c,cpp,objc    nmap <leader>b :!make build<CR>
+  autocmd FileType c,cpp,objc    nmap <leader>r :!make build && ./a.out<CR>
+augroup end
 "}}}
 "{{{ RUST
 let g:rustfmt_autosave = 1
 
 augroup filetype_rust
-    autocmd!
-    au FileType rust nmap <leader>r :!cargo run<CR>
+  autocmd!
+  au FileType rust nmap <leader>r :!cargo run<CR>
 
-    "AUTO-PAIRS
-    au FileType rust let g:AutoPairs = {'(':')', '[':']', '{':'}','"':'"', '`':'`'}
-augroup END
+  "AUTO-PAIRS
+  au FileType rust let g:AutoPairs = {'(':')', '[':']', '{':'}','"':'"', '`':'`'}
+augroup end
 "}}}
 "}}}
 "{{{ MAPPINGS
@@ -324,6 +322,9 @@ nnoremap <leader>s :,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 nnoremap <leader>S :%s/\<<C-r><C-w>\>//gc<Left><Left>
 nmap <leader>tab :Tabularize /\|<CR>
 nmap <space> ,
+
+nnoremap gev :e $MYVIMRC<CR>
+nnoremap gsv :so $MYVIMRC<CR>
 
 nmap <leader>lg :term lazygit<CR>i
 nmap <F8> :TagbarToggle<CR>
@@ -356,34 +357,34 @@ let g:LanguageClient_serverCommands = {
             \ }
 
 augroup lsp_langs
-    autocmd!
-    au FileType groovy,scala,java,kotlin,rust,c,cpp nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-    au FileType groovy,scala,java,kotlin,rust,c,cpp nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-    au FileType groovy,scala,java,kotlin,rust,c,cpp nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>zz
-    au FileType groovy,scala,java,kotlin,rust,c,cpp nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-    au FileType groovy,scala,java,kotlin,rust,c,cpp noremap <silent> H :call LanguageClient_textDocument_hover()<CR>
-    au FileType groovy,scala,java,kotlin,rust,c,cpp noremap <silent> Z :call LanguageClient_textDocument_definition()<CR>
-    au FileType groovy,scala,java,kotlin,rust,c,cpp noremap <silent> R :call LanguageClient_textDocument_rename()<CR>
-    au FileType groovy,scala,java,kotlin,rust,c,cpp noremap <silent> S :call LanugageClient_textDocument_documentSymbol()<CR>
-    au FileType groovy,scala,java,kotlin,rust,c,cpp nmap <leader>rn :call LanguageClient_textDocument_rename()<CR>
-    au FileType groovy,scala,java,kotlin,rust,c,cpp nmap <silent> <leader>d :call LanguageClient_textDocument_definition()<CR>
-    au User lsp_setup call lsp#register_server({
-            \ 'name': 'intelli-lsp-server',
-            \ 'cmd': {server_info->['tcp://127.0.0.1:8888']},
-            \ 'whitelist': ['groovy', 'java', 'kotlin', 'scala']
-            \ })
-augroup END
+  autocmd!
+  au FileType groovy,scala,java,kotlin,rust,c,cpp nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+  au FileType groovy,scala,java,kotlin,rust,c,cpp nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+  au FileType groovy,scala,java,kotlin,rust,c,cpp nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>zz
+  au FileType groovy,scala,java,kotlin,rust,c,cpp nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+  au FileType groovy,scala,java,kotlin,rust,c,cpp noremap <silent> H :call LanguageClient_textDocument_hover()<CR>
+  au FileType groovy,scala,java,kotlin,rust,c,cpp noremap <silent> Z :call LanguageClient_textDocument_definition()<CR>
+  au FileType groovy,scala,java,kotlin,rust,c,cpp noremap <silent> R :call LanguageClient_textDocument_rename()<CR>
+  au FileType groovy,scala,java,kotlin,rust,c,cpp noremap <silent> S :call LanugageClient_textDocument_documentSymbol()<CR>
+  au FileType groovy,scala,java,kotlin,rust,c,cpp nmap <leader>rn :call LanguageClient_textDocument_rename()<CR>
+  au FileType groovy,scala,java,kotlin,rust,c,cpp nmap <silent> <leader>d :call LanguageClient_textDocument_definition()<CR>
+  au User lsp_setup call lsp#register_server({
+        \ 'name': 'intelli-lsp-server',
+        \ 'cmd': {server_info->['tcp://127.0.0.1:8888']},
+        \ 'whitelist': ['groovy', 'java', 'kotlin', 'scala']
+        \ })
+augroup end
 
 if executable('clangd')
-    augroup lsp_clangd
-        autocmd!
-        autocmd User lsp_setup call lsp#register_server({
-                    \ 'name': 'clangd',
-                    \ 'cmd': {server_info->['clangd']},
-                    \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp']
-                    \ })
-        autocmd FileType c,cpp,objc,objcpp setlocal omnifunc=lsp#complete
-    augroup end
+  augroup lsp_clangd
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+          \ 'name': 'clangd',
+          \ 'cmd': {server_info->['clangd']},
+          \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp']
+          \ })
+    autocmd FileType c,cpp,objc,objcpp setlocal omnifunc=lsp#complete
+  augroup end
 endif
 
 let g:LanguageClient_rootMarkers = {
