@@ -6,8 +6,8 @@ call plug#begin('~/.vim/plugged')
 "{{{ GENERIC
 Plug 'VundleVim/Vundle.vim'
 Plug 'vim-scripts/VisIncr'
-" Plug 'vim-airline/vim-airline'
-Plug 'itchyny/lightline.vim'
+Plug 'vim-airline/vim-airline'
+" Plug 'itchyny/lightline.vim'
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
 Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
@@ -97,7 +97,7 @@ call plug#end()
 "}}}
 filetype plugin indent on
 "{{{ MISC
-syntax on
+syntax off
 syntax enable
 "shell
 set shell=/bin/zsh    "shell type for :term
@@ -112,7 +112,8 @@ set termguicolors
 set cursorcolumn
 set cursorline
 set synmaxcol=128
-set laststatus=2                "lightline
+highlight ColorColumn ctermbg=red guibg=red
+" set laststatus=2                "lightline
 hi LineNr ctermfg=red
 hi LineNr guifg=#050505
 if (has("nvim"))
@@ -323,6 +324,7 @@ nnoremap <leader>s :,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 nnoremap <leader>S :%s/\<<C-r><C-w>\>//gc<Left><Left>
 nmap <leader>tab :Tabularize /\|<CR>
 nmap <space> ,
+vmap <C-c> <ESC>
 
 nnoremap gev :e $MYVIMRC<CR>
 nnoremap gsv :so $MYVIMRC<CR>
