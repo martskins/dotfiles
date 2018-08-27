@@ -323,6 +323,8 @@ nmap <Up> :cprevious<cr>
 nnoremap <leader>s :,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 nnoremap <leader>S :%s/\<<C-r><C-w>\>//gc<Left><Left>
 nmap <leader>tab :Tabularize /\|<CR>
+nnoremap <leader>pj :norm 0v$,json<CR>
+vnoremap <leader>pj :!python -m json.tool<CR>
 nmap <space> ,
 vmap <C-c> <ESC>
 
