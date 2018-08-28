@@ -20,13 +20,12 @@ Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-markdown'
 Plug 'airblade/vim-gitgutter'
 Plug 'mattn/emmet-vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-notes'
-Plug 'digitaltoad/vim-pug'
-Plug 'junegunn/vim-github-dashboard'
 Plug 'lkdjiin/vim-foldcomments'
 Plug 'ervandew/supertab'
 Plug 'majutsushi/tagbar'
@@ -34,7 +33,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'godlygeek/tabular'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'unblevable/quick-scope'
-Plug 'tpope/vim-markdown'
+Plug 'justinmk/vim-sneak'
 
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -43,6 +42,9 @@ else
   Plug 'roxma/nvim-yarp'
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
+"}}}
+"{{{ PUG
+Plug 'digitaltoad/vim-pug', { 'for': ['pug', 'jade'] }
 "}}}
 "{{{ PYTHON
 Plug 'zchee/deoplete-jedi', { 'for': 'python' }
@@ -58,9 +60,9 @@ Plug 'zchee/deoplete-go', { 'for': 'go' }
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 "}}}
 "{{{ GRAILS
-Plug 'vim-scripts/grails-vim'
-Plug 'sjurgemeyer/vimport', { 'for': 'groovy' }
-Plug 'thecodesmith/vim-groovy', { 'for': 'groovy' }
+Plug 'vim-scripts/grails-vim', { 'for': ['groovy', 'java', 'kotlin'] }
+Plug 'martskins/vimport', { 'for': ['groovy', 'java', 'kotlin'] }
+Plug 'thecodesmith/vim-groovy', { 'for': ['groovy', 'java', 'kotlin'] }
 "}}}
 "{{{ KOTLIN
 Plug 'udalov/kotlin-vim', { 'for': 'kotlin' }
@@ -146,7 +148,6 @@ set autoread          "autoload file changes
 set ttyfast
 set t_ut=
 let mapleader = ','
-" set lazyredraw
 "folding
 set fdm=expr
 set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
@@ -304,6 +305,10 @@ augroup end
 "}}}
 "}}}
 "{{{ MAPPINGS
+command WQ wq
+command Wq wq
+command W w
+command Q q
 nmap <c-p> :Files<CR>
 nmap <leader>o :only<CR>
 nnoremap <S-F5> ggvG=
