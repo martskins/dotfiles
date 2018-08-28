@@ -314,6 +314,8 @@ noremap <Right> <NOP>
 nmap <tab> :bnext<CR>
 nmap <s-tab> :bprevious<CR>
 nnoremap Q @q
+nnoremap 0 ^
+nnoremap ^ 0
 nnoremap Q :norm @q<cr>
 nmap <leader>bd :bdelete<CR>
 nmap <leader>bq :bdelete!<CR>
