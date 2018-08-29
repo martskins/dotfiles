@@ -43,6 +43,12 @@ else
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
 "}}}
+"{{{ LISP
+Plug 'jpalardy/vim-slime', { 'for': 'lisp' }
+let g:slime_target = "tmux"
+let g:slime_paste_file = "$HOME/.slime_paste"
+let g:slime_default_config = {"socket_name": split($TMUX, ",")[0], "target_pane": ":.2"}
+"}}}
 "{{{ PUG
 Plug 'digitaltoad/vim-pug', { 'for': ['pug', 'jade'] }
 "}}}
@@ -53,7 +59,11 @@ Plug 'zchee/deoplete-jedi', { 'for': 'python' }
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 Plug 'tpope/vim-rails', { 'for': 'ruby' }
 Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby' }
-"Plug 'hackhowtofaq/vim-solargraph'
+
+autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
+autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
+autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
+autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
 "}}}
 "{{{ GO
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' , 'for': 'go' }
@@ -668,8 +678,3 @@ let &cpo = s:save_cpo
 xnoremap <expr> ++ VMATH_YankAndAnalyse()
 nmap ++  vip++
 " }}}
-
-autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
-autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
-autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
-autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
