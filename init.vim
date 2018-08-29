@@ -127,7 +127,7 @@ if (has("nvim"))
 endif
 "colors
 set background=dark
-colorscheme gruvbox
+colorscheme dracula
 "indentation
 set tabstop=2                   "number of visual spaces per TAB
 set shiftwidth=2                "number of spaces for auto-indent
