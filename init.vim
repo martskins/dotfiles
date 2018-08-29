@@ -4,10 +4,10 @@ filetype off
 "{{{ PLUGINS
 call plug#begin('~/.vim/plugged')
 "{{{ GENERIC
+Plug 'neilagabriel/vim-geeknote'
 Plug 'VundleVim/Vundle.vim'
 Plug 'vim-scripts/VisIncr'
 Plug 'vim-airline/vim-airline'
-" Plug 'itchyny/lightline.vim'
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
 Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
@@ -50,6 +50,9 @@ Plug 'digitaltoad/vim-pug', { 'for': ['pug', 'jade'] }
 Plug 'zchee/deoplete-jedi', { 'for': 'python' }
 "}}}
 "{{{ RUBY
+Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
+Plug 'tpope/vim-rails', { 'for': 'ruby' }
+Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby' }
 "Plug 'hackhowtofaq/vim-solargraph'
 "}}}
 "{{{ GO
@@ -305,10 +308,10 @@ augroup end
 "}}}
 "}}}
 "{{{ MAPPINGS
-command WQ wq
-command Wq wq
-command W w
-command Q q
+command! WQ wq
+command! Wq wq
+command! W w
+command! Q q
 nmap <c-p> :Files<CR>
 nmap <leader>o :only<CR>
 nnoremap <S-F5> ggvG=
@@ -356,7 +359,7 @@ command! UncommitedChanges :call UncommitedChanges()
 "}}}
 "{{{ LSP
 nnoremap <leader>lcs :LanguageClientStart<CR>
-
+let g:LanguageClient_diagnosticsList = 'Disabled'
 let g:LanguageClient_autoStart = 1
 let g:LanguageClient_serverCommands = {
       \ 'rust': ['rustup', 'run', 'stable', 'rls'],
@@ -665,3 +668,8 @@ let &cpo = s:save_cpo
 xnoremap <expr> ++ VMATH_YankAndAnalyse()
 nmap ++  vip++
 " }}}
+
+autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
+autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
+autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
+autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
