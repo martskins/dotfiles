@@ -4,7 +4,6 @@ filetype off
 "{{{ PLUGINS
 call plug#begin('~/.vim/plugged')
 "{{{ GENERIC
-Plug 'neilagabriel/vim-geeknote'
 Plug 'VundleVim/Vundle.vim'
 Plug 'vim-scripts/VisIncr'
 Plug 'vim-airline/vim-airline'
@@ -34,7 +33,7 @@ Plug 'godlygeek/tabular'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'unblevable/quick-scope'
 Plug 'justinmk/vim-sneak'
-
+Plug 'diepm/vim-rest-console'
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
@@ -47,7 +46,9 @@ endif
 Plug 'jpalardy/vim-slime', { 'for': 'lisp' }
 let g:slime_target = "tmux"
 let g:slime_paste_file = "$HOME/.slime_paste"
-let g:slime_default_config = {"socket_name": split($TMUX, ",")[0], "target_pane": ":.2"}
+if (has('tmux'))
+  let g:slime_default_config = {"socket_name": split($TMUX, ",")[0], "target_pane": ":.2"}
+endif
 "}}}
 "{{{ PUG
 Plug 'digitaltoad/vim-pug', { 'for': ['pug', 'jade'] }
@@ -88,6 +89,7 @@ Plug 'neomake/neomake', { 'for': 'haskell' }
 " }}}
 " {{{ JAVASCRIPT
 Plug 'posva/vim-vue', { 'for': 'vue' }
+Plug 'carlitux/deoplete-ternjs', { 'for': 'javascript',  'do': 'sudo npm install -g tern' }
 " }}}
 "{{{ LSP
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
@@ -161,6 +163,7 @@ set autoread          "autoload file changes
 set ttyfast
 set t_ut=
 let mapleader = ','
+let g:netrw_list_hide= '.*\.swp$,.DS_Store,*/tmp/*,*.so,*.swp,*.swo,*.zip,*.git,^\.\.\=/\=$'
 "folding
 set fdm=expr
 set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
@@ -205,6 +208,19 @@ let g:SuperTabDefaultCompletionType = "<c-n>"
 " ==== DEOPLETE
 let g:deoplete#enable_at_startup = 1
 set completeopt-=preview
+" ternjs
+let g:deoplete#sources#ternjs#timeout = 1
+let g:deoplete#sources#ternjs#types = 1
+let g:deoplete#sources#ternjs#depths = 1
+let g:deoplete#sources#ternjs#docs = 1
+let g:deoplete#sources#ternjs#filter = 0
+let g:deoplete#sources#ternjs#case_insensitive = 1
+let g:deoplete#sources#ternjs#guess = 0
+let g:deoplete#sources#ternjs#sort = 0
+let g:deoplete#sources#ternjs#expand_word_forward = 0
+let g:deoplete#sources#ternjs#omit_object_prototype = 0
+let g:deoplete#sources#ternjs#include_keywords = 1
+let g:deoplete#sources#ternjs#in_literal = 0
 " ==== ACK
 let g:ack_use_dispatch = 1
 " ==== CTRLP
@@ -359,13 +375,23 @@ if has('nvim')
   tnoremap <leader>bd :bd!<CR>
 endif
 
-function! UncommitedChanges()
-  let files=split(system("git diff --name-only"), '\n')
-  for f in files
-    execute ":e " . f
-  endfor
+function! FixAccute()
+  execute "%s/&aacute;/á/ge"
+  execute "%s/&eacute;/é/ge"
+  execute "%s/&oacute;/ó/ge"
+  execute "%s/&uacute;/ú/ge"
+  execute "%s/&iacute;/í/ge"
+  execute "%s/&uuml;/ü/ge"
+  execute "%s/&ntilde;/ñ/ge"
+  execute "%s/&iquest;/¿/ge"
 endfunction
-command! UncommitedChanges :call UncommitedChanges()
+
+command! FixAccute :call FixAccute()
+
+augroup qf
+   autocmd!
+   autocmd FileType qf set nobuflisted
+augroup END
 "}}}
 "{{{ LSP
 nnoremap <leader>lcs :LanguageClientStart<CR>
@@ -677,4 +703,7 @@ let &cpo = s:save_cpo
 
 xnoremap <expr> ++ VMATH_YankAndAnalyse()
 nmap ++  vip++
+" }}}
+" {{{ REST
+command! VrcQuery :call VrcQuery()
 " }}}
