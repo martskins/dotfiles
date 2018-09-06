@@ -230,11 +230,11 @@ let g:airline_theme='gruvbox'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 " ==== ALE
-let g:ale_fixers = { 'javascript': ['eslint'], 'haskell': ['brittany'], 'python': ['autopep8', 'isort']}
+let g:ale_fixers = { 'javascript': ['eslint'], 'haskell': ['brittany'], 'python': ['autopep8', 'isort'], 'cpp': ['clang-format']}
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 0
 let g:ale_emit_conflict_warnings = 0
-let g:ale_linters = { 'javascript': ['eslint'], 'go': ['gometalinter'], 'rust': ['cargo'], 'haskell': ['hlint', 'ghc-mod'], 'python': ['flake8']}
+let g:ale_linters = { 'javascript': ['eslint'], 'go': ['gometalinter'], 'rust': ['cargo'], 'haskell': ['hlint', 'ghc-mod'], 'python': ['flake8'], 'cpp': []}
 " ==== BETTER-WHITESPACE
 let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
@@ -397,15 +397,26 @@ augroup END
 nnoremap <leader>lcs :LanguageClientStart<CR>
 let g:LanguageClient_diagnosticsList = 'Disabled'
 let g:LanguageClient_autoStart = 1
+let g:LanguageClient_loadSettings = 1
+if has('nvim')
+  let g:LanguageClient_settingsPath = '~/.config/nvim/settings.json'
+else
+  let g:LanguageClient_settingsPath = '~/.config/vim/settings.json'
+endif
+
 let g:LanguageClient_serverCommands = {
       \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-      \ 'cpp' : ['clangd'],
+      \ 'cpp' : ['cquery', '--language-server', '--log-file=/tmp/cqlog.log'],
       \ 'javascript': ['flow-language-server', '--stdio'],
       \ 'groovy': ['tcp://127.0.0.1:8888'],
       \ 'kotlin': ['tcp://127.0.0.1:8888'],
       \ 'scala': ['tcp://127.0.0.1:8888'],
       \ 'java': ['tcp://127.0.0.1:8888']
       \ }
+
+let g:LanguageClient_rootMarkers = {
+     \ 'cpp': ['.cquery', 'compile_commands.json', 'build'],
+     \ }
 
 augroup lsp_langs
   autocmd!
@@ -426,12 +437,12 @@ augroup lsp_langs
         \ })
 augroup end
 
-if executable('clangd')
+if executable('cquery')
   augroup lsp_clangd
     autocmd!
     autocmd User lsp_setup call lsp#register_server({
-          \ 'name': 'clangd',
-          \ 'cmd': {server_info->['clangd']},
+          \ 'name': 'cquery',
+          \ 'cmd': {server_info->['cquery']},
           \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp']
           \ })
     autocmd FileType c,cpp,objc,objcpp setlocal omnifunc=lsp#complete
@@ -707,3 +718,6 @@ nmap ++  vip++
 " {{{ REST
 command! VrcQuery :call VrcQuery()
 " }}}
+
+
+
