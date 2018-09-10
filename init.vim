@@ -23,6 +23,7 @@ Plug 'tpope/vim-markdown'
 Plug 'airblade/vim-gitgutter'
 Plug 'mattn/emmet-vim'
 Plug 'terryma/vim-multiple-cursors'
+Plug 'SirVer/ultisnips'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-notes'
 Plug 'lkdjiin/vim-foldcomments'
@@ -67,6 +68,7 @@ autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
 autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
 "}}}
 "{{{ GO
+Plug 'mdempsky/gocode', { 'rtp': 'nvim', 'do': '~/.vim/plugged/gocode/nvim/symlink.sh' }
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' , 'for': 'go' }
 Plug 'zchee/deoplete-go', { 'for': 'go' }
 "}}}
@@ -129,7 +131,6 @@ set termguicolors
 set cursorcolumn
 set cursorline
 set synmaxcol=128
-highlight ColorColumn ctermbg=red guibg=red
 " set laststatus=2                "lightline
 hi LineNr ctermfg=red
 hi LineNr guifg=#050505
@@ -139,7 +140,8 @@ if (has("nvim"))
 endif
 "colors
 set background=dark
-colorscheme dracula
+colorscheme gruvbox
+highlight ColorColumn ctermbg=red guibg=red
 "indentation
 set tabstop=2                   "number of visual spaces per TAB
 set shiftwidth=2                "number of spaces for auto-indent
@@ -291,6 +293,7 @@ let g:go_list_type = "quickfix"
 let g:go_def_reuse_buffer = 1
 let g:go_addtags_transform = "camelcase"
 let g:go_gocode_unimported_packages = 1
+let g:go_gocode_propose_source = 0
 
 augroup filetype_go
   autocmd!
@@ -719,5 +722,9 @@ nmap ++  vip++
 command! VrcQuery :call VrcQuery()
 " }}}
 
-
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<c-k>"
+let g:UltiSnipsJumpForwardTrigger="<c-k>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsEditSplit="vertical"
 
