@@ -50,7 +50,7 @@ if (has('tmux'))
 endif
 "}}}
 "{{{ ELIXIR
-Plug 'elixir-editors/vim-elixir'
+Plug 'elixir-editors/vim-elixir', { 'for': 'elixir' }
 "}}}
 "{{{ PUG
 Plug 'digitaltoad/vim-pug', { 'for': ['pug', 'jade'] }
