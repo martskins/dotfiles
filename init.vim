@@ -22,8 +22,6 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-markdown'
 Plug 'airblade/vim-gitgutter'
 Plug 'mattn/emmet-vim'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'SirVer/ultisnips'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-notes'
 Plug 'lkdjiin/vim-foldcomments'
@@ -98,8 +96,8 @@ Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' 
 Plug 'dbakker/vim-projectroot'
 "}}}
 "{{{ NEOSNIPPET
-Plug 'Shougo/neosnippet.vim', { 'for': 'go' }
-Plug 'Shougo/neosnippet-snippets', { 'for': 'go' }
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
 "}}}
 "{{{ COLORSCHEMES
 Plug 'hzchirs/vim-material'
@@ -292,6 +290,7 @@ let g:go_metalinter_deadline = "5s"
 let g:go_list_type = "quickfix"
 let g:go_def_reuse_buffer = 1
 let g:go_addtags_transform = "camelcase"
+
 let g:go_gocode_unimported_packages = 1
 let g:go_gocode_propose_source = 0
 
@@ -722,9 +721,5 @@ nmap ++  vip++
 command! VrcQuery :call VrcQuery()
 " }}}
 
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<c-k>"
-let g:UltiSnipsJumpForwardTrigger="<c-k>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-let g:UltiSnipsEditSplit="vertical"
 
+let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
