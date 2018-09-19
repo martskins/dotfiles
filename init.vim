@@ -221,6 +221,7 @@ let g:deoplete#sources#ternjs#expand_word_forward = 0
 let g:deoplete#sources#ternjs#omit_object_prototype = 0
 let g:deoplete#sources#ternjs#include_keywords = 1
 let g:deoplete#sources#ternjs#in_literal = 0
+let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
 " ==== ACK
 let g:ack_use_dispatch = 1
 " ==== CTRLP
@@ -365,6 +366,7 @@ nnoremap <leader>pj :norm 0v$,json<CR>
 vnoremap <leader>pj :!python -m json.tool<CR>
 nmap <space> ,
 vmap <C-c> <ESC>
+nmap <C-v><C-v> gg<C-V>G$
 
 nnoremap gev :e $MYVIMRC<CR>
 nnoremap gsv :so $MYVIMRC<CR>
@@ -720,6 +722,25 @@ nmap ++  vip++
 " {{{ REST
 command! VrcQuery :call VrcQuery()
 " }}}
+" {{{ NEGATE
+function! Negate()
+  let list = {
+        \'false':'true', 'true':'false', 'False': 'True', 'True': 'False',
+        \'0': '1', '1': '0', '==':'!=', '!=':'==', '>': '<', '<': '>'
+        \}
+  let s:keys = keys(g:list)
+  if index(s:keys, expand("<cword>")) == -1
+    call search(join(s:keys, '\|'), 'e', line('.'))
+  endif
 
-
-let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+  let s:current_word = expand("<cword>")
+  let s:new_word = get(g:list, s:current_word)
+  if s:new_word == "0"
+    return
+  endif
+  echo s:current_word
+  execute ":s/".s:current_word."/".s:new_word."/"
+endfunction
+command! Negate :call Negate()
+nmap !! :Negate<CR>
+" }}}
