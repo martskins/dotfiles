@@ -49,6 +49,9 @@ if (has('tmux'))
   let g:slime_default_config = {"socket_name": split($TMUX, ",")[0], "target_pane": ":.2"}
 endif
 "}}}
+"{{{ ELIXIR
+Plug 'elixir-editors/vim-elixir', { 'for': 'elixir' }
+"}}}
 "{{{ PUG
 Plug 'digitaltoad/vim-pug', { 'for': ['pug', 'jade'] }
 "}}}
