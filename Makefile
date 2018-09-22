@@ -9,6 +9,8 @@ link: clean
 	ln -s ~/dotfiles/init.vim ~/.config/nvim/init.vim
 	ln -s ~/dotfiles/init.vim ~/.vimrc
 	ln -s ~/dotfiles/tmux.conf ~/.tmux.conf
+	ln -s ~/dotfiles/.muttrc ~/.muttrc
+	ln -s ~/dotfiles/.mutt ~/.mutt
 ifeq ($(UNAME), Linux)
 	ln -s ~/dotfiles/alacritty.yml ~/.config/alacritty/alacritty.yml
 else ifeq ($(UNAME), Darwin)
@@ -22,8 +24,11 @@ clean:
 	rm -f ~/.vimrc
 	rm -f ~/.tmux.conf
 	rm -f ~/.config/alacritty/alacritty.yml
+	rm -f ~/.muttrc
+	rm -rf ~/.mutt
 
-install: git brew zsh nvim vimplug ctags languages grpc alacritty lazygit
+install: git brew zsh exa mutt\
+	nvim vimplug ctags languages grpc alacritty lazygit
 
 vimplug:
 	curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
@@ -134,3 +139,21 @@ else ifeq ($(UNAME), Darwin)
 	brew tap jesseduffield/lazygit
 	brew install lazygit
 endif
+
+exa:
+ifeq ($(UNAME), Linux)
+	echo "not implemented"
+else ifeq ($(UNAME), Darwin)
+	brew install exa
+endif
+
+mutt:
+ifeq ($(UNAME), Linux)
+	sudo apt-get -y update
+	sudo apt-get -y --allow-unauthenticated install mutt
+else ifeq ($(UNAME), Darwin)
+	brew install mutt
+endif
+	mkdir -p ~/.mutt/com.gmail.me/cache
+	mkdir -p ~/.mutt/com.gmail.financiarme/cache
+	mkdir -p ~/.mutt/com.gmail.pedidosya/cache
