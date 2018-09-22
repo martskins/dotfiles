@@ -139,19 +139,24 @@ if (has("nvim"))
   "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
+
 "colors
+" set background=light
+" colorscheme gruvbox
 set background=dark
-colorscheme gruvbox
 highlight ColorColumn ctermbg=red guibg=red
+
 "indentation
 set tabstop=2                   "number of visual spaces per TAB
 set shiftwidth=2                "number of spaces for auto-indent
 set expandtab                   "tabs to spaces
 set backspace=indent,eol,start
 set autoindent                  "copy indentation from last line on <CR>
+
 "pasting
 set pastetoggle=<leader>z
 set clipboard=unnamed
+
 "search
 set ignorecase    "case insensitive search
 set history=100   "command lines to be remembered
@@ -727,7 +732,7 @@ command! VrcQuery :call VrcQuery()
 " }}}
 " {{{ NEGATE
 function! Negate()
-  let list = {
+  let s:list = {
         \'false':'true', 'true':'false', 'False': 'True', 'True': 'False',
         \'0': '1', '1': '0', '==':'!=', '!=':'==', '>': '<', '<': '>'
         \}
