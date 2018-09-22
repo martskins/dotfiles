@@ -5,7 +5,6 @@ filetype off
 call plug#begin('~/.vim/plugged')
 "{{{ GENERIC
 Plug 'VundleVim/Vundle.vim'
-Plug 'vim-scripts/VisIncr'
 Plug 'vim-airline/vim-airline'
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
 Plug 'mileszs/ack.vim'
@@ -17,21 +16,18 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-markdown'
+" Plug 'tpope/vim-markdown'
 Plug 'airblade/vim-gitgutter'
 Plug 'mattn/emmet-vim'
-Plug 'xolox/vim-misc'
-Plug 'xolox/vim-notes'
+" Plug 'xolox/vim-misc'
 Plug 'lkdjiin/vim-foldcomments'
 Plug 'ervandew/supertab'
 Plug 'majutsushi/tagbar'
-Plug 'christoomey/vim-tmux-navigator'
+" Plug 'christoomey/vim-tmux-navigator'
 Plug 'godlygeek/tabular'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'unblevable/quick-scope'
-Plug 'justinmk/vim-sneak'
 Plug 'diepm/vim-rest-console'
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -103,15 +99,9 @@ Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 "}}}
 "{{{ COLORSCHEMES
-Plug 'hzchirs/vim-material'
 Plug 'morhetz/gruvbox'
-Plug 'tomasr/molokai'
-Plug 'tomasiser/vim-code-dark'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'ayu-theme/ayu-vim'
-Plug 'sickill/vim-monokai'
-Plug 'rafi/awesome-vim-colorschemes'
-Plug 'olivertaylor/vacme'
+Plug 'chriskempson/base16-vim'
 "}}}
 call plug#end()
 "}}}
@@ -119,9 +109,11 @@ filetype plugin indent on
 "{{{ MISC
 syntax off
 syntax enable
+
 "shell
 set shell=/bin/zsh    "shell type for :term
 set cmdheight=2       "command line height
+
 "visuals
 set number relativenumber
 set hid
@@ -132,7 +124,7 @@ set termguicolors
 set cursorcolumn
 set cursorline
 set synmaxcol=128
-" set laststatus=2                "lightline
+
 hi LineNr ctermfg=red
 hi LineNr guifg=#050505
 if (has("nvim"))
@@ -144,6 +136,7 @@ endif
 " set background=light
 " colorscheme gruvbox
 set background=dark
+colorscheme base16-default-dark
 highlight ColorColumn ctermbg=red guibg=red
 
 "indentation
@@ -162,16 +155,19 @@ set ignorecase    "case insensitive search
 set history=100   "command lines to be remembered
 set hlsearch      "highlight matches of current search
 set showmatch     "when inserting a bracket jump to the matching one to show it's position
+
 " Use <F3> to clear the highlighting of :set hlsearch.
 if maparg('<F3>', 'n') ==# ''
   nnoremap <silent> <F3> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 endif
+
 "behavior
 set autoread          "autoload file changes
 set ttyfast
 set t_ut=
 let mapleader = ','
 let g:netrw_list_hide= '.*\.swp$,.DS_Store,*/tmp/*,*.so,*.swp,*.swo,*.zip,*.git,^\.\.\=/\=$'
+
 "folding
 set fdm=expr
 set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
@@ -209,13 +205,17 @@ augroup end
 " ==== NECO-GHC
 let g:haskellmode_completion_ghc = 0
 autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+
 " ==== TAGBAR
 let g:tagbar_autofocus = 1
+
 " ==== SUPERTAB
 let g:SuperTabDefaultCompletionType = "<c-n>"
+
 " ==== DEOPLETE
 let g:deoplete#enable_at_startup = 1
 set completeopt-=preview
+
 " ternjs
 let g:deoplete#sources#ternjs#timeout = 1
 let g:deoplete#sources#ternjs#types = 1
@@ -230,24 +230,28 @@ let g:deoplete#sources#ternjs#omit_object_prototype = 0
 let g:deoplete#sources#ternjs#include_keywords = 1
 let g:deoplete#sources#ternjs#in_literal = 0
 let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+
 " ==== ACK
 let g:ack_use_dispatch = 1
+
 " ==== CTRLP
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|\.git\|target\|web-app'
+
 " ==== AIRLINE
-let g:airline_theme='gruvbox'
+let g:airline_theme='base16_default'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
+
 " ==== ALE
 let g:ale_fixers = { 'javascript': ['eslint'], 'haskell': ['brittany'], 'python': ['autopep8', 'isort'], 'cpp': ['clang-format']}
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 0
 let g:ale_emit_conflict_warnings = 0
 let g:ale_linters = { 'javascript': ['eslint'], 'go': ['gometalinter'], 'rust': ['cargo'], 'haskell': ['hlint', 'ghc-mod'], 'python': ['flake8'], 'cpp': []}
+
 " ==== BETTER-WHITESPACE
 let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
-
 "}}}
 "{{{ LANGUAGE-SPECIFIC
 "{{{ JAVA
@@ -373,6 +377,7 @@ nmap <leader>tab :Tabularize /\|<CR>
 nnoremap <leader>pj :norm 0v$,json<CR>
 vnoremap <leader>pj :!python -m json.tool<CR>
 nmap <space> ,
+nmap <space><space> :e#<cr>
 vmap <C-c> <ESC>
 nmap <C-v><C-v> gg<C-V>G$
 
