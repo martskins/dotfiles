@@ -16,6 +16,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-repeat'
 Plug 'airblade/vim-gitgutter'
 Plug 'mattn/emmet-vim'
 Plug 'lkdjiin/vim-foldcomments'
@@ -24,10 +26,9 @@ Plug 'majutsushi/tagbar'
 Plug 'godlygeek/tabular'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'unblevable/quick-scope'
-Plug 'diepm/vim-rest-console'
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
 
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-tmux'
 Plug 'ncm2/ncm2-path'
@@ -37,49 +38,28 @@ Plug 'ncm2/ncm2-go', { 'for': 'go' }
 Plug 'ncm2/ncm2-tern', { 'for': 'javascript' , 'do': 'npm install' }
 Plug 'ncm2/ncm2-cssomni', { 'for': 'css' }
 Plug 'ncm2/ncm2-jedi', { 'for': 'python' }
-Plug 'ncm2/ncm-ruby', { 'for': 'ruby' }
+Plug 'roxma/ncm-ruby', { 'for': 'ruby' }
 
-" elixir
 Plug 'elixir-editors/vim-elixir', { 'for': 'elixir' }
-
-" pug
 Plug 'digitaltoad/vim-pug', { 'for': ['pug', 'jade'] }
-
-" ruby
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 Plug 'tpope/vim-rails', { 'for': 'ruby' }
-
-" go
-" Plug 'mdempsky/gocode', { 'rtp': 'nvim', 'do': '~/.vim/plugged/gocode/nvim/symlink.sh' }
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' , 'for': 'go' }
-
-" rust
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-
-" jvm
 Plug 'vim-scripts/grails-vim', { 'for': ['groovy', 'java', 'kotlin'] }
 Plug 'martskins/vimport', { 'for': ['groovy', 'java', 'kotlin'] }
 Plug 'thecodesmith/vim-groovy', { 'for': ['groovy', 'java', 'kotlin'] }
 Plug 'udalov/kotlin-vim', { 'for': 'kotlin' }
-
-" haskell
 Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 Plug 'parsonsmatt/intero-neovim', { 'for': 'haskell' }
 Plug 'neomake/neomake', { 'for': 'haskell' }
-
-" javascript
 Plug 'posva/vim-vue', { 'for': 'vue' }
-
-" completion
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
 Plug 'dbakker/vim-projectroot'
-
-" snippets
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
-" colorschemes
 Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'chriskempson/base16-vim'
@@ -339,6 +319,7 @@ nnoremap ^ 0
 nnoremap Q :norm @q<cr>
 nmap <leader>bd :bdelete<CR>
 nmap <leader>bq :bdelete!<CR>
+nmap <leader>ba :bd <C-A><CR>
 nmap <leader>bo :BufOnly<CR>
 nmap <Down> :cnext<cr>
 nmap <Up> :cprevious<cr>
