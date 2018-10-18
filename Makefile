@@ -7,6 +7,7 @@ UNAME := $(shell uname)
 
 link: clean
 	ln -s ~/dotfiles/init.vim ~/.config/nvim/init.vim
+	ln -s ~/dotfiles/vanilla.vim ~/.config/nvim/vanilla.vim
 	ln -s ~/dotfiles/init.vim ~/.vimrc
 	ln -s ~/dotfiles/tmux.conf ~/.tmux.conf
 	ln -s ~/dotfiles/.muttrc ~/.muttrc
@@ -22,6 +23,7 @@ endif
 clean:
 	rm -f ~/.ctags
 	rm -f ~/.config/nvim/init.vim
+	rm -f ~/.config/nvim/vanilla.vim
 	rm -f ~/.vimrc
 	rm -f ~/.tmux.conf
 	rm -f ~/.config/alacritty/alacritty.yml

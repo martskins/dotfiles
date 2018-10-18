@@ -15,6 +15,7 @@ env:
   TERM: xterm-256color
 
 window:
+  fullscreen: true
   # Window dimensions in character columns and lines
   # Falls back to size specified by window manager if set to 0x0.
   # (changes require restart)
@@ -65,16 +66,16 @@ antialias: true
 # * file:///usr/share/doc/fontconfig/fontconfig-user.html
 font:
   normal:
-    family: Hasklig  # should be "Menlo" or something on macOS.
-    style: Regular
+    family: "Fira Code"  # should be "Menlo" or something on macOS.
+    style: Light
 
   bold:
-    family: Hasklig  # should be "Menlo" or something on macOS.
-    #style: Bold
+    family: "Fira Code"  # should be "Menlo" or something on macOS.
+    style: Light
 
   italic:
-    family: Hasklig  # should be "Menlo" or something on macOS.
-    #style: Italic
+    family: "Fira Code"  # should be "Menlo" or something on macOS.
+    style: Light
 
   size: 12
 
@@ -90,7 +91,7 @@ font:
   # for retina displays, but for non-retina you probably want this set to
   # false.
   use_thin_strokes: true
-  scale_with_dpi: true
+  scale_with_dpi: false
 
 # Should display the render timer
 render_timer: false
@@ -303,6 +304,7 @@ key_bindings:
   - { key: V,        mods: Command,    action: Paste               }
   - { key: C,        mods: Command,    action: Copy                }
   - { key: Q,        mods: Command, action: Quit                         }
+  - { key: Return,   mods: Command, action: ToggleFullscreen             }
   - { key: W,        mods: Command, action: Quit                         }
   - { key: Insert,   mods: Shift,   action: PasteSelection               }
   - { key: Key0,     mods: Command, action: ResetFontSize                }

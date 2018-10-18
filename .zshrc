@@ -113,3 +113,5 @@ export FZF_DEFAULT_COMMAND='rg --files --hidden --follow'
 alias -g ls=exa
 alias -g l="exa -l"
 
+# AUTOJUMP
+[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh

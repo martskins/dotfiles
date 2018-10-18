@@ -3,7 +3,6 @@ filetype off
 
 "{{{ PLUGINS
 call plug#begin('~/.vim/plugged')
-Plug 'VundleVim/Vundle.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
 Plug 'mileszs/ack.vim'
@@ -20,12 +19,10 @@ Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-repeat'
 Plug 'airblade/vim-gitgutter'
 Plug 'mattn/emmet-vim'
-Plug 'lkdjiin/vim-foldcomments'
 Plug 'ervandew/supertab'
 Plug 'majutsushi/tagbar'
 Plug 'godlygeek/tabular'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'unblevable/quick-scope'
 
 Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2'
@@ -37,11 +34,13 @@ Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'ncm2/ncm2-go', { 'for': 'go' }
 Plug 'ncm2/ncm2-tern', { 'for': 'javascript' , 'do': 'npm install' }
 Plug 'ncm2/ncm2-cssomni', { 'for': 'css' }
-Plug 'ncm2/ncm2-jedi', { 'for': 'python' }
+" Plug 'ncm2/ncm2-jedi', { 'for': 'python' }
 Plug 'roxma/ncm-ruby', { 'for': 'ruby' }
 
-Plug 'elixir-editors/vim-elixir', { 'for': 'elixir' }
+Plug 'davidhalter/jedi-vim', { 'for': 'python' }
+
 Plug 'digitaltoad/vim-pug', { 'for': ['pug', 'jade'] }
+Plug 'posva/vim-vue', { 'for': 'vue' }
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 Plug 'tpope/vim-rails', { 'for': 'ruby' }
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' , 'for': 'go' }
@@ -50,25 +49,30 @@ Plug 'vim-scripts/grails-vim', { 'for': ['groovy', 'java', 'kotlin'] }
 Plug 'martskins/vimport', { 'for': ['groovy', 'java', 'kotlin'] }
 Plug 'thecodesmith/vim-groovy', { 'for': ['groovy', 'java', 'kotlin'] }
 Plug 'udalov/kotlin-vim', { 'for': 'kotlin' }
+
 Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 Plug 'parsonsmatt/intero-neovim', { 'for': 'haskell' }
 Plug 'neomake/neomake', { 'for': 'haskell' }
-Plug 'posva/vim-vue', { 'for': 'vue' }
-Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
+
+Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh', 'for': ['cpp', 'rust']}
 Plug 'dbakker/vim-projectroot'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
 Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'chriskempson/base16-vim'
 call plug#end()
 "}}}
+
 filetype plugin indent on
+
 "{{{ CONFIG
 syntax off
 syntax enable
+let g:ftplugin_sql_omni_key = '<C-j>'
+set encoding=utf-8
+let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
 
 " shell
 set shell=/bin/zsh
@@ -81,20 +85,20 @@ set colorcolumn=128
 set signcolumn=yes
 set guifont=Monaco
 set termguicolors
-set cursorcolumn
-set cursorline
+" set cursorcolumn
+" set cursorline
 set synmaxcol=128
-
-hi LineNr ctermfg=red
-hi LineNr guifg=#050505
-if (has("nvim"))
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-endif
+set list
+set listchars=tab:>-,trail:~,extends:>,precedes:<
+set nobk
 
 " colors
 set background=dark
-colorscheme base16-atelier-dune
-highlight ColorColumn ctermbg=red guibg=red
+if (has("nvim"))
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+endif
+colorscheme gruvbox
+hi ColorColumn ctermbg=red guibg=red
 
 " indentation
 set tabstop=2
@@ -102,6 +106,7 @@ set shiftwidth=2
 set expandtab
 set backspace=indent,eol,start
 set autoindent
+set wrap
 
 " pasting
 set pastetoggle=<leader>z
@@ -112,9 +117,8 @@ set ignorecase
 set history=100
 set hlsearch
 set showmatch
-if maparg('<F3>', 'n') ==# ''
-  nnoremap <silent> <F3> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
-endif
+set wildmenu
+nnoremap <silent> <F3> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 
 " behavior
 set autoread
@@ -124,6 +128,7 @@ let mapleader = ','
 let g:netrw_list_hide= '.*\.swp$,.DS_Store,*/tmp/*,*.so,*.swp,*.swo,*.zip,*.git,^\.\.\=/\=$'
 
 " folding
+" set foldmethod=expr foldexpr=getline(v:lnum)=~'^\s*'.&commentstring[0]
 set fdm=expr
 set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
 augroup folding
@@ -133,8 +138,7 @@ augroup folding
         \ set foldmethod=expr |
         \ set foldexpr=getline(v:lnum)=~'^\\s*#' |
         \ exe "normal zM``"
-
-  autocmd FileType groovy,java,scala,javascript,go,rs
+  autocmd FileType groovy,java,scala,javascript,go,rust
         \ set foldmethod=expr |
         \ set foldexpr=getline(v:lnum)=~'^\\s*//' |
         \ exe "normal zM``"
@@ -168,10 +172,10 @@ let g:tagbar_autofocus = 1
 let g:SuperTabDefaultCompletionType = "<c-n>"
 
 " ncm2
-autocmd BufEnter * call ncm2#enable_for_buffer()
-set completeopt=noinsert,menuone,noselect
-au User Ncm2PopupOpen set completeopt=noinsert,menuone,noselect
-au User Ncm2PopupClose set completeopt=menuone
+" autocmd BufEnter * call ncm2#enable_for_buffer()
+" set completeopt=noinsert,menuone,noselect
+" au User Ncm2PopupOpen set completeopt=noinsert,menuone,noselect
+" au User Ncm2PopupClose set completeopt=menuone
 
 " ack
 let g:ack_use_dispatch = 1
@@ -185,16 +189,36 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 
 " ale
-let g:ale_fixers = { 'javascript': ['eslint'], 'haskell': ['brittany'], 'python': ['autopep8', 'isort'], 'cpp': ['clang-format']}
-let g:ale_fix_on_save = 1
+let g:ale_fixers = {
+      \ 'javascript': ['eslint'],
+      \ 'haskell': ['brittany'],
+      \ 'python': ['autopep8', 'isort'],
+      \ 'cpp': ['clang-format'],
+      \ 'rust': ['rustfmt'],
+      \ 'ruby': ['rufo'],
+      \ 'vue': ['eslint']
+      \}
+let g:ale_fix_on_save = 0
 let g:ale_lint_on_enter = 0
 let g:ale_emit_conflict_warnings = 0
-let g:ale_linters = { 'javascript': ['eslint'], 'go': ['gometalinter'], 'rust': ['cargo'], 'haskell': ['hlint', 'ghc-mod'], 'python': ['flake8'], 'cpp': []}
+let g:ale_linters = {
+      \ 'javascript': ['eslint'],
+      \ 'go': ['gometalinter'],
+      \ 'rust': ['cargo'],
+      \ 'haskell': ['hlint', 'ghc-mod'],
+      \ 'python': ['flake8'],
+      \ 'cpp': []
+      \}
 
 " better-whitespace
 let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
+
+" jedi
+let g:jedi#show_call_signatures=0
+let g:jedi#popup_on_dot=0
 "}}}
+
 "{{{ LANGUAGE-SPECIFIC
 
 " lisp
@@ -213,27 +237,6 @@ autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
 " java
 let g:JavaImpPaths = $HOME . "/Projects/billing"
 let g:JavaImpDataDir = $HOME . "/vim/JavaImp"
-
-function! Patch()
-  execute "e application.properties | g/app\.version"
-  execute ":normal $"
-  execute ":normal \<C-a>"
-  execute ":w"
-  execute ":bd"
-endfunction
-command! Patch :call Patch()
-
-function! Minor()
-  execute "e application.properties | g/app\.version"
-  execute ":normal $"
-  execute ":normal cw0"
-  execute ":normal $bb"
-  execute ":normal \<C-a>"
-  execute ":w"
-  execute ":bd"
-endfunction
-command! Minor :call Minor()
-
 augroup custom_hl
   autocmd!
   au FileType groovy syn region groovyComment start="@PropertyHelp" end=")"
@@ -265,8 +268,6 @@ let g:go_gocode_propose_source = 0
 
 augroup filetype_go
   autocmd!
-
-  "VIM-GO
   au FileType go     nmap <leader>c <Plug>(go-coverage)
   au FileType go     nmap <leader>ct <Plug>(go-coverage-toggle)
   au FileType go     nmap <Leader>d <Plug>(go-def)
@@ -277,8 +278,6 @@ augroup filetype_go
   au FileType go     nmap <leader>a <Plug>(go-alternate-edit)
   au FileType go     nmap <leader>g <Plug>(go-generate)
   au FileType go     inoremap ;err <ESC>:GoIfErr<CR>O
-
-  " au FileType go      set conceallevel=2 concealcursor=niv
 augroup end
 
 " cpp
@@ -289,56 +288,53 @@ augroup filetype_c
 augroup end
 
 " rust
-let g:rustfmt_autosave = 1
-
+let g:rustfmt_autosave = 0
 augroup filetype_rust
   autocmd!
   au FileType rust nmap <leader>r :!cargo run<CR>
-
-  "AUTO-PAIRS
   au FileType rust let g:AutoPairs = {'(':')', '[':']', '{':'}','"':'"', '`':'`'}
 augroup end
 "}}}
+
 "{{{ MAPPINGS
 command! WQ wq
 command! Wq wq
 command! W w
 command! Q q
 nmap <c-p> :Files<CR>
-nmap <leader>o :only<CR>
 nnoremap <S-F5> ggvG=
-noremap <Up> <NOP>
-noremap <Down> <NOP>
-noremap <Left> <NOP>
-noremap <Right> <NOP>
 nmap <tab> :bnext<CR>
 nmap <s-tab> :bprevious<CR>
 nnoremap Q @q
 nnoremap 0 ^
 nnoremap ^ 0
 nnoremap Q :norm @q<cr>
+nmap <leader>o :only<CR>
 nmap <leader>bd :bdelete<CR>
 nmap <leader>bq :bdelete!<CR>
-nmap <leader>ba :bd <C-A><CR>
+nmap <leader>ba :bufdo bd<CR>
 nmap <leader>bo :BufOnly<CR>
+nmap <leader>ls :ls<CR>
+nmap <leader>f :ALEFix<CR>
+nmap <leader>lg :term lazygit<CR>i
+nmap <leader>S :,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
+nmap <leader>s :%s/\<<C-r><C-w>\>//gc<Left><Left>
+nmap <leader>tab :Tabularize /\|<CR>
+nmap <leader>pj :norm 0v$,json<CR>
+nmap <leader>. :TagbarToggle<CR>
+nmap <F8> :TagbarToggle<CR>
+nmap <C-v><C-v> gg<C-V>G$
+noremap <Left> <NOP>
+noremap <Right> <NOP>
 nmap <Down> :cnext<cr>
 nmap <Up> :cprevious<cr>
-nnoremap <leader>s :,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
-nnoremap <leader>S :%s/\<<C-r><C-w>\>//gc<Left><Left>
-nmap <leader>tab :Tabularize /\|<CR>
-nnoremap <leader>pj :norm 0v$,json<CR>
-vnoremap <leader>pj :!python -m json.tool<CR>
 nmap <space> ,
 nmap <space><space> :e#<cr>
-vmap <C-c> <ESC>
-nmap <C-v><C-v> gg<C-V>G$
-
 nnoremap gev :e $MYVIMRC<CR>
 nnoremap gsv :so $MYVIMRC<CR>
 
-nmap <leader>lg :term lazygit<CR>i
-nmap <F8> :TagbarToggle<CR>
-nmap <leader>. :TagbarToggle<CR>
+vmap <C-c> <ESC>
+vnoremap <leader>pj :!python -m json.tool<CR>
 
 if has('nvim')
   tnoremap <leader>bd :bd!<CR>
@@ -353,6 +349,7 @@ function! FixAccute()
   execute "%s/&uuml;/ü/ge"
   execute "%s/&ntilde;/ñ/ge"
   execute "%s/&iquest;/¿/ge"
+  execute "%s/&iexcl;/¡/ge"
 endfunction
 command! FixAccute :call FixAccute()
 
@@ -366,6 +363,7 @@ let g:UltiSnipsExpandTrigger="<c-k>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 "}}}
+
 "{{{ LSP
 nnoremap <leader>lcs :LanguageClientStart<CR>
 let g:LanguageClient_diagnosticsList = 'Disabled'
@@ -377,15 +375,10 @@ else
   let g:LanguageClient_settingsPath = '~/.config/vim/settings.json'
 endif
 
-      "\ 'cpp' : ['cquery', '--language-server', '--log-file=/tmp/cqlog.log'],
 let g:LanguageClient_serverCommands = {
       \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
       \ 'cpp': ['clangd']
       \ }
-
-" let g:LanguageClient_rootMarkers = {
-"      \ 'cpp': ['.cquery', 'compile_commands.json', 'build'],
-"      \ }
 
 augroup lsp_langs
   autocmd!
@@ -402,6 +395,7 @@ augroup lsp_langs
 augroup end
 
 "}}}
+
 "{{{ CTAGS
 let g:tagbar_type_groovy = {
       \ 'ctagstype' : 'groovy',
@@ -462,6 +456,7 @@ let g:tagbar_type_haskell = {
       \ }
       \ }
 "}}}
+
 " {{{ INTERO
 augroup interoMaps
   au!
@@ -516,6 +511,7 @@ let g:intero_vertical_split = 1
 " OPTIONAL: Make the update time shorter, so the type info will trigger faster.
 set updatetime=1000
 " }}}
+
 " {{{ VMATH
 " Vim global plugin for math on visual regions
 " Maintainer:	Damian Conway
@@ -661,6 +657,7 @@ let &cpo = s:save_cpo
 xnoremap <expr> ++ VMATH_YankAndAnalyse()
 nmap ++  vip++
 " }}}
+
 " {{{ NEGATE
 function! Negate()
   let s:list = {
@@ -685,7 +682,14 @@ command! Negate :call Negate()
 nmap !! :Negate<CR>
 " }}}
 
-let g:ftplugin_sql_omni_key = '<C-j>'
-set encoding=utf-8
+function! ProfileStart()
+  :profile start profile.log
+  :profile func *
+  :profile file *
+endfunction
 
-let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
+function! ProfileEnd()
+  :profile pause
+  :noautocmd qall!
+endfunction
+
