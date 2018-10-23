@@ -86,8 +86,6 @@ set signcolumn=yes
 set guifont=Monaco
 set termguicolors
 set synmaxcol=128
-" set list
-" set listchars=tab:__,trail:~,extends:>,precedes:<
 set nobk
 
 " colors
