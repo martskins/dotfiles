@@ -55,7 +55,7 @@ Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 Plug 'parsonsmatt/intero-neovim', { 'for': 'haskell' }
 Plug 'neomake/neomake', { 'for': 'haskell' }
 
-Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh', 'for': ['cpp', 'rust']}
+Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh', 'for': ['cpp', 'rust', 'javascript']}
 Plug 'dbakker/vim-projectroot'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
@@ -85,11 +85,9 @@ set colorcolumn=128
 set signcolumn=yes
 set guifont=Monaco
 set termguicolors
-" set cursorcolumn
-" set cursorline
 set synmaxcol=128
-set list
-set listchars=tab:>-,trail:~,extends:>,precedes:<
+" set list
+" set listchars=tab:__,trail:~,extends:>,precedes:<
 set nobk
 
 " colors
@@ -128,7 +126,6 @@ let mapleader = ','
 let g:netrw_list_hide= '.*\.swp$,.DS_Store,*/tmp/*,*.so,*.swp,*.swo,*.zip,*.git,^\.\.\=/\=$'
 
 " folding
-" set foldmethod=expr foldexpr=getline(v:lnum)=~'^\s*'.&commentstring[0]
 set fdm=expr
 set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
 augroup folding
@@ -172,10 +169,11 @@ let g:tagbar_autofocus = 1
 let g:SuperTabDefaultCompletionType = "<c-n>"
 
 " ncm2
-" autocmd BufEnter * call ncm2#enable_for_buffer()
-" set completeopt=noinsert,menuone,noselect
-" au User Ncm2PopupOpen set completeopt=noinsert,menuone,noselect
-" au User Ncm2PopupClose set completeopt=menuone
+autocmd BufEnter * call ncm2#enable_for_buffer()
+set completeopt=noinsert,menuone,noselect
+au User Ncm2PopupOpen set completeopt=noinsert,menuone,noselect
+au User Ncm2PopupClose set completeopt=menuone
+let g:ncm2#auto_popup = 1
 
 " ack
 let g:ack_use_dispatch = 1
@@ -196,7 +194,8 @@ let g:ale_fixers = {
       \ 'cpp': ['clang-format'],
       \ 'rust': ['rustfmt'],
       \ 'ruby': ['rufo'],
-      \ 'vue': ['eslint']
+      \ 'vue': ['eslint'],
+      \ '*': ['remove_trailing_spaces']
       \}
 let g:ale_fix_on_save = 0
 let g:ale_lint_on_enter = 0
@@ -377,7 +376,8 @@ endif
 
 let g:LanguageClient_serverCommands = {
       \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-      \ 'cpp': ['clangd']
+      \ 'cpp': ['clangd'],
+      \ 'javascript': ['tcp://127.0.0.1:61606']
       \ }
 
 augroup lsp_langs
@@ -692,4 +692,3 @@ function! ProfileEnd()
   :profile pause
   :noautocmd qall!
 endfunction
-
