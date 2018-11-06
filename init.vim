@@ -3,7 +3,8 @@ filetype off
 
 "{{{ PLUGINS
 call plug#begin('~/.vim/plugged')
-Plug 'vim-airline/vim-airline'
+Plug 'itchyny/lightline.vim'
+Plug 'mengelbrecht/lightline-bufferline'
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
 Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
@@ -31,29 +32,22 @@ Plug 'ncm2/ncm2-tmux'
 Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-ultisnips'
 Plug 'roxma/vim-hug-neovim-rpc'
-Plug 'ncm2/ncm2-go', { 'for': 'go' }
-Plug 'ncm2/ncm2-tern', { 'for': 'javascript' , 'do': 'npm install' }
-Plug 'ncm2/ncm2-cssomni', { 'for': 'css' }
-" Plug 'ncm2/ncm2-jedi', { 'for': 'python' }
-Plug 'roxma/ncm-ruby', { 'for': 'ruby' }
+Plug 'ncm2/ncm2-go',              { 'for': 'go' }
+Plug 'ncm2/ncm2-tern',            { 'for': 'javascript' , 'do': 'npm install' }
+Plug 'ncm2/ncm2-cssomni',         { 'for': 'css' }
+Plug 'roxma/ncm-ruby',            { 'for': 'ruby' }
 
-Plug 'davidhalter/jedi-vim', { 'for': 'python' }
-
-Plug 'digitaltoad/vim-pug', { 'for': ['pug', 'jade'] }
-Plug 'posva/vim-vue', { 'for': 'vue' }
-Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
-Plug 'tpope/vim-rails', { 'for': 'ruby' }
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' , 'for': 'go' }
-Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-Plug 'vim-scripts/grails-vim', { 'for': ['groovy', 'java', 'kotlin'] }
-Plug 'martskins/vimport', { 'for': ['groovy', 'java', 'kotlin'] }
-Plug 'thecodesmith/vim-groovy', { 'for': ['groovy', 'java', 'kotlin'] }
-Plug 'udalov/kotlin-vim', { 'for': 'kotlin' }
-
-Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
-Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
-Plug 'parsonsmatt/intero-neovim', { 'for': 'haskell' }
-Plug 'neomake/neomake', { 'for': 'haskell' }
+Plug 'davidhalter/jedi-vim',      { 'for': 'python' }
+Plug 'digitaltoad/vim-pug',       { 'for': ['pug', 'jade'] }
+Plug 'posva/vim-vue',             { 'for': 'vue' }
+Plug 'vim-ruby/vim-ruby',         { 'for': 'ruby' }
+Plug 'tpope/vim-rails',           { 'for': 'ruby' }
+Plug 'fatih/vim-go',              { 'for': 'go', 'do': ':GoInstallBinaries' }
+Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
+Plug 'vim-scripts/grails-vim',    { 'for': ['groovy', 'java', 'kotlin'] }
+Plug 'martskins/vimport',         { 'for': ['groovy', 'java', 'kotlin'] }
+Plug 'thecodesmith/vim-groovy',   { 'for': ['groovy', 'java', 'kotlin'] }
+Plug 'udalov/kotlin-vim',         { 'for': 'kotlin' }
 
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh', 'for': ['cpp', 'rust', 'javascript']}
 Plug 'dbakker/vim-projectroot'
@@ -62,6 +56,9 @@ Plug 'honza/vim-snippets'
 
 Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline-themes'
+
+Plug 'zah/nim.vim'
+Plug 'rhysd/vim-crystal'
 call plug#end()
 "}}}
 
@@ -156,10 +153,6 @@ augroup netrw_buf_hidden_fix
         \| endif
 augroup end
 
-" neco-ghc
-let g:haskellmode_completion_ghc = 0
-autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
-
 " tagbar
 let g:tagbar_autofocus = 1
 
@@ -173,16 +166,23 @@ au User Ncm2PopupOpen set completeopt=noinsert,menuone,noselect
 au User Ncm2PopupClose set completeopt=menuone
 let g:ncm2#auto_popup = 1
 
+"lighline
+let g:lightline#bufferline#show_number  = 1
+let g:lightline#bufferline#shorten_path = 1
+let g:lightline#bufferline#unnamed      = '[No Name]'
+
+let g:lightline                  = {}
+let g:lightline.tabline          = {'left': [['buffers']], 'right': [['close']]}
+let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
+let g:lightline.component_type   = {'buffers': 'tabsel'}
+
+set showtabline=2
+
 " ack
 let g:ack_use_dispatch = 1
 
 " ctrlp
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|\.git\|target\|web-app'
-
-" airline
-let g:airline_theme='base16_default'
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
 
 " ale
 let g:ale_fixers = {
@@ -191,7 +191,7 @@ let g:ale_fixers = {
       \ 'python': ['autopep8', 'isort'],
       \ 'cpp': ['clang-format'],
       \ 'rust': ['rustfmt'],
-      \ 'ruby': ['rufo'],
+      \ 'ruby': ['rubocop'],
       \ 'vue': ['eslint'],
       \ '*': ['remove_trailing_spaces']
       \}
