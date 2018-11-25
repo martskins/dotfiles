@@ -107,7 +107,8 @@ export PATH=$PATH:$HOME/.cabal/bin
 export PATH=$PATH:$HOME/.local/bin
 export PATH=$PATH:$HOME/Library/Haskell/bin
 export MYVIMRC=~/.config/nvim/init.vim
-export FZF_DEFAULT_COMMAND='rg --files --hidden --follow'
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-messages'
+export PATH=/Users/martin/.nimble/bin:$PATH
 
 # ALIASES
 alias -g ls=exa
