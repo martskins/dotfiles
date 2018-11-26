@@ -23,16 +23,16 @@ Plug 'ervandew/supertab'
 Plug 'ntpeters/vim-better-whitespace'
 
 Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2', { 'for': ['go'] }
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-tmux'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-ultisnips'
-Plug 'roxma/vim-hug-neovim-rpc'
-Plug 'ncm2/ncm2-go',              { 'for': 'go' }
-Plug 'ncm2/ncm2-tern',            { 'for': 'javascript' , 'do': 'npm install' }
-Plug 'ncm2/ncm2-cssomni',         { 'for': 'css' }
-Plug 'roxma/ncm-ruby',            { 'for': 'ruby' }
+
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
+Plug 'pbogut/deoplete-elm', { 'for': 'elm' }
 
 Plug 'zah/nim.vim',               { 'for': 'nim' }
 Plug 'davidhalter/jedi-vim',      { 'for': 'python' }
@@ -42,6 +42,7 @@ Plug 'vim-ruby/vim-ruby',         { 'for': 'ruby' }
 Plug 'fatih/vim-go',              { 'for': 'go', 'do': ':GoInstallBinaries' }
 Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
+Plug 'Zaptic/elm-vim',           { 'for': 'elm' }
 
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
 Plug 'dbakker/vim-projectroot'
@@ -50,7 +51,6 @@ Plug 'honza/vim-snippets'
 
 Plug 'machakann/vim-highlightedyank'
 Plug 'morhetz/gruvbox'
-Plug 'elmcast/elm-vim'
 
 call plug#end()
 "}}}
@@ -149,12 +149,17 @@ augroup end
 " supertab
 let g:SuperTabDefaultCompletionType = "<c-n>"
 
+
+" deoplete
+let g:deoplete#enable_at_startup = 1
+set completeopt-=preview
+
 " ncm2
-autocmd BufEnter * call ncm2#enable_for_buffer()
-set completeopt=noinsert,menuone,noselect
-au User Ncm2PopupOpen set completeopt=noinsert,menuone,noselect
-au User Ncm2PopupClose set completeopt=menuone
-let g:ncm2#auto_popup = 1
+" autocmd BufEnter * call ncm2#enable_for_buffer()
+" set completeopt=noinsert,menuone,noselect
+" au User Ncm2PopupOpen set completeopt=noinsert,menuone,noselect
+" au User Ncm2PopupClose set completeopt=menuone
+" let g:ncm2#auto_popup = 1
 
 "lightline
 let g:lightline#bufferline#show_number  = 1
@@ -242,7 +247,6 @@ augroup filetype_go
   au FileType go     nmap <leader>c <Plug>(go-coverage)
   au FileType go     nmap <leader>ct <Plug>(go-coverage-toggle)
   au FileType go     nmap <Leader>d <Plug>(go-def)
-  au FileType go     nmap <leader>rn <Plug>(go-rename)
   au FileType go     nmap R <Plug>(go-rename)
   au FileType go     nmap <leader>b <Plug>(go-build)
   au FileType go     nmap <leader>t <Plug>(go-test)
@@ -255,14 +259,14 @@ augroup end
 augroup filetype_c
   autocmd!
   autocmd FileType c,cpp    nmap <leader>b :!make build<CR>
-  autocmd FileType c,cpp    nmap <leader>r :!make build && ./a.out<CR>
+  " autocmd FileType c,cpp    nmap <leader>r :!make build && ./a.out<CR>
 augroup end
 
 " rust
 let g:rustfmt_autosave = 0
 augroup filetype_rust
   autocmd!
-  au FileType rust nmap <leader>r :!cargo run<CR>
+  " au FileType rust nmap <leader>r :!cargo run<CR>
   au FileType rust let g:AutoPairs = {'(':')', '[':']', '{':'}','"':'"', '`':'`'}
 augroup end
 "}}}
