@@ -116,3 +116,5 @@ alias -g l="exa -l"
 
 # AUTOJUMP
 [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
+
+[ -z "$TMUX"  ] && { tmux attach || exec tmux new-session && exit;}

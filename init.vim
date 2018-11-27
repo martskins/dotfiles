@@ -44,6 +44,10 @@ Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'Zaptic/elm-vim',           { 'for': 'elm' }
 
+Plug 'majutsushi/tagbar'
+Plug 'soramugi/auto-ctags.vim'
+Plug 'ctrlpvim/ctrlp.vim'
+
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
 Plug 'dbakker/vim-projectroot'
 Plug 'SirVer/ultisnips'
@@ -149,6 +153,8 @@ augroup end
 " supertab
 let g:SuperTabDefaultCompletionType = "<c-n>"
 
+" ctags
+let g:auto_ctags = 1
 
 " deoplete
 let g:deoplete#enable_at_startup = 1
@@ -276,7 +282,7 @@ command! WQ wq
 command! Wq wq
 command! W w
 command! Q q
-nmap <c-p> :Files<CR>
+" nmap <c-p> :Files<CR>
 nnoremap <S-F5> ggvG=
 nmap <tab> :bnext<CR>
 nmap <s-tab> :bprevious<CR>
