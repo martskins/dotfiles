@@ -205,7 +205,7 @@ let g:ale_linters = {
       \ 'go': ['gometalinter'],
       \ 'rust': ['cargo'],
       \ 'python': ['flake8'],
-      \ 'cpp': []
+      \ 'cpp': ['clang']
       \}
 
 " better-whitespace
@@ -344,7 +344,7 @@ let g:LanguageClient_selectionUI = "fzf"
 
 let g:LanguageClient_serverCommands = {
       \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-      \ 'cpp': ['clangd'],
+      \ 'cpp': ['cquery', '--init={"cacheDirectory":"/tmp/cquery/", "std": "c++14"}'],
       \ 'ruby': ['solargraph', 'stdio'],
       \ 'nim': ['/Users/martin/Projects/nimlsp/nimlsp'],
       \ 'javascript': ['tcp://127.0.0.1:61606']
@@ -359,6 +359,11 @@ augroup lsp_langs
   au FileType ruby,nim,rust,c,cpp noremap   <silent>  Z :call LanguageClient_textDocument_definition()<CR>
   au FileType ruby,nim,rust,c,cpp noremap   <silent>  R :call LanguageClient_textDocument_rename()<CR>
   au FileType ruby,nim,rust,c,cpp nmap      <silent>  <leader>d :call LanguageClient_textDocument_definition()<CR>
+augroup end
+
+augroup ctags
+  autocmd!
+  au FileType elm nnoremap gd <C-]>
 augroup end
 
 "}}}
