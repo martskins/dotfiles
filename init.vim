@@ -21,6 +21,7 @@ Plug 'tpope/vim-repeat'
 Plug 'mattn/emmet-vim'
 Plug 'ervandew/supertab'
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'chriskempson/base16-vim'
 
 Plug 'roxma/nvim-yarp'
 
@@ -43,9 +44,12 @@ Plug 'fatih/vim-go',              { 'for': 'go', 'do': ':GoInstallBinaries' }
 Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'Zaptic/elm-vim',           { 'for': 'elm' }
+Plug 'jalvesaq/Nvim-R'
+Plug 'mxw/vim-jsx'
+Plug 'pangloss/vim-javascript'
 
 Plug 'majutsushi/tagbar'
-Plug 'soramugi/auto-ctags.vim'
+Plug 'ludovicchabant/vim-gutentags', { 'for': 'cpp' }
 Plug 'ctrlpvim/ctrlp.vim'
 
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
@@ -76,18 +80,23 @@ set cmdheight=2
 set number relativenumber
 set hid
 set colorcolumn=100
+set cursorline
 set signcolumn=yes
 set guifont=Monaco
 set termguicolors
 set synmaxcol=100
 set nobk
+set textwidth=100
 
 " colors
 set background=dark
 if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
-colorscheme gruvbox
+colorscheme base16-tomorrow-night
+" colorscheme base16-atelier-savanna
+" colorscheme base16-atelier-seaside
+" colorscheme gruvbox
 " hi ColorColumn ctermbg=red guibg=red
 
 " indentation
@@ -114,6 +123,7 @@ nnoremap <silent> <F3> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR>
 set autoread
 set ttyfast
 set t_ut=
+set mouse=a
 let mapleader = ','
 let g:netrw_list_hide= '.*\.swp$,.DS_Store,*/tmp/*,*.so,*.swp,*.swo,*.zip,*.git,^\.\.\=/\=$'
 
@@ -137,8 +147,8 @@ if has("mac")
   let g:python_host_prog="/usr/local/bin/python"
   let g:python3_host_prog="/usr/local/bin/python3"
 else
-  let g:python_host_prog="/home/linuxbrew/.linuxbrew/bin/python"
-  let g:python3_host_prog="/home/linuxbrew/.linuxbrew/bin/python3.7"
+  let g:python_host_prog="/usr/bin/python"
+    let g:python3_host_prog="/usr/bin/python"
 endif
 
 augroup netrw_buf_hidden_fix
@@ -159,13 +169,6 @@ let g:auto_ctags = 1
 " deoplete
 let g:deoplete#enable_at_startup = 1
 set completeopt-=preview
-
-" ncm2
-" autocmd BufEnter * call ncm2#enable_for_buffer()
-" set completeopt=noinsert,menuone,noselect
-" au User Ncm2PopupOpen set completeopt=noinsert,menuone,noselect
-" au User Ncm2PopupClose set completeopt=menuone
-" let g:ncm2#auto_popup = 1
 
 "lightline
 let g:lightline#bufferline#show_number  = 1
@@ -200,10 +203,10 @@ let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 0
 let g:ale_emit_conflict_warnings = 0
 let g:ale_go_gometalinter_options = '--fast'
+      " \ 'rust': ['cargo'],
 let g:ale_linters = {
       \ 'javascript': ['eslint'],
       \ 'go': ['gometalinter'],
-      \ 'rust': ['cargo'],
       \ 'python': ['flake8'],
       \ 'cpp': ['clang']
       \}
@@ -245,8 +248,6 @@ let g:go_metalinter_deadline = "5s"
 let g:go_list_type = "quickfix"
 let g:go_def_reuse_buffer = 1
 let g:go_addtags_transform = "camelcase"
-let g:go_gocode_unimported_packages = 1
-let g:go_gocode_propose_source = 0
 
 augroup filetype_go
   autocmd!
@@ -259,20 +260,19 @@ augroup filetype_go
   au FileType go     nmap <leader>a <Plug>(go-alternate-edit)
   au FileType go     nmap <leader>g <Plug>(go-generate)
   au FileType go     inoremap ;err <ESC>:GoIfErr<CR>O
+  au FileType go     inoremap :err <ESC>:GoIfErr<CR>O
 augroup end
 
 " cpp
 augroup filetype_c
   autocmd!
   autocmd FileType c,cpp    nmap <leader>b :!make build<CR>
-  " autocmd FileType c,cpp    nmap <leader>r :!make build && ./a.out<CR>
 augroup end
 
 " rust
 let g:rustfmt_autosave = 0
 augroup filetype_rust
   autocmd!
-  " au FileType rust nmap <leader>r :!cargo run<CR>
   au FileType rust let g:AutoPairs = {'(':')', '[':']', '{':'}','"':'"', '`':'`'}
 augroup end
 "}}}
@@ -282,7 +282,6 @@ command! WQ wq
 command! Wq wq
 command! W w
 command! Q q
-" nmap <c-p> :Files<CR>
 nnoremap <S-F5> ggvG=
 nmap <tab> :bnext<CR>
 nmap <s-tab> :bprevious<CR>
@@ -303,7 +302,9 @@ nmap <leader>s :%s/\<<C-r><C-w>\>//gc<Left><Left>
 nmap <leader>tab :Tabularize /\|<CR>
 nmap <leader>pj :norm 0v$,json<CR>
 nmap <leader>. :TagbarToggle<CR>
-nmap <leader>r :!
+nmap <leader>e :!
+nmap <leader>be :!<UP><CR>
+nmap <leader>x :%!xxd<CR>
 nmap <F8> :TagbarToggle<CR>
 nmap <C-v><C-v> gg<C-V>G$
 noremap <Left> <NOP>
@@ -314,9 +315,10 @@ nmap <space> ,
 nmap <space><space> :e#<cr>
 nnoremap gev :e $MYVIMRC<CR>
 nnoremap gsv :so $MYVIMRC<CR>
+nnoremap <LeftMouse> <NOP>
+inoremap <LeftMouse> <NOP>
 
 vmap <C-c> <ESC>
-imap jk <ESC>
 vnoremap <leader>pj :!python -m json.tool<CR>
 
 if has('nvim')
@@ -338,15 +340,16 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 nnoremap <leader>lcs :LanguageClientStart<CR>
 let g:LanguageClient_diagnosticsList = 'Disabled'
 let g:LanguageClient_loadSettings = 0
-let g:LanguageClient_loggingFile = "/Users/martin/Desktop/languageclient-neovim.log"
+let g:LanguageClient_loggingFile = "/home/martin/Desktop/languageclient-neovim.log"
 let g:LanguageClient_autoStart = 1
 let g:LanguageClient_selectionUI = "fzf"
 
+      " \ 'go': ['golsp', '-mode', 'stdio'],
 let g:LanguageClient_serverCommands = {
       \ 'rust': ['rustup', 'run', 'stable', 'rls'],
       \ 'cpp': ['cquery', '--init={"cacheDirectory":"/tmp/cquery/", "std": "c++14"}'],
       \ 'ruby': ['solargraph', 'stdio'],
-      \ 'nim': ['/Users/martin/Projects/nimlsp/nimlsp'],
+      \ 'nim': ['/home/martin/Projects/nimlsp/nimlsp'],
       \ 'javascript': ['tcp://127.0.0.1:61606']
       \ }
 
