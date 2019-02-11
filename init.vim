@@ -22,20 +22,12 @@ Plug 'mattn/emmet-vim'
 Plug 'ervandew/supertab'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'chriskempson/base16-vim'
+Plug 'cespare/vim-toml'
 
+Plug 'ncm2/ncm2'
+Plug 'ncm2/ncm2-ultisnips'
 Plug 'roxma/nvim-yarp'
 
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
-Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
-Plug 'pbogut/deoplete-elm', { 'for': 'elm' }
-
-Plug 'zah/nim.vim',               { 'for': 'nim' }
 Plug 'davidhalter/jedi-vim',      { 'for': 'python' }
 Plug 'digitaltoad/vim-pug',       { 'for': ['pug', 'jade'] }
 Plug 'posva/vim-vue',             { 'for': 'vue' }
@@ -86,18 +78,15 @@ set guifont=Monaco
 set termguicolors
 set synmaxcol=100
 set nobk
-set textwidth=100
+set textwidth=80
+set lazyredraw
 
 " colors
 set background=dark
 if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
-colorscheme base16-tomorrow-night
-" colorscheme base16-atelier-savanna
-" colorscheme base16-atelier-seaside
-" colorscheme gruvbox
-" hi ColorColumn ctermbg=red guibg=red
+colorscheme gruvbox
 
 " indentation
 set tabstop=2
@@ -148,7 +137,7 @@ if has("mac")
   let g:python3_host_prog="/usr/local/bin/python3"
 else
   let g:python_host_prog="/usr/bin/python"
-    let g:python3_host_prog="/usr/bin/python"
+    let g:python3_host_prog="/usr/bin/python3"
 endif
 
 augroup netrw_buf_hidden_fix
@@ -166,9 +155,9 @@ let g:SuperTabDefaultCompletionType = "<c-n>"
 " ctags
 let g:auto_ctags = 1
 
-" deoplete
-let g:deoplete#enable_at_startup = 1
-set completeopt-=preview
+" ncm2
+autocmd BufEnter * call ncm2#enable_for_buffer()
+set completeopt=noinsert,menuone,noselect
 
 "lightline
 let g:lightline#bufferline#show_number  = 1
@@ -201,7 +190,7 @@ let g:ale_fixers = {
       \}
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 0
-let g:ale_emit_conflict_warnings = 0
+let g:ale_emit_conflict_warnings = 1
 let g:ale_go_gometalinter_options = '--fast'
       " \ 'rust': ['cargo'],
 let g:ale_linters = {
@@ -260,7 +249,7 @@ augroup filetype_go
   au FileType go     nmap <leader>a <Plug>(go-alternate-edit)
   au FileType go     nmap <leader>g <Plug>(go-generate)
   au FileType go     inoremap ;err <ESC>:GoIfErr<CR>O
-  au FileType go     inoremap :err <ESC>:GoIfErr<CR>O
+  " au FileType go     inoremap :err <ESC>:GoIfErr<CR>O
 augroup end
 
 " cpp
@@ -331,25 +320,30 @@ augroup qf
 augroup END
 
 " ultisnips
-let g:UltiSnipsExpandTrigger="<c-k>"
+let g:UltiSnipsExpandTrigger="<Plug>(ultisnips_expand)"
 let g:UltiSnipsJumpForwardTrigger="<c-k>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <silent> <expr> <CR> pumvisible() ? ncm2_ultisnips#expand_or("\<CR>", 'n') : "\<CR>"
 "}}}
 
 "{{{ LSP
 nnoremap <leader>lcs :LanguageClientStart<CR>
 let g:LanguageClient_diagnosticsList = 'Disabled'
 let g:LanguageClient_loadSettings = 0
-let g:LanguageClient_loggingFile = "/home/martin/Desktop/languageclient-neovim.log"
+let g:LanguageClient_loggingFile = "/home/martin.asquino/Desktop/languageclient-neovim.log"
 let g:LanguageClient_autoStart = 1
 let g:LanguageClient_selectionUI = "fzf"
+let g:LanguageClient_hasClientSupport = 0
 
       " \ 'go': ['golsp', '-mode', 'stdio'],
 let g:LanguageClient_serverCommands = {
       \ 'rust': ['rustup', 'run', 'stable', 'rls'],
       \ 'cpp': ['cquery', '--init={"cacheDirectory":"/tmp/cquery/", "std": "c++14"}'],
       \ 'ruby': ['solargraph', 'stdio'],
-      \ 'nim': ['/home/martin/Projects/nimlsp/nimlsp'],
+      \ 'nim': ['/home/martin.asquino/Projects/nimlsp/nimlsp'],
+      \ 'go': ['bingo'],
       \ 'javascript': ['tcp://127.0.0.1:61606']
       \ }
 
