@@ -3,8 +3,7 @@ filetype off
 
 "{{{ PLUGINS
 call plug#begin('~/.vim/plugged')
-Plug 'itchyny/lightline.vim'
-Plug 'mengelbrecht/lightline-bufferline'
+Plug 'vim-airline/vim-airline'
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
 Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
@@ -18,41 +17,23 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-repeat'
-Plug 'mattn/emmet-vim'
 Plug 'ervandew/supertab'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'chriskempson/base16-vim'
+Plug 'majutsushi/tagbar'
+Plug 'ctrlpvim/ctrlp.vim'
 
-Plug 'roxma/nvim-yarp'
-
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
-Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
-Plug 'pbogut/deoplete-elm', { 'for': 'elm' }
-
-Plug 'zah/nim.vim',               { 'for': 'nim' }
+Plug 'cespare/vim-toml',          { 'for': 'toml' }
 Plug 'davidhalter/jedi-vim',      { 'for': 'python' }
 Plug 'digitaltoad/vim-pug',       { 'for': ['pug', 'jade'] }
 Plug 'posva/vim-vue',             { 'for': 'vue' }
 Plug 'vim-ruby/vim-ruby',         { 'for': 'ruby' }
 Plug 'fatih/vim-go',              { 'for': 'go', 'do': ':GoInstallBinaries' }
 Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
+Plug 'Zaptic/elm-vim',            { 'for': 'elm' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
-Plug 'Zaptic/elm-vim',           { 'for': 'elm' }
-Plug 'jalvesaq/Nvim-R'
-Plug 'mxw/vim-jsx'
-Plug 'pangloss/vim-javascript'
+Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
 
-Plug 'majutsushi/tagbar'
-Plug 'ludovicchabant/vim-gutentags', { 'for': 'cpp' }
-Plug 'ctrlpvim/ctrlp.vim'
-
-Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
+Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
 Plug 'dbakker/vim-projectroot'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
@@ -86,18 +67,16 @@ set guifont=Monaco
 set termguicolors
 set synmaxcol=100
 set nobk
-set textwidth=100
+set textwidth=80
+set lazyredraw
 
 " colors
 set background=dark
 if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
-colorscheme base16-tomorrow-night
-" colorscheme base16-atelier-savanna
-" colorscheme base16-atelier-seaside
-" colorscheme gruvbox
-" hi ColorColumn ctermbg=red guibg=red
+colorscheme gruvbox
+" colorscheme Atelier_DuneDark
 
 " indentation
 set tabstop=2
@@ -112,6 +91,7 @@ set pastetoggle=<leader>z
 set clipboard=unnamed
 
 " search
+set showtabline=2
 set ignorecase
 set history=100
 set hlsearch
@@ -120,6 +100,7 @@ set wildmenu
 nnoremap <silent> <F3> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 
 " behavior
+set updatetime=100
 set autoread
 set ttyfast
 set t_ut=
@@ -148,7 +129,7 @@ if has("mac")
   let g:python3_host_prog="/usr/local/bin/python3"
 else
   let g:python_host_prog="/usr/bin/python"
-    let g:python3_host_prog="/usr/bin/python"
+    let g:python3_host_prog="/usr/bin/python3"
 endif
 
 augroup netrw_buf_hidden_fix
@@ -163,64 +144,22 @@ augroup end
 " supertab
 let g:SuperTabDefaultCompletionType = "<c-n>"
 
-" ctags
-let g:auto_ctags = 1
+let g:airline#extensions#tabline#enabled = 1
 
-" deoplete
-let g:deoplete#enable_at_startup = 1
-set completeopt-=preview
-
-"lightline
-let g:lightline#bufferline#show_number  = 1
-let g:lightline#bufferline#shorten_path = 1
-let g:lightline#bufferline#unnamed      = '[No Name]'
-
-let g:lightline                  = {}
-let g:lightline.tabline          = {'left': [['buffers']], 'right': [['close']]}
-let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
-let g:lightline.component_type   = {'buffers': 'tabsel'}
-
-set showtabline=2
-
-" ack
 let g:ack_use_dispatch = 1
 
-" ctrlp
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|\.git\|target\|web-app'
-
-" ale
-let g:ale_fixers = {
-      \ 'javascript': ['eslint'],
-      \ 'python': ['autopep8', 'isort'],
-      \ 'cpp': ['clang-format'],
-      \ 'rust': ['rustfmt'],
-      \ 'ruby': ['rubocop'],
-      \ 'nim': ['nimpretty'],
-      \ 'vue': ['eslint'],
-      \ '*': ['trim_whitespace']
-      \}
-let g:ale_fix_on_save = 1
-let g:ale_lint_on_enter = 0
-let g:ale_emit_conflict_warnings = 0
-let g:ale_go_gometalinter_options = '--fast'
-      " \ 'rust': ['cargo'],
-let g:ale_linters = {
-      \ 'javascript': ['eslint'],
-      \ 'go': ['gometalinter'],
-      \ 'python': ['flake8'],
-      \ 'cpp': ['clang']
-      \}
 
 " better-whitespace
 let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
-
-" jedi
-let g:jedi#show_call_signatures=0
-let g:jedi#popup_on_dot=0
 "}}}
 
 "{{{ LANGUAGE-SPECIFIC
+
+" python
+let g:jedi#show_call_signatures=0
+let g:jedi#popup_on_dot=0
 
 " ruby
 autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
@@ -254,19 +193,11 @@ augroup filetype_go
   au FileType go     nmap <leader>c <Plug>(go-coverage)
   au FileType go     nmap <leader>ct <Plug>(go-coverage-toggle)
   au FileType go     nmap <Leader>d <Plug>(go-def)
-  au FileType go     nmap R <Plug>(go-rename)
   au FileType go     nmap <leader>b <Plug>(go-build)
   au FileType go     nmap <leader>t <Plug>(go-test)
   au FileType go     nmap <leader>a <Plug>(go-alternate-edit)
   au FileType go     nmap <leader>g <Plug>(go-generate)
   au FileType go     inoremap ;err <ESC>:GoIfErr<CR>O
-  au FileType go     inoremap :err <ESC>:GoIfErr<CR>O
-augroup end
-
-" cpp
-augroup filetype_c
-  autocmd!
-  autocmd FileType c,cpp    nmap <leader>b :!make build<CR>
 augroup end
 
 " rust
@@ -331,68 +262,74 @@ augroup qf
 augroup END
 
 " ultisnips
-let g:UltiSnipsExpandTrigger="<c-k>"
+let g:UltiSnipsExpandTrigger="<Plug>(ultisnips_expand)"
 let g:UltiSnipsJumpForwardTrigger="<c-k>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <silent> <expr> <CR> pumvisible() ? ncm2_ultisnips#expand_or("\<CR>", 'n') : "\<CR>"
 "}}}
 
-"{{{ LSP
-nnoremap <leader>lcs :LanguageClientStart<CR>
-let g:LanguageClient_diagnosticsList = 'Disabled'
-let g:LanguageClient_loadSettings = 0
-let g:LanguageClient_loggingFile = "/home/martin/Desktop/languageclient-neovim.log"
-let g:LanguageClient_autoStart = 1
-let g:LanguageClient_selectionUI = "fzf"
-
-      " \ 'go': ['golsp', '-mode', 'stdio'],
-let g:LanguageClient_serverCommands = {
-      \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-      \ 'cpp': ['cquery', '--init={"cacheDirectory":"/tmp/cquery/", "std": "c++14"}'],
-      \ 'ruby': ['solargraph', 'stdio'],
-      \ 'nim': ['/home/martin/Projects/nimlsp/nimlsp'],
-      \ 'javascript': ['tcp://127.0.0.1:61606']
-      \ }
-
-augroup lsp_langs
-  autocmd!
-  au FileType ruby,nim,rust,c,cpp nnoremap            <F5> :call LanguageClient_contextMenu()<CR>
-  au FileType ruby,nim,rust,c,cpp nnoremap  <silent>  K :call LanguageClient#textDocument_hover()<CR>
-  au FileType ruby,nim,rust,c,cpp nnoremap  <silent>  gd :call LanguageClient#textDocument_definition()<CR>zz
-  au FileType ruby,nim,rust,c,cpp noremap   <silent>  H :call LanguageClient_textDocument_hover()<CR>
-  au FileType ruby,nim,rust,c,cpp noremap   <silent>  Z :call LanguageClient_textDocument_definition()<CR>
-  au FileType ruby,nim,rust,c,cpp noremap   <silent>  R :call LanguageClient_textDocument_rename()<CR>
-  au FileType ruby,nim,rust,c,cpp nmap      <silent>  <leader>d :call LanguageClient_textDocument_definition()<CR>
-augroup end
-
-augroup ctags
-  autocmd!
-  au FileType elm nnoremap gd <C-]>
-augroup end
+"{{{ ALE
+let g:ale_fixers = {
+      \ 'javascript': ['eslint'],
+      \ 'python': ['autopep8', 'isort'],
+      \ 'cpp': ['clang-format'],
+      \ 'c': ['uncrustify'],
+      \ 'rust': ['rustfmt'],
+      \ 'ruby': ['rubocop'],
+      \ 'nim': ['nimpretty'],
+      \ 'vue': ['eslint'],
+      \ '*': ['trim_whitespace']
+      \}
+let g:ale_fix_on_save = 1
+let g:ale_lint_on_enter = 1
+let g:ale_emit_conflict_warnings = 1
+let g:airline#extensions#ale#enabled = 1
+let g:ale_go_gometalinter_options = '--fast'
+      " \ 'rust': ['cargo'],
+let g:ale_linters = {
+      \ 'javascript': ['eslint'],
+      \ 'go': ['gometalinter'],
+      \ 'python': ['flake8'],
+      \ 'cpp': ['clang']
+      \}
 
 "}}}
 
-" {{{ NEGATE
-function! Negate()
-  let s:list = {
-        \'false':'true', 'true':'false', 'False': 'True', 'True': 'False',
-        \'0': '1', '1': '0', '==':'!=', '!=':'==', '>': '<', '<': '>', '&&': '||', '||': '&&'
-        \}
-  let s:keys = keys(s:list)
-  if index(s:keys, expand("<cword>")) == -1
-    call search(join(s:keys, '\|'), 'e', line('.'))
-  endif
+" {{{ COC
+  function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+  endfunction
 
-  let s:current_word = expand("<cword>")
-  echo s:current_word
-  let s:new_word = get(s:list, s:current_word)
-  if s:new_word == "0"
-    return
-  endif
-  echo s:current_word
-  execute ":s/".s:current_word."/".s:new_word."/"
-endfunction
-command! Negate :call Negate()
-nmap !! :Negate<CR>
+  " Use <c-space> for trigger completion.
+  inoremap <silent><expr> <c-space> coc#refresh()
+
+  " Use <cr> for confirm completion, `<C-g>u` means break undo chain at current position.
+  " Coc only does snippet and additional edit on confirm.
+  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+  " Use `[c` and `]c` for navigate diagnostics
+  nmap <silent> [c <Plug>(coc-diagnostic-prev)
+  nmap <silent> ]c <Plug>(coc-diagnostic-next)
+
+  " Remap keys for gotos
+  nmap <silent> gd <Plug>(coc-definition)
+  nmap <silent> gy <Plug>(coc-type-definition)
+  nmap <silent> gi <Plug>(coc-implementation)
+  nmap <silent> gr <Plug>(coc-references)
+
+  " Use K for show documentation in preview window
+  nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+  function! s:show_documentation()
+    if &filetype == 'vim'
+      execute 'h '.expand('<cword>')
+    else
+      call CocAction('doHover')
+    endif
+  endfunction
 " }}}
 
 function! ProfileStart()
