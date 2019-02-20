@@ -76,7 +76,6 @@ if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 colorscheme gruvbox
-" colorscheme Atelier_DuneDark
 
 " indentation
 set tabstop=2
@@ -294,7 +293,6 @@ let g:ale_linters = {
       \ 'python': ['flake8'],
       \ 'cpp': ['clang']
       \}
-
 "}}}
 
 " {{{ COC
