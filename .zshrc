@@ -9,7 +9,6 @@ export ZSH=$HOME/.oh-my-zsh
 # The next line enables shell command completion for gcloud.
 #if [ -f '$HOME/Downloads/google-cloud-sdk/completion.bash.inc' ]; then source '$HOME/Downloads/google-cloud-sdk/completion.bash.inc'; fi
 export PATH=$HOME/go//bin:$HOME/Downloads/google-cloud-sdk/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/go/bin:/usr/local/mysql/bin
-export PATH="$HOME/.cabal/bin:$PATH"
 #
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -96,25 +95,32 @@ unsetopt share_history
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 export GOPATH="$HOME/go"
-export PATH="$HOME/.cargo/bin:$PATH"
-export PATH="$HOME/go/bin":$PATH
 export LANG=en_US.UTF-8
 export EDITOR='nvim'
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+export PATH="/usr/local/go/bin":$PATH
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH=$PATH:/opt/flutter/bin
 export PATH=$PATH:$HOME/.cabal/bin
 export PATH=$PATH:$HOME/.local/bin
-export PATH=$PATH:$HOME/Library/Haskell/bin
+export PATH=$PATH:$HOME/.nimble/bin
+export PATH=$PATH:$HOME/.pub-cache/bin
 export MYVIMRC=~/.config/nvim/init.vim
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-messages'
-export PATH=/Users/martin/.nimble/bin:$PATH
+export PATH="$PATH:$HOME/.rvm/bin"
 
 # ALIASES
 alias -g ls=exa
 alias -g l="exa -l"
+alias -g open="xdg-open"
 
 # AUTOJUMP
 [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
 
-[ -z "$TMUX"  ] && { tmux attach || exec tmux new-session && exit;}
+# [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/opt/gcloud/path.zsh.inc' ]; then . '/opt/gcloud/path.zsh.inc'; fi
+if [ -f '/opt/gcloud/completion.zsh.inc' ]; then . '/opt/gcloud/completion.zsh.inc'; fi
