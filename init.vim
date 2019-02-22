@@ -150,6 +150,7 @@ augroup end
 let g:SuperTabDefaultCompletionType = "<c-n>"
 
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tagbar#enabled = 0
 
 let g:ack_use_dispatch = 1
 
@@ -312,8 +313,9 @@ let g:ale_linters = {
   let g:LanguageClient_serverCommands = {
       \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
       \ 'go': ['bingo'],
-      \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-      \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+      \ 'javascript': ['javascript-typescript-stdio'],
+      \ 'typescript': ['javascript-typescript-stdio'],
+      \ 'javascript.jsx': ['javascript-typescript-stdio'],
       \ 'python': ['/usr/local/bin/pyls'],
       \ }
 
@@ -340,7 +342,7 @@ let g:ale_linters = {
   \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
   if has('conceal')
-    set conceallevel=2 concealcursor=niv
+    set conceallevel=0 concealcursor=niv
   endif
 " }}}
 
