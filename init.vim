@@ -129,13 +129,8 @@ augroup folding
         \ exe "normal zM``"
 augroup end
 
-if has("mac")
-  let g:python_host_prog="/usr/local/bin/python"
-  let g:python3_host_prog="/usr/local/bin/python3"
-else
-  let g:python_host_prog="/usr/bin/python"
-    let g:python3_host_prog="/usr/bin/python3"
-endif
+let g:python_host_prog="/usr/bin/python2.7"
+let g:python3_host_prog="/usr/bin/python3"
 
 augroup netrw_buf_hidden_fix
   autocmd!
@@ -309,11 +304,13 @@ let g:ale_linters = {
 "{{{ LSP
   set omnifunc=syntaxcomplete#Complete
   set completeopt-=preview
+  let g:LanguageClient_useVirtualText = 0
   let g:LanguageClient_serverCommands = {
       \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
       \ 'go': ['bingo'],
-      \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-      \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+      \ 'typescript': ['javascript-typescript-stdio'],
+      \ 'javascript': ['javascript-typescript-stdio'],
+      \ 'javascript.jsx': ['javascript-typescript-stdio'],
       \ 'python': ['/usr/local/bin/pyls'],
       \ }
 
@@ -353,4 +350,8 @@ endfunction
 function! ProfileEnd()
   :profile pause
   :noautocmd qall!
+endfunction
+
+function! RustFillStruct()
+  :r !/home/martin/Projects/rfs/target/release/rfs Stuff /home/martin/Projects/rfs/src/main.rs
 endfunction
