@@ -150,6 +150,7 @@ augroup end
 let g:SuperTabDefaultCompletionType = "<c-n>"
 
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tagbar#enabled = 0
 
 let g:ack_use_dispatch = 1
 
@@ -324,9 +325,9 @@ let g:ale_linters = {
   let g:LanguageClient_serverCommands = {
       \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
       \ 'go': ['bingo'],
-      \ 'typescript': ['javascript-typescript-stdio'],
       \ 'vue': ['vls'],
       \ 'javascript': ['javascript-typescript-stdio'],
+      \ 'typescript': ['javascript-typescript-stdio'],
       \ 'javascript.jsx': ['javascript-typescript-stdio'],
       \ 'python': ['/usr/local/bin/pyls'],
       \ }
