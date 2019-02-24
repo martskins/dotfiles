@@ -29,6 +29,11 @@ set $mod Mod4
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
+for_window [class="^.*"] border pixel 1
+focus_follows_mouse = no
+client.focused              #353439 #34be5b #7B9F35
+
+
 # start a terminal
 # bindsym $mod+Return exec i3-sensible-terminal
 # bindsym $mod+Return exec xterm

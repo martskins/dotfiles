@@ -84,7 +84,9 @@ if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 " colorscheme gruvbox
+let g:molokai_original = 1
 colorscheme molokai
+hi MatchParen cterm=none ctermbg=green ctermfg=blue guibg=black guifg=white
 
 " indentation
 set tabstop=2
