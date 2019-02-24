@@ -50,7 +50,7 @@ font-3 = "Noto Sans Symbols2:size=9;1"
 
 modules-left = i3 xwindow
 modules-center =
-modules-right = pulseaudio spotify eth memory cpu date
+modules-right = pulseaudio spotify eth battery memory cpu date
 
 tray-position = right
 tray-padding = 2
@@ -64,6 +64,15 @@ tray-maxsize = 12
 
 cursor-click = pointer
 cursor-scroll = ns-resize
+
+[module/battery]
+type = internal/battery
+label-charging = "Charging %percentage%%"
+label-discharging = "Discharging %percentage%%"
+full-at = 99
+battery = BAT0
+adapter = ADP1
+poll-interval = 5
 
 [module/xwindow]
 type = internal/xwindow
@@ -146,7 +155,7 @@ label = %percentage_used%%
 
 [module/eth]
 type = internal/network
-interface = wlp61s0
+interface = wlo1
 interval = 3.0
 
 format-connected-underline = #55aa55
@@ -242,7 +251,7 @@ ramp-volume-2 = 🔊
 
 [module/github]
 type = internal/github
-token = ${file:/home/martin.asquino/.config/github/notifications.token}
+token = ${file:~/.config/github/notifications.token}
 format-prefix = "📫 "
 format-prefix-foreground = ${colors.primary}
 empty-notifications = false
@@ -254,7 +263,7 @@ type = custom/script
 interval = 1
 format-prefix = " "
 format = <label>
-exec = python /home/martin.asquino/.config/polybar/spotify.py -f '{artist}: {song}'
+exec = python ~/.config/polybar/spotify.py -f '{artist}: {song}'
 format-underline = #1db954
 
 [settings]

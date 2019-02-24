@@ -31,6 +31,7 @@ Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-neosnippet'
 
+Plug 'mattn/emmet-vim',           { 'for': ['vue', 'html'] }
 Plug 'cespare/vim-toml',          { 'for': 'toml' }
 Plug 'davidhalter/jedi-vim',      { 'for': 'python' }
 Plug 'digitaltoad/vim-pug',       { 'for': ['pug', 'jade'] }
@@ -46,6 +47,7 @@ Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.s
 
 Plug 'machakann/vim-highlightedyank'
 Plug 'morhetz/gruvbox'
+Plug 'tomasr/molokai'
 
 call plug#end()
 "}}}
@@ -71,7 +73,7 @@ set cursorline
 set signcolumn=yes
 set guifont=Monaco
 set termguicolors
-set synmaxcol=100
+" set synmaxcol=100
 set nobk
 set textwidth=80
 set lazyredraw
@@ -81,7 +83,8 @@ set background=dark
 if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
-colorscheme gruvbox
+" colorscheme gruvbox
+colorscheme molokai
 
 " indentation
 set tabstop=2
@@ -211,6 +214,14 @@ augroup filetype_rust
   autocmd!
   au FileType rust let g:AutoPairs = {'(':')', '[':']', '{':'}','"':'"', '`':'`'}
 augroup end
+
+" vue
+augroup filetype_vue
+  autocmd!
+  au FileType vue set textwidth=150
+  " au FileType vue set synmaxcol=150
+augroup end
+
 "}}}
 
 "{{{ MAPPINGS
@@ -234,7 +245,8 @@ nmap <leader>ls :ls<CR>
 nmap <leader>f :ALEFix<CR>
 nmap <leader>lg :term lazygit<CR>i
 nmap <leader>S :,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
-nmap <leader>s :%s/\<<C-r><C-w>\>//gc<Left><Left>
+nmap <leader>s :%s/\<<C-r><C-w>\>//gc<Left><Left><Left>
+nmap <leader>w :!surf "duckduckgo.com?q="<Left>
 nmap <leader>tab :Tabularize /\|<CR>
 nmap <leader>pj :norm 0v$,json<CR>
 nmap <leader>. :TagbarToggle<CR>
@@ -284,7 +296,7 @@ let g:ale_fixers = {
       \ 'rust': ['rustfmt'],
       \ 'ruby': ['rubocop'],
       \ 'nim': ['nimpretty'],
-      \ 'vue': ['eslint'],
+      \ 'vue': [],
       \ '*': ['trim_whitespace']
       \}
 let g:ale_fix_on_save = 1
@@ -295,6 +307,8 @@ let g:ale_go_gometalinter_options = '--fast'
       " \ 'rust': ['cargo'],
 let g:ale_linters = {
       \ 'javascript': ['eslint'],
+      \ 'typescript': ['tslint'],
+      \ 'vue': ['tslint', 'vls'],
       \ 'go': ['gometalinter'],
       \ 'python': ['flake8'],
       \ 'cpp': ['clang']
@@ -309,6 +323,7 @@ let g:ale_linters = {
       \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
       \ 'go': ['bingo'],
       \ 'typescript': ['javascript-typescript-stdio'],
+      \ 'vue': ['vls'],
       \ 'javascript': ['javascript-typescript-stdio'],
       \ 'javascript.jsx': ['javascript-typescript-stdio'],
       \ 'python': ['/usr/local/bin/pyls'],
@@ -337,7 +352,7 @@ let g:ale_linters = {
   \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
   if has('conceal')
-    set conceallevel=2 concealcursor=niv
+    set conceallevel=0 concealcursor=niv
   endif
 " }}}
 
