@@ -46,7 +46,7 @@ bindsym $mod+d exec dmenu_run
 # bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
-bindsym $mod+l exec "~/lock.sh"
+bindsym $mod+l exec "betterlockscreen -l"
 # change focus
 # bindsym $mod+j focus left
 # bindsym $mod+k focus down
@@ -166,5 +166,7 @@ bindsym $mod+r mode "resize"
 
 exec "setxkbmap -layout us"
 exec "~/.screenlayout/default.sh"
-exec "xinput set-prop 11 287 1"
-exec "ssh-add ~/.ssh/id_rsa"
+exec "xinput set-prop 14 301 1"
+exec "xinput set-prop 14 302 1"
+exec ssh-add ~/.ssh/id_rsa
+exec --no-startup-id xautolock -time 4 -locker "betterlockscreen -l"
