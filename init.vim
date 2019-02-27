@@ -48,6 +48,8 @@ Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.s
 Plug 'machakann/vim-highlightedyank'
 Plug 'morhetz/gruvbox'
 Plug 'tomasr/molokai'
+Plug 'lifepillar/vim-solarized8'
+Plug 'altercation/vim-colors-solarized'
 
 call plug#end()
 "}}}
@@ -73,6 +75,7 @@ set cursorline
 set signcolumn=yes
 set guifont=Monaco
 set termguicolors
+set t_Co=256
 " set synmaxcol=100
 set nobk
 set textwidth=80
@@ -84,8 +87,10 @@ if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 " colorscheme gruvbox
-let g:molokai_original = 1
-colorscheme molokai
+" let g:molokai_original = 1
+" colorscheme molokai
+
+colorscheme solarized8_high
 hi MatchParen cterm=none ctermbg=green ctermfg=blue guibg=black guifg=white
 
 " indentation
@@ -216,6 +221,7 @@ let g:rustfmt_autosave = 0
 augroup filetype_rust
   autocmd!
   au FileType rust let g:AutoPairs = {'(':')', '[':']', '{':'}','"':'"', '`':'`'}
+  aut FileType rust nmap <leader>d :!surf "https://doc.rust-lang.org/std/?search="&<Left><Left>
 augroup end
 
 " vue
@@ -249,7 +255,7 @@ nmap <leader>f :ALEFix<CR>
 nmap <leader>lg :term lazygit<CR>i
 nmap <leader>S :,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 nmap <leader>s :%s/\<<C-r><C-w>\>//gc<Left><Left><Left>
-nmap <leader>w :!surf "duckduckgo.com?q="<Left>
+nmap <leader>w :!surf "duckduckgo.com?q="&<Left><Left>
 nmap <leader>tab :Tabularize /\|<CR>
 nmap <leader>pj :norm 0v$,json<CR>
 nmap <leader>. :TagbarToggle<CR>
@@ -373,3 +379,9 @@ endfunction
 function! RustFillStruct()
   :r !/home/martin/Projects/rfs/target/release/rfs Stuff /home/martin/Projects/rfs/src/main.rs
 endfunction
+
+" let g:solarized_enable_extra_hi_groups = 1
+let g:solarized_old_cursor_style = 0
+let g:solarized_term_italics = 1
+let g:solarized_visibility = "high"
+" let g:solarized_use16 = 0

@@ -64,7 +64,7 @@ fram_color = "#4d679a"
     startup_notification = false
     dmenu = /usr/bin/dmenu -p dunst:
     browser = /usr/bin/firefox -new-tab
-    icon_position = left
+    icon_position = off
     icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/:/usr/share/icons/hicolor/16x16/apps/
 
 [shortcuts]
