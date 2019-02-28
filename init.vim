@@ -3,7 +3,6 @@ filetype off
 
 "{{{ PLUGINS
 call plug#begin('~/.vim/plugged')
-Plug 'vim-airline/vim-airline'
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
 Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
@@ -19,7 +18,6 @@ Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-repeat'
 Plug 'ervandew/supertab'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'majutsushi/tagbar'
 Plug 'ctrlpvim/ctrlp.vim'
 
 Plug 'Shougo/neosnippet.vim'
@@ -71,12 +69,11 @@ set cmdheight=2
 set number relativenumber
 set hid
 set colorcolumn=100
-set cursorline
 set signcolumn=yes
-set guifont=Monaco
+set guifont=monospace
 set termguicolors
 set t_Co=256
-" set synmaxcol=100
+set synmaxcol=128
 set nobk
 set textwidth=80
 set lazyredraw
@@ -86,9 +83,9 @@ set background=dark
 if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
-" colorscheme gruvbox
-" let g:molokai_original = 1
-" colorscheme molokai
+colorscheme gruvbox
+let g:molokai_original = 1
+colorscheme molokai
 
 colorscheme solarized8_high
 hi MatchParen cterm=none ctermbg=green ctermfg=blue guibg=black guifg=white
@@ -154,9 +151,6 @@ augroup end
 " supertab
 let g:SuperTabDefaultCompletionType = "<c-n>"
 
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tagbar#enabled = 0
-
 let g:ack_use_dispatch = 1
 
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|\.git\|target\|web-app'
@@ -196,10 +190,10 @@ let g:go_highlight_generate_tags = 1
 let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
-let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
-let g:go_metalinter_autosave = 0
-let g:go_metalinter_autosave_enabled = ['golint']
-let g:go_metalinter_deadline = "5s"
+" let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
+" let g:go_metalinter_autosave = 0
+" let g:go_metalinter_autosave_enabled = ['golint']
+" let g:go_metalinter_deadline = "5s"
 let g:go_list_type = "quickfix"
 let g:go_def_reuse_buffer = 1
 let g:go_addtags_transform = "camelcase"
@@ -318,7 +312,7 @@ let g:ale_linters = {
       \ 'javascript': ['eslint'],
       \ 'typescript': ['tslint'],
       \ 'vue': ['tslint', 'vls'],
-      \ 'go': ['gometalinter'],
+      \ 'go': ['vet', 'golint', 'errcheck'],
       \ 'python': ['flake8'],
       \ 'cpp': ['clang']
       \}
@@ -380,8 +374,6 @@ function! RustFillStruct()
   :r !/home/martin/Projects/rfs/target/release/rfs Stuff /home/martin/Projects/rfs/src/main.rs
 endfunction
 
-" let g:solarized_enable_extra_hi_groups = 1
 let g:solarized_old_cursor_style = 0
 let g:solarized_term_italics = 1
 let g:solarized_visibility = "high"
-" let g:solarized_use16 = 0
