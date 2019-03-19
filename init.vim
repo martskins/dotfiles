@@ -20,11 +20,13 @@ Plug 'tpope/vim-repeat'
 Plug 'ervandew/supertab'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'schickling/vim-bufonly'
 
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 
 Plug 'ncm2/ncm2'
+Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
@@ -74,10 +76,10 @@ set synmaxcol=128
 set nobk
 set textwidth=100
 set lazyredraw
-set wildoptions=pum
-set pumblend=20
 set background=dark
 if (has("nvim"))
+  set wildoptions=pum
+  set pumblend=20
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 colorscheme codedark
@@ -257,13 +259,13 @@ let g:ale_linters = {
   let g:LanguageClient_useVirtualText = 1
   let g:LanguageClient_serverCommands = {
       \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-      \ 'go': ['bingo', '--logfile', '/home/martin/Desktop/binlog.txt', '--trace'],
+      \ 'go': ['bingo'],
       \ 'vue': ['vls'],
       \ 'javascript': ['javascript-typescript-stdio'],
       \ 'typescript': ['javascript-typescript-stdio'],
       \ 'javascript.jsx': ['javascript-typescript-stdio'],
       \ 'python': ['/usr/local/bin/pyls'],
-      \ 'dart': ['/home/martin/.pub-cache/bin/dart_language_server'],
+      \ 'dart': ['dart_language_server'],
       \ }
 
   nnoremap <F5> :call LanguageClient_contextMenu()<CR>
