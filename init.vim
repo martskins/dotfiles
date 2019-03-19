@@ -68,20 +68,22 @@ set cmdheight=2
 set number relativenumber
 set hid
 set colorcolumn=100
-set signcolumn=no
 set guifont=monospace
 set termguicolors
 set t_Co=256
 set synmaxcol=128
 set nobk
 set textwidth=100
-set lazyredraw
-set background=dark
 if (has("nvim"))
+  set signcolumn=no
   set wildoptions=pum
   set pumblend=20
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+else
+  set signcolumn=yes
 endif
+set lazyredraw
+set background=dark
 colorscheme codedark
 set tabstop=2
 set shiftwidth=2
