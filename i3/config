@@ -37,7 +37,7 @@ client.focused              #353439 #34be5b #7B9F35
 # start a terminal
 # bindsym $mod+Return exec i3-sensible-terminal
 # bindsym $mod+Return exec xterm
-bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec kitty
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -162,6 +162,17 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+
+# Media player controls
+bindsym XF86AudioPlay exec playerctl play
+bindsym XF86AudioPause exec playerctl pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 # bar {
@@ -172,7 +183,10 @@ bindsym $mod+r mode "resize"
 exec "setxkbmap -layout us"
 exec "~/.screenlayout/default.sh"
 exec "xinput set-prop 14 301 1"
-exec "xinput set-prop 14 302 1"
+exec "xinput set-prop 14 293 1"
+exec "xinput set-prop 14 295 0"
+# exec "xinput set-prop 14 296 0"
+# exec "xinput set-prop 14 302 1"
+# exec "xinput set-prop 14 294 1"
 exec ssh-add ~/.ssh/id_rsa
-exec --no-startup-id xautolock -time 4 -locker "betterlockscreen -l"
-exec xautolock -time 15 -locker 'betterlockscreen -l' &
+exec --no-startup-id xautolock -corners ---- -time 4 -locker "betterlockscreen -l"

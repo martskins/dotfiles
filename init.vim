@@ -4,6 +4,7 @@ filetype off
 "{{{ PLUGINS
 call plug#begin('~/.vim/plugged')
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
+Plug 'vim-airline/vim-airline'
 Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'}
@@ -40,14 +41,15 @@ Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
 Plug 'Zaptic/elm-vim',            { 'for': 'elm' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
+Plug 'dart-lang/dart-vim-plugin', { 'for': 'dart' }
+Plug 'thosakwe/vim-flutter',      { 'for': 'dart' }
 
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 
 Plug 'machakann/vim-highlightedyank'
 Plug 'morhetz/gruvbox'
-Plug 'tomasr/molokai'
-Plug 'lifepillar/vim-solarized8'
-Plug 'altercation/vim-colors-solarized'
+Plug 'sonobre/briofita_vim'
+Plug 'tomasiser/vim-code-dark'
 
 call plug#end()
 "}}}
@@ -55,72 +57,55 @@ call plug#end()
 filetype plugin indent on
 
 "{{{ GENERAL
-syntax off
 syntax enable
 let g:ftplugin_sql_omni_key = '<C-j>'
 set encoding=utf-8
-let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
-
-" shell
+" let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
 set shell=/bin/zsh
 set cmdheight=2
-
-" visuals
 set number relativenumber
 set hid
 set colorcolumn=100
-set signcolumn=yes
+set signcolumn=no
 set guifont=monospace
 set termguicolors
 set t_Co=256
 set synmaxcol=128
 set nobk
-set textwidth=80
+set textwidth=100
 set lazyredraw
-
-" colors
+set wildoptions=pum
+set pumblend=20
 set background=dark
 if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
-colorscheme gruvbox
-let g:molokai_original = 1
-colorscheme molokai
-
-colorscheme solarized8_high
-hi MatchParen cterm=none ctermbg=green ctermfg=blue guibg=black guifg=white
-
-" indentation
+colorscheme codedark
 set tabstop=2
 set shiftwidth=2
 set expandtab
 set backspace=indent,eol,start
 set autoindent
 set wrap
-
-" pasting
 set pastetoggle=<leader>z
 set clipboard=unnamed
-
-" search
 set showtabline=2
 set ignorecase
 set history=100
 set hlsearch
 set showmatch
 set wildmenu
-nnoremap <silent> <F3> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
-
-" behavior
 set updatetime=100
 set autoread
 set ttyfast
 set t_ut=
 set mouse=a
 let mapleader = ','
-let g:netrw_list_hide= '.*\.swp$,.DS_Store,*/tmp/*,*.so,*.swp,*.swo,*.zip,*.git,^\.\.\=/\=$'
 
-" folding
+let g:netrw_list_hide= '.*\.swp$,.DS_Store,*/tmp/*,*.so,*.swp,*.swo,*.zip,*.git,^\.\.\=/\=$'
+let g:python_host_prog="/usr/bin/python2.7"
+let g:python3_host_prog="/usr/bin/python3"
+
 set fdm=expr
 set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
 augroup folding
@@ -136,8 +121,6 @@ augroup folding
         \ exe "normal zM``"
 augroup end
 
-let g:python_host_prog="/usr/bin/python2.7"
-let g:python3_host_prog="/usr/bin/python3"
 
 augroup netrw_buf_hidden_fix
   autocmd!
@@ -147,37 +130,35 @@ augroup netrw_buf_hidden_fix
         \|     set bufhidden=hide
         \| endif
 augroup end
+"}}}
 
-" supertab
+" {{{ SUPERTAB
 let g:SuperTabDefaultCompletionType = "<c-n>"
+" }}}
 
+" {{{ ACK
 let g:ack_use_dispatch = 1
+" }}}
 
+" {{{ CTRLP
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|\.git\|target\|web-app'
+" }}}
 
-" better-whitespace
+" {{{ BETTER WHITESPACE
 let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
-"}}}
+" }}}
+
+" {{{ AIRLINE
+let g:airline#extensions#tabline#enabled = 1
+" }}}
 
 " {{{ NCM2
   autocmd BufEnter * call ncm2#enable_for_buffer()
   set completeopt=noinsert,menuone,noselect
 " }}}
 
-"{{{ LANGUAGE-SPECIFIC
-
-" python
-let g:jedi#show_call_signatures=0
-let g:jedi#popup_on_dot=0
-
-" ruby
-autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
-autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
-autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
-autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
-
-" go
+"{{{ VIM-GO
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
 let g:go_highlight_types = 1
@@ -190,10 +171,10 @@ let g:go_highlight_generate_tags = 1
 let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
-" let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
-" let g:go_metalinter_autosave = 0
-" let g:go_metalinter_autosave_enabled = ['golint']
-" let g:go_metalinter_deadline = "5s"
+let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
+let g:go_metalinter_autosave = 0
+let g:go_metalinter_autosave_enabled = ['golint']
+let g:go_metalinter_deadline = "5s"
 let g:go_list_type = "quickfix"
 let g:go_def_reuse_buffer = 1
 let g:go_addtags_transform = "camelcase"
@@ -209,25 +190,31 @@ augroup filetype_go
   au FileType go     nmap <leader>g <Plug>(go-generate)
   au FileType go     inoremap ;err <ESC>:GoIfErr<CR>O
 augroup end
+"}}}
 
-" rust
+" {{{ JEDI
+let g:jedi#show_call_signatures=0
+let g:jedi#popup_on_dot=0
+" }}}
+
+"{{{ RUBY
+autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
+autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
+autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
+autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
+"}}}
+
+"{{{ RUST
 let g:rustfmt_autosave = 0
 augroup filetype_rust
   autocmd!
-  au FileType rust let g:AutoPairs = {'(':')', '[':']', '{':'}','"':'"', '`':'`'}
+  au FileType rust let g:AutoPairs = {'(':')', '[':']', '{':'}','"':'"', '`':'`', '<':'>'}
   aut FileType rust nmap <leader>d :!surf "https://doc.rust-lang.org/std/?search="&<Left><Left>
 augroup end
-
-" vue
-augroup filetype_vue
-  autocmd!
-  au FileType vue set textwidth=150
-  " au FileType vue set synmaxcol=150
-augroup end
-
 "}}}
 
 "{{{ MAPPINGS
+nnoremap <silent> <F3> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 command! WQ wq
 command! Wq wq
 command! W w
@@ -287,12 +274,12 @@ let g:UltiSnipsJumpForwardTrigger="<c-k>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-" inoremap <silent> <expr> <CR> pumvisible() ? ncm2_ultisnips#expand_or("\<CR>", 'n') : "\<CR>"
 "}}}
 
 "{{{ ALE
 let g:ale_fixers = {
       \ 'javascript': ['eslint'],
+      \ 'dart': ['dartfmt'],
       \ 'python': ['autopep8', 'isort'],
       \ 'cpp': ['clang-format'],
       \ 'c': ['uncrustify'],
@@ -307,8 +294,8 @@ let g:ale_lint_on_enter = 1
 let g:ale_emit_conflict_warnings = 1
 let g:airline#extensions#ale#enabled = 1
 let g:ale_go_gometalinter_options = '--fast'
-      " \ 'rust': ['cargo'],
 let g:ale_linters = {
+      \ 'rust': ['cargo'],
       \ 'javascript': ['eslint'],
       \ 'typescript': ['tslint'],
       \ 'vue': ['tslint', 'vls'],
@@ -321,15 +308,17 @@ let g:ale_linters = {
 "{{{ LSP
   set omnifunc=syntaxcomplete#Complete
   set completeopt-=preview
-  let g:LanguageClient_useVirtualText = 0
+  let g:LanguageClient_diagnosticsList = 'disabled'
+  let g:LanguageClient_useVirtualText = 1
   let g:LanguageClient_serverCommands = {
       \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-      \ 'go': ['bingo'],
+      \ 'go': ['bingo', '--logfile', '/home/martin/Desktop/binlog.txt', '--trace'],
       \ 'vue': ['vls'],
       \ 'javascript': ['javascript-typescript-stdio'],
       \ 'typescript': ['javascript-typescript-stdio'],
       \ 'javascript.jsx': ['javascript-typescript-stdio'],
       \ 'python': ['/usr/local/bin/pyls'],
+      \ 'dart': ['/home/martin/.pub-cache/bin/dart_language_server'],
       \ }
 
   nnoremap <F5> :call LanguageClient_contextMenu()<CR>
@@ -369,11 +358,3 @@ function! ProfileEnd()
   :profile pause
   :noautocmd qall!
 endfunction
-
-function! RustFillStruct()
-  :r !/home/martin/Projects/rfs/target/release/rfs Stuff /home/martin/Projects/rfs/src/main.rs
-endfunction
-
-let g:solarized_old_cursor_style = 0
-let g:solarized_term_italics = 1
-let g:solarized_visibility = "high"
