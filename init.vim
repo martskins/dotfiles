@@ -144,6 +144,14 @@ let g:ack_use_dispatch = 1
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|\.git\|target\|web-app'
 " }}}
 
+" {{{ ULTISNIPS
+let g:UltiSnipsExpandTrigger="<Plug>(ultisnips_expand)"
+let g:UltiSnipsJumpForwardTrigger="<c-k>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" }}}
+
 " {{{ BETTER WHITESPACE
 let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
@@ -158,7 +166,7 @@ let g:airline#extensions#tabline#enabled = 1
   set completeopt=noinsert,menuone,noselect
 " }}}
 
-"{{{ VIM-GO
+" {{{ VIM-GO
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
 let g:go_highlight_types = 1
@@ -197,14 +205,14 @@ let g:jedi#show_call_signatures=0
 let g:jedi#popup_on_dot=0
 " }}}
 
-"{{{ RUBY
+" {{{ RUBY
 autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
 autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
 autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
 autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
 "}}}
 
-"{{{ RUST
+" {{{ RUST
 let g:rustfmt_autosave = 0
 augroup filetype_rust
   autocmd!
@@ -213,7 +221,79 @@ augroup filetype_rust
 augroup end
 "}}}
 
-"{{{ MAPPINGS
+" {{{ ALE
+let g:ale_fixers = {
+      \ 'javascript': ['eslint'],
+      \ 'dart': ['dartfmt'],
+      \ 'python': ['autopep8', 'isort'],
+      \ 'cpp': ['clang-format'],
+      \ 'c': ['uncrustify'],
+      \ 'rust': ['rustfmt'],
+      \ 'ruby': ['rubocop'],
+      \ 'nim': ['nimpretty'],
+      \ 'vue': [],
+      \ '*': ['trim_whitespace']
+      \}
+let g:ale_fix_on_save = 1
+let g:ale_lint_on_enter = 1
+let g:ale_emit_conflict_warnings = 1
+let g:airline#extensions#ale#enabled = 1
+let g:ale_go_gometalinter_options = '--fast'
+let g:ale_linters = {
+      \ 'rust': ['cargo'],
+      \ 'javascript': ['eslint'],
+      \ 'typescript': ['tslint'],
+      \ 'vue': ['tslint', 'vls'],
+      \ 'go': ['vet', 'golint', 'errcheck'],
+      \ 'python': ['flake8'],
+      \ 'cpp': ['clang']
+      \}
+"}}}
+
+" {{{ LSP
+  set omnifunc=syntaxcomplete#Complete
+  set completeopt-=preview
+  let g:LanguageClient_diagnosticsList = 'disabled'
+  let g:LanguageClient_useVirtualText = 1
+  let g:LanguageClient_serverCommands = {
+      \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+      \ 'go': ['bingo', '--logfile', '/home/martin/Desktop/binlog.txt', '--trace'],
+      \ 'vue': ['vls'],
+      \ 'javascript': ['javascript-typescript-stdio'],
+      \ 'typescript': ['javascript-typescript-stdio'],
+      \ 'javascript.jsx': ['javascript-typescript-stdio'],
+      \ 'python': ['/usr/local/bin/pyls'],
+      \ 'dart': ['/home/martin/.pub-cache/bin/dart_language_server'],
+      \ }
+
+  nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+  nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+  nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+  nnoremap <silent> gi :call LanguageClient#textDocument_implementation()<CR>
+  nnoremap <silent> gr :call LanguageClient#textDocument_references()<CR>
+  nnoremap <silent> R :call LanguageClient#textDocument_rename()<CR>
+"}}}
+
+" {{{ NEOSNIPPET
+  let g:neosnippet#enable_snipmate_compatibility = 1
+
+  imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+  smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+  xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+  imap <expr><TAB>
+   \ pumvisible() ? "\<C-n>" :
+   \ neosnippet#expandable_or_jumpable() ?
+   \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+  smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+  \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+  if has('conceal')
+    set conceallevel=0 concealcursor=niv
+  endif
+" }}}
+
+" {{{ MAPPINGS
 nnoremap <silent> <F3> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 command! WQ wq
 command! Wq wq
@@ -267,86 +347,7 @@ augroup qf
    autocmd!
    autocmd FileType qf set nobuflisted
 augroup END
-
-" ultisnips
-let g:UltiSnipsExpandTrigger="<Plug>(ultisnips_expand)"
-let g:UltiSnipsJumpForwardTrigger="<c-k>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 "}}}
-
-"{{{ ALE
-let g:ale_fixers = {
-      \ 'javascript': ['eslint'],
-      \ 'dart': ['dartfmt'],
-      \ 'python': ['autopep8', 'isort'],
-      \ 'cpp': ['clang-format'],
-      \ 'c': ['uncrustify'],
-      \ 'rust': ['rustfmt'],
-      \ 'ruby': ['rubocop'],
-      \ 'nim': ['nimpretty'],
-      \ 'vue': [],
-      \ '*': ['trim_whitespace']
-      \}
-let g:ale_fix_on_save = 1
-let g:ale_lint_on_enter = 1
-let g:ale_emit_conflict_warnings = 1
-let g:airline#extensions#ale#enabled = 1
-let g:ale_go_gometalinter_options = '--fast'
-let g:ale_linters = {
-      \ 'rust': ['cargo'],
-      \ 'javascript': ['eslint'],
-      \ 'typescript': ['tslint'],
-      \ 'vue': ['tslint', 'vls'],
-      \ 'go': ['vet', 'golint', 'errcheck'],
-      \ 'python': ['flake8'],
-      \ 'cpp': ['clang']
-      \}
-"}}}
-
-"{{{ LSP
-  set omnifunc=syntaxcomplete#Complete
-  set completeopt-=preview
-  let g:LanguageClient_diagnosticsList = 'disabled'
-  let g:LanguageClient_useVirtualText = 1
-  let g:LanguageClient_serverCommands = {
-      \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-      \ 'go': ['bingo', '--logfile', '/home/martin/Desktop/binlog.txt', '--trace'],
-      \ 'vue': ['vls'],
-      \ 'javascript': ['javascript-typescript-stdio'],
-      \ 'typescript': ['javascript-typescript-stdio'],
-      \ 'javascript.jsx': ['javascript-typescript-stdio'],
-      \ 'python': ['/usr/local/bin/pyls'],
-      \ 'dart': ['/home/martin/.pub-cache/bin/dart_language_server'],
-      \ }
-
-  nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-  nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-  nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-  nnoremap <silent> gi :call LanguageClient#textDocument_implementation()<CR>
-  nnoremap <silent> gr :call LanguageClient#textDocument_references()<CR>
-  nnoremap <silent> R :call LanguageClient#textDocument_rename()<CR>
-"}}}
-
-" {{{ NEOSNIPPET
-  let g:neosnippet#enable_snipmate_compatibility = 1
-
-  imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-  smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-  xmap <C-k>     <Plug>(neosnippet_expand_target)
-
-  imap <expr><TAB>
-   \ pumvisible() ? "\<C-n>" :
-   \ neosnippet#expandable_or_jumpable() ?
-   \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-  smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-  \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-  if has('conceal')
-    set conceallevel=0 concealcursor=niv
-  endif
-" }}}
 
 function! ProfileStart()
   :profile start profile.log
