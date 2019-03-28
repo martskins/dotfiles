@@ -38,13 +38,14 @@ Plug 'davidhalter/jedi-vim',      { 'for': 'python' }
 Plug 'digitaltoad/vim-pug',       { 'for': ['pug', 'jade'] }
 Plug 'posva/vim-vue',             { 'for': 'vue' }
 Plug 'vim-ruby/vim-ruby',         { 'for': 'ruby' }
-Plug 'fatih/vim-go',              { 'for': 'go', 'do': ':GoInstallBinaries' }
+Plug 'fatih/vim-go',              { 'for': 'go' }
 Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
 Plug 'Zaptic/elm-vim',            { 'for': 'elm' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
 Plug 'dart-lang/dart-vim-plugin', { 'for': 'dart' }
 Plug 'thosakwe/vim-flutter',      { 'for': 'dart' }
+Plug 'elixir-editors/vim-elixir'
 
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 
@@ -52,6 +53,7 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'morhetz/gruvbox'
 Plug 'sonobre/briofita_vim'
 Plug 'tomasiser/vim-code-dark'
+Plug 'dunstontc/vim-vscode-theme'
 
 call plug#end()
 "}}}
@@ -63,28 +65,30 @@ syntax enable
 let g:ftplugin_sql_omni_key = '<C-j>'
 set encoding=utf-8
 " let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
-set shell=/bin/zsh
+set shell=/usr/bin/fish
 set cmdheight=2
 set number relativenumber
 set hid
 set colorcolumn=100
 set guifont=monospace
-set termguicolors
+" set termguicolors
 set t_Co=256
 set synmaxcol=128
 set nobk
 set textwidth=100
+set noswapfile
 if (has("nvim"))
   set signcolumn=no
   set wildoptions=pum
-  set pumblend=20
+  " set pumblend=90
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 else
   set signcolumn=yes
 endif
 set lazyredraw
 set background=dark
-colorscheme codedark
+colorscheme gruvbox
+" colorscheme codedark
 set tabstop=2
 set shiftwidth=2
 set expandtab
@@ -124,7 +128,6 @@ augroup folding
         \ set foldexpr=getline(v:lnum)=~'^\\s*//' |
         \ exe "normal zM``"
 augroup end
-
 
 augroup netrw_buf_hidden_fix
   autocmd!
@@ -190,17 +193,20 @@ let g:go_metalinter_deadline = "5s"
 let g:go_list_type = "quickfix"
 let g:go_def_reuse_buffer = 1
 let g:go_addtags_transform = "camelcase"
+ let g:go_doc_keywordprg_enabled = 0
 
 augroup filetype_go
   autocmd!
   au FileType go     nmap <leader>c <Plug>(go-coverage)
   au FileType go     nmap <leader>ct <Plug>(go-coverage-toggle)
-  au FileType go     nmap <Leader>d <Plug>(go-def)
   au FileType go     nmap <leader>b <Plug>(go-build)
   au FileType go     nmap <leader>t <Plug>(go-test)
+  au FileType go     nmap <leader>tf <Plug>(go-test-func)
   au FileType go     nmap <leader>a <Plug>(go-alternate-edit)
   au FileType go     nmap <leader>g <Plug>(go-generate)
   au FileType go     inoremap ;err <ESC>:GoIfErr<CR>O
+
+  au FileType go     nmap <leader>d :!surf "https://golang.org/search?q="&<Left><Left>
 augroup end
 "}}}
 
@@ -221,7 +227,7 @@ let g:rustfmt_autosave = 0
 augroup filetype_rust
   autocmd!
   au FileType rust let g:AutoPairs = {'(':')', '[':']', '{':'}','"':'"', '`':'`', '<':'>'}
-  aut FileType rust nmap <leader>d :!surf "https://doc.rust-lang.org/std/?search="&<Left><Left>
+  au FileType rust nmap <leader>d :!surf "https://doc.rust-lang.org/std/?search="&<Left><Left>
 augroup end
 "}}}
 
@@ -256,11 +262,12 @@ let g:ale_linters = {
 
 " {{{ LSP
   set omnifunc=syntaxcomplete#Complete
-  set completeopt-=preview
+  " set completeopt-=preview
+  let g:LanguageClient_useFloatingHover = 1
   let g:LanguageClient_diagnosticsList = 'disabled'
-  let g:LanguageClient_useVirtualText = 1
+  let g:LanguageClient_useVirtualText = 0
   let g:LanguageClient_serverCommands = {
-      \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+      \ 'rust': ['~/.cargo/bin/rustup', 'run', 'nightly', 'rls'],
       \ 'go': ['bingo'],
       \ 'vue': ['vls'],
       \ 'javascript': ['javascript-typescript-stdio'],
@@ -321,13 +328,10 @@ nmap <leader>lg :term lazygit<CR>i
 nmap <leader>S :,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 nmap <leader>s :%s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 nmap <leader>w :!surf "duckduckgo.com?q="&<Left><Left>
-nmap <leader>tab :Tabularize /\|<CR>
 nmap <leader>pj :norm 0v$,json<CR>
-nmap <leader>. :TagbarToggle<CR>
 nmap <leader>e :!
 nmap <leader>be :!<UP><CR>
 nmap <leader>x :%!xxd<CR>
-nmap <F8> :TagbarToggle<CR>
 nmap <C-v><C-v> gg<C-V>G$
 noremap <Left> <NOP>
 noremap <Right> <NOP>
@@ -339,6 +343,8 @@ nnoremap gev :e $MYVIMRC<CR>
 nnoremap gsv :so $MYVIMRC<CR>
 nnoremap <LeftMouse> <NOP>
 inoremap <LeftMouse> <NOP>
+nmap <c-s><c-v> :vsplit<CR>
+nmap <c-s><c-h> :split<CR>
 
 vmap <C-c> <ESC>
 vnoremap <leader>pj :!python -m json.tool<CR>
@@ -363,3 +369,12 @@ function! ProfileEnd()
   :profile pause
   :noautocmd qall!
 endfunction
+
+" function! GoAddSnakeTags(...)
+"   :let g:go_addtags_transform = "snakecase"
+"   GoAddTags a:000
+"   :let g:go_addtags_transform = "camelcase"
+" endfunction
+
+" command! -nargs=+ GoAddSnakeTags :call GoAddSnakeTags(<f-args>)
+
