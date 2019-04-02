@@ -53,7 +53,7 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'morhetz/gruvbox'
 Plug 'sonobre/briofita_vim'
 Plug 'tomasiser/vim-code-dark'
-Plug 'dunstontc/vim-vscode-theme'
+Plug 'romainl/flattened'
 
 call plug#end()
 "}}}
@@ -64,7 +64,6 @@ filetype plugin indent on
 syntax enable
 let g:ftplugin_sql_omni_key = '<C-j>'
 set encoding=utf-8
-" let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
 set shell=/usr/bin/fish
 set cmdheight=2
 set number relativenumber
@@ -72,7 +71,7 @@ set hid
 set colorcolumn=100
 set guifont=monospace
 " set termguicolors
-set t_Co=256
+" set t_Co=256
 set synmaxcol=128
 set nobk
 set textwidth=100
@@ -87,8 +86,10 @@ else
 endif
 set lazyredraw
 set background=dark
-colorscheme gruvbox
+let g:gruvbox_contrast_hard = 'hard'
+" colorscheme gruvbox
 " colorscheme codedark
+" colorscheme flattened_dark
 set tabstop=2
 set shiftwidth=2
 set expandtab
@@ -116,18 +117,9 @@ let g:python3_host_prog="/usr/bin/python3"
 
 set fdm=expr
 set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
-augroup folding
-  autocmd!
-  autocmd FileType vim setlocal foldmethod=marker
-  autocmd FileType ruby,eruby
-        \ set foldmethod=expr |
-        \ set foldexpr=getline(v:lnum)=~'^\\s*#' |
-        \ exe "normal zM``"
-  autocmd FileType groovy,java,scala,javascript,go,rust
-        \ set foldmethod=expr |
+set foldmethod=expr |
         \ set foldexpr=getline(v:lnum)=~'^\\s*//' |
         \ exe "normal zM``"
-augroup end
 
 augroup netrw_buf_hidden_fix
   autocmd!
@@ -173,64 +165,6 @@ let g:airline#extensions#tabline#enabled = 1
   set completeopt=noinsert,menuone,noselect
 " }}}
 
-" {{{ VIM-GO
-let g:go_fmt_command = "goimports"
-let g:go_autodetect_gopath = 1
-let g:go_highlight_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_function_calls = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_generate_tags = 1
-let g:go_highlight_structs = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_build_constraints = 1
-let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
-let g:go_metalinter_autosave = 0
-let g:go_metalinter_autosave_enabled = ['golint']
-let g:go_metalinter_deadline = "5s"
-let g:go_list_type = "quickfix"
-let g:go_def_reuse_buffer = 1
-let g:go_addtags_transform = "camelcase"
- let g:go_doc_keywordprg_enabled = 0
-
-augroup filetype_go
-  autocmd!
-  au FileType go     nmap <leader>c <Plug>(go-coverage)
-  au FileType go     nmap <leader>ct <Plug>(go-coverage-toggle)
-  au FileType go     nmap <leader>b <Plug>(go-build)
-  au FileType go     nmap <leader>t <Plug>(go-test)
-  au FileType go     nmap <leader>tf <Plug>(go-test-func)
-  au FileType go     nmap <leader>a <Plug>(go-alternate-edit)
-  au FileType go     nmap <leader>g <Plug>(go-generate)
-  au FileType go     inoremap ;err <ESC>:GoIfErr<CR>O
-
-  au FileType go     nmap <leader>d :!surf "https://golang.org/search?q="&<Left><Left>
-augroup end
-"}}}
-
-" {{{ JEDI
-let g:jedi#show_call_signatures=0
-let g:jedi#popup_on_dot=0
-" }}}
-
-" {{{ RUBY
-autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
-autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
-autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
-autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
-"}}}
-
-" {{{ RUST
-let g:rustfmt_autosave = 0
-augroup filetype_rust
-  autocmd!
-  au FileType rust let g:AutoPairs = {'(':')', '[':']', '{':'}','"':'"', '`':'`', '<':'>'}
-  au FileType rust nmap <leader>d :!surf "https://doc.rust-lang.org/std/?search="&<Left><Left>
-augroup end
-"}}}
-
 " {{{ ALE
 let g:ale_fixers = {
       \ 'javascript': ['eslint'],
@@ -264,6 +198,7 @@ let g:ale_linters = {
   set omnifunc=syntaxcomplete#Complete
   " set completeopt-=preview
   let g:LanguageClient_useFloatingHover = 1
+  let g:LanguageClient_hoverPreview = 'Always'
   let g:LanguageClient_diagnosticsList = 'disabled'
   let g:LanguageClient_useVirtualText = 0
   let g:LanguageClient_serverCommands = {
@@ -369,12 +304,3 @@ function! ProfileEnd()
   :profile pause
   :noautocmd qall!
 endfunction
-
-" function! GoAddSnakeTags(...)
-"   :let g:go_addtags_transform = "snakecase"
-"   GoAddTags a:000
-"   :let g:go_addtags_transform = "camelcase"
-" endfunction
-
-" command! -nargs=+ GoAddSnakeTags :call GoAddSnakeTags(<f-args>)
-
