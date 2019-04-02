@@ -88,7 +88,10 @@ set background=dark
 " let g:gruvbox_contrast_hard = 'hard'
 " colorscheme gruvbox
 " colorscheme codedark
+
 colorscheme palenight
+hi LineNr ctermfg=white guifg=#888822
+hi CursorLineNr ctermfg=red guifg=yellow
 
 set tabstop=2
 set shiftwidth=2
