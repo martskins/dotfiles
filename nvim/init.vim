@@ -51,9 +51,8 @@ Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.s
 
 Plug 'machakann/vim-highlightedyank'
 Plug 'morhetz/gruvbox'
-Plug 'sonobre/briofita_vim'
 Plug 'tomasiser/vim-code-dark'
-Plug 'romainl/flattened'
+Plug 'drewtempelmeyer/palenight.vim'
 
 call plug#end()
 "}}}
@@ -70,8 +69,6 @@ set number relativenumber
 set hid
 set colorcolumn=100
 set guifont=monospace
-" set termguicolors
-" set t_Co=256
 set synmaxcol=128
 set nobk
 set textwidth=100
@@ -79,17 +76,20 @@ set noswapfile
 if (has("nvim"))
   set signcolumn=no
   set wildoptions=pum
-  " set pumblend=90
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 else
   set signcolumn=yes
 endif
 set lazyredraw
+set termguicolors
+set t_Co=256
 set background=dark
-let g:gruvbox_contrast_hard = 'hard'
+
+" let g:gruvbox_contrast_hard = 'hard'
 " colorscheme gruvbox
 " colorscheme codedark
-" colorscheme flattened_dark
+colorscheme palenight
+
 set tabstop=2
 set shiftwidth=2
 set expandtab
