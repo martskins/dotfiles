@@ -74,11 +74,8 @@ set nobk
 set textwidth=100
 set noswapfile
 if (has("nvim"))
-  set signcolumn=no
   set wildoptions=pum
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-else
-  set signcolumn=yes
 endif
 set lazyredraw
 set termguicolors
@@ -93,6 +90,7 @@ colorscheme palenight
 hi LineNr ctermfg=white guifg=#888822
 hi CursorLineNr ctermfg=red guifg=yellow
 
+set signcolumn=yes
 set tabstop=2
 set shiftwidth=2
 set expandtab
