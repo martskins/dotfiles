@@ -17,3 +17,6 @@ end
 alias ls "exa"
 alias l "exa -l"
 alias open "xdg-open"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/opt/gcloud/path.fish.inc' ]; . '/opt/gcloud/path.fish.inc'; end
