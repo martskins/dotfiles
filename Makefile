@@ -1,7 +1,7 @@
 .PHONY: clean link
 
 link: clean
-	ln -s ~/dotfiles/init.vim ~/.config/nvim/init.vim
+	ln -s ~/dotfiles/nvim ~/.config/
 	ln -s ~/dotfiles/init.vim ~/.vimrc
 	ln -s ~/dotfiles/tmux.conf ~/.tmux.conf
 	ln -s ~/dotfiles/i3 ~/.config/i3
