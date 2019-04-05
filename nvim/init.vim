@@ -5,7 +5,6 @@ filetype off
 call plug#begin('~/.vim/plugged')
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
 Plug 'vim-airline/vim-airline'
-Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'}
 Plug 'junegunn/fzf.vim'
@@ -19,7 +18,6 @@ Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-repeat'
 Plug 'ervandew/supertab'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'schickling/vim-bufonly'
 
 Plug 'Shougo/neosnippet.vim'
@@ -31,6 +29,7 @@ Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-neosnippet'
+Plug 'majutsushi/tagbar'
 
 Plug 'mattn/emmet-vim',           { 'for': ['vue', 'html'] }
 Plug 'cespare/vim-toml',          { 'for': 'toml' }
@@ -45,7 +44,6 @@ Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
 Plug 'dart-lang/dart-vim-plugin', { 'for': 'dart' }
 Plug 'thosakwe/vim-flutter',      { 'for': 'dart' }
-Plug 'elixir-editors/vim-elixir'
 
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 
@@ -53,6 +51,7 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'morhetz/gruvbox'
 Plug 'tomasiser/vim-code-dark'
 Plug 'drewtempelmeyer/palenight.vim'
+Plug 'flazz/vim-colorschemes'
 
 call plug#end()
 "}}}
@@ -84,11 +83,7 @@ set background=dark
 
 " let g:gruvbox_contrast_hard = 'hard'
 " colorscheme gruvbox
-" colorscheme codedark
-
-colorscheme palenight
-hi LineNr ctermfg=white guifg=#888822
-hi CursorLineNr ctermfg=red guifg=yellow
+colorscheme Atelier_DuneDark
 
 set signcolumn=yes
 set tabstop=2
@@ -136,37 +131,11 @@ augroup end
 let g:SuperTabDefaultCompletionType = "<c-n>"
 " }}}
 
-" {{{ ACK
-let g:ack_use_dispatch = 1
-" }}}
-
 " {{{ FZF
-" Mapping selecting mappings
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
-
-" Insert mode completion
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
-imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
-
-" Advanced customization using autoload functions
-inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
-function! s:fzf_statusline()
-  " Override statusline as you like
-  highlight fzf1 ctermfg=161 ctermbg=251
-  highlight fzf2 ctermfg=23 ctermbg=251
-  highlight fzf3 ctermfg=237 ctermbg=251
-  setlocal statusline=%#fzf1#\ >\ %#fzf2#fz%#fzf3#f
-endfunction
-
-autocmd! User FzfStatusLine call <SID>fzf_statusline()
-" }}}
-
-" {{{ CTRLP
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|\.git\|target\|web-app'
+nmap <leader><tab> <plug>(fzf-maps-n)
 " }}}
 
 " {{{ ULTISNIPS
@@ -222,7 +191,7 @@ let g:ale_linters = {
 
 " {{{ LSP
   set omnifunc=syntaxcomplete#Complete
-  " set completeopt-=preview
+  " let g:LanguageClient_loggingFile = '/home/martin.asquino/Desktop/lsp.log'
   let g:LanguageClient_useFloatingHover = 1
   let g:LanguageClient_hoverPreview = 'Always'
   let g:LanguageClient_diagnosticsList = 'disabled'
@@ -231,6 +200,7 @@ let g:ale_linters = {
       \ 'rust': ['~/.cargo/bin/rustup', 'run', 'nightly', 'rls'],
       \ 'go': ['bingo'],
       \ 'vue': ['vls'],
+      \ 'ruby': ['solargraph', 'stdio'],
       \ 'javascript': ['javascript-typescript-stdio'],
       \ 'typescript': ['javascript-typescript-stdio'],
       \ 'javascript.jsx': ['javascript-typescript-stdio'],
@@ -274,6 +244,7 @@ command! Q q
 nnoremap <S-F5> ggvG=
 nmap <tab> :bnext<CR>
 nmap <s-tab> :bprevious<CR>
+nmap <c-p> :Files<CR>
 nnoremap Q @q
 nnoremap 0 ^
 nnoremap ^ 0
@@ -306,6 +277,7 @@ nnoremap <LeftMouse> <NOP>
 inoremap <LeftMouse> <NOP>
 nmap <c-s><c-v> :vsplit<CR>
 nmap <c-s><c-h> :split<CR>
+nmap ,. :TagbarToggle<CR>
 
 vmap <C-c> <ESC>
 vnoremap <leader>pj :!python -m json.tool<CR>
@@ -330,3 +302,5 @@ function! ProfileEnd()
   :profile pause
   :noautocmd qall!
 endfunction
+
+command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".<q-args>, <bang>0)
