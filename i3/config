@@ -190,3 +190,5 @@ exec "xinput set-prop 14 295 0"
 # exec "xinput set-prop 14 294 1"
 exec ssh-add ~/.ssh/id_rsa
 exec --no-startup-id xautolock -corners ---- -time 4 -locker "betterlockscreen -l"
+for_window  [title="Android Emulator - Nexus_5X_API_28:5554"] floating enable
+for_window  [title="Android Emulator - flutter_emulator:5554"] floating enable

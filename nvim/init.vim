@@ -19,17 +19,17 @@ Plug 'tpope/vim-repeat'
 Plug 'ervandew/supertab'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'schickling/vim-bufonly'
-
+Plug 'majutsushi/tagbar'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 
-Plug 'ncm2/ncm2'
-Plug 'roxma/vim-hug-neovim-rpc'
-Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-neosnippet'
-Plug 'majutsushi/tagbar'
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
 
 Plug 'mattn/emmet-vim',           { 'for': ['vue', 'html'] }
 Plug 'cespare/vim-toml',          { 'for': 'toml' }
@@ -37,20 +37,17 @@ Plug 'davidhalter/jedi-vim',      { 'for': 'python' }
 Plug 'digitaltoad/vim-pug',       { 'for': ['pug', 'jade'] }
 Plug 'posva/vim-vue',             { 'for': 'vue' }
 Plug 'vim-ruby/vim-ruby',         { 'for': 'ruby' }
+Plug 'fishbullet/deoplete-ruby',  { 'for': 'ruby' }
 Plug 'fatih/vim-go',              { 'for': 'go' }
 Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
 Plug 'Zaptic/elm-vim',            { 'for': 'elm' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
 Plug 'dart-lang/dart-vim-plugin', { 'for': 'dart' }
-Plug 'thosakwe/vim-flutter',      { 'for': 'dart' }
 
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 
 Plug 'machakann/vim-highlightedyank'
-Plug 'morhetz/gruvbox'
-Plug 'tomasiser/vim-code-dark'
-Plug 'drewtempelmeyer/palenight.vim'
 Plug 'flazz/vim-colorschemes'
 
 call plug#end()
@@ -81,10 +78,7 @@ set termguicolors
 set t_Co=256
 set background=dark
 
-" let g:gruvbox_contrast_hard = 'hard'
-" colorscheme gruvbox
-colorscheme Atelier_DuneDark
-
+colorscheme badwolf
 set signcolumn=yes
 set tabstop=2
 set shiftwidth=2
@@ -155,9 +149,9 @@ let g:strip_whitespace_on_save=1
 let g:airline#extensions#tabline#enabled = 1
 " }}}
 
-" {{{ NCM2
-  autocmd BufEnter * call ncm2#enable_for_buffer()
-  set completeopt=noinsert,menuone,noselect
+" {{{ Deoplete
+set completeopt-=preview
+let g:deoplete#enable_at_startup = 1
 " }}}
 
 " {{{ ALE
@@ -176,14 +170,14 @@ let g:ale_fixers = {
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 1
 let g:ale_emit_conflict_warnings = 1
-let g:airline#extensions#ale#enabled = 1
 let g:ale_go_gometalinter_options = '--fast'
+      " \ 'go': ['vet', 'golint', 'errcheck'],
 let g:ale_linters = {
       \ 'rust': ['cargo'],
       \ 'javascript': ['eslint'],
       \ 'typescript': ['tslint'],
       \ 'vue': ['tslint', 'vls'],
-      \ 'go': ['vet', 'golint', 'errcheck'],
+      \ 'go': ['golangci-lint'],
       \ 'python': ['flake8'],
       \ 'cpp': ['clang']
       \}
@@ -191,16 +185,17 @@ let g:ale_linters = {
 
 " {{{ LSP
   set omnifunc=syntaxcomplete#Complete
-  " let g:LanguageClient_loggingFile = '/home/martin.asquino/Desktop/lsp.log'
+  let g:LanguageClient_loggingFile = '/home/martin/Desktop/lsp.log'
   let g:LanguageClient_useFloatingHover = 1
   let g:LanguageClient_hoverPreview = 'Always'
   let g:LanguageClient_diagnosticsList = 'disabled'
   let g:LanguageClient_useVirtualText = 0
+      " \ 'rust': ['~/Projects/rls/target/release/rls'],
   let g:LanguageClient_serverCommands = {
-      \ 'rust': ['~/.cargo/bin/rustup', 'run', 'nightly', 'rls'],
+      \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+      \ 'ruby': ['solargraph', 'stdio'],
       \ 'go': ['bingo'],
       \ 'vue': ['vls'],
-      \ 'ruby': ['solargraph', 'stdio'],
       \ 'javascript': ['javascript-typescript-stdio'],
       \ 'typescript': ['javascript-typescript-stdio'],
       \ 'javascript.jsx': ['javascript-typescript-stdio'],
@@ -245,6 +240,7 @@ nnoremap <S-F5> ggvG=
 nmap <tab> :bnext<CR>
 nmap <s-tab> :bprevious<CR>
 nmap <c-p> :Files<CR>
+nmap <c-f> :Rg<space>
 nnoremap Q @q
 nnoremap 0 ^
 nnoremap ^ 0
