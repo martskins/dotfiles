@@ -4,7 +4,7 @@ filetype off
 "{{{ PLUGINS
 call plug#begin('~/.vim/plugged')
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
-Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline'
 Plug 'w0rp/ale'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'}
 Plug 'junegunn/fzf.vim'
@@ -20,24 +20,22 @@ Plug 'ervandew/supertab'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'schickling/vim-bufonly'
 Plug 'majutsushi/tagbar'
+
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
-
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
+Plug 'ncm2/ncm2'
+Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-neosnippet'
+Plug 'majutsushi/tagbar'
 
 Plug 'mattn/emmet-vim',           { 'for': ['vue', 'html'] }
 Plug 'cespare/vim-toml',          { 'for': 'toml' }
 Plug 'davidhalter/jedi-vim',      { 'for': 'python' }
 Plug 'digitaltoad/vim-pug',       { 'for': ['pug', 'jade'] }
 Plug 'posva/vim-vue',             { 'for': 'vue' }
-Plug 'vim-ruby/vim-ruby',         { 'for': 'ruby' }
-Plug 'fishbullet/deoplete-ruby',  { 'for': 'ruby' }
 Plug 'fatih/vim-go',              { 'for': 'go' }
 Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
 Plug 'Zaptic/elm-vim',            { 'for': 'elm' }
@@ -88,7 +86,7 @@ set autoindent
 set wrap
 set pastetoggle=<leader>z
 set clipboard=unnamed
-set showtabline=2
+" set showtabline=2
 set ignorecase
 set history=100
 set hlsearch
@@ -149,10 +147,10 @@ let g:strip_whitespace_on_save=1
 let g:airline#extensions#tabline#enabled = 1
 " }}}
 
-" {{{ Deoplete
-set completeopt-=preview
-let g:deoplete#enable_at_startup = 1
-" }}}
+"{{{ NCM2
+autocmd BufEnter * call ncm2#enable_for_buffer()
+set completeopt=noinsert,menuone,noselect
+"}}}
 
 " {{{ ALE
 let g:ale_fixers = {
@@ -160,9 +158,10 @@ let g:ale_fixers = {
       \ 'dart': ['dartfmt'],
       \ 'python': ['autopep8', 'isort'],
       \ 'cpp': ['clang-format'],
+      \ 'css': ['prettier'],
+      \ 'ruby': ['rubocop'],
       \ 'c': ['uncrustify'],
       \ 'rust': ['rustfmt'],
-      \ 'ruby': ['rubocop'],
       \ 'nim': ['nimpretty'],
       \ 'vue': [],
       \ '*': ['trim_whitespace']
@@ -171,13 +170,12 @@ let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 1
 let g:ale_emit_conflict_warnings = 1
 let g:ale_go_gometalinter_options = '--fast'
-      " \ 'go': ['vet', 'golint', 'errcheck'],
 let g:ale_linters = {
       \ 'rust': ['cargo'],
       \ 'javascript': ['eslint'],
       \ 'typescript': ['tslint'],
       \ 'vue': ['tslint', 'vls'],
-      \ 'go': ['golangci-lint'],
+      \ 'go': ['vet', 'golint', 'errcheck'],
       \ 'python': ['flake8'],
       \ 'cpp': ['clang']
       \}
@@ -190,11 +188,10 @@ let g:ale_linters = {
   let g:LanguageClient_hoverPreview = 'Always'
   let g:LanguageClient_diagnosticsList = 'disabled'
   let g:LanguageClient_useVirtualText = 0
-      " \ 'rust': ['~/Projects/rls/target/release/rls'],
   let g:LanguageClient_serverCommands = {
-      \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
       \ 'ruby': ['solargraph', 'stdio'],
-      \ 'go': ['bingo'],
+      \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+      \ 'go': ['go-langserver'],
       \ 'vue': ['vls'],
       \ 'javascript': ['javascript-typescript-stdio'],
       \ 'typescript': ['javascript-typescript-stdio'],
@@ -274,6 +271,7 @@ inoremap <LeftMouse> <NOP>
 nmap <c-s><c-v> :vsplit<CR>
 nmap <c-s><c-h> :split<CR>
 nmap ,. :TagbarToggle<CR>
+nnoremap ls :buffers<CR>:buffer<Space>
 
 vmap <C-c> <ESC>
 vnoremap <leader>pj :!python -m json.tool<CR>
