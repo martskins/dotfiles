@@ -4,22 +4,23 @@ filetype off
 "{{{ PLUGINS
 call plug#begin('~/.vim/plugged')
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
-" Plug 'vim-airline/vim-airline'
 Plug 'w0rp/ale'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'}
 Plug 'junegunn/fzf.vim'
-Plug 'tpope/vim-vinegar'
-Plug 'tpope/vim-abolish'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-dispatch'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-sleuth'
-Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-vinegar'      "better netrw
+Plug 'tpope/vim-abolish'      "toggle casing (snake or camel) with crs and crc
+Plug 'tpope/vim-fugitive'     "git commands
+Plug 'tpope/vim-dispatch'     "provides :Make and :Start
+Plug 'tpope/vim-surround'     "provides mappings to surround stuff with stuff
+Plug 'tpope/vim-commentary'   "mappings to comment/uncomment blocks of code
+Plug 'tpope/vim-sleuth'       "automagically adjusts tab width
+Plug 'tpope/vim-repeat'       "enables repeating commands from plugins
 Plug 'ervandew/supertab'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'schickling/vim-bufonly'
 Plug 'majutsushi/tagbar'
+Plug 'machakann/vim-highlightedyank'
+Plug 'flazz/vim-colorschemes'
 
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
@@ -30,6 +31,7 @@ Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-neosnippet'
 Plug 'majutsushi/tagbar'
+Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 
 Plug 'mattn/emmet-vim',           { 'for': ['vue', 'html'] }
 Plug 'cespare/vim-toml',          { 'for': 'toml' }
@@ -38,15 +40,10 @@ Plug 'digitaltoad/vim-pug',       { 'for': ['pug', 'jade'] }
 Plug 'posva/vim-vue',             { 'for': 'vue' }
 Plug 'fatih/vim-go',              { 'for': 'go' }
 Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
-Plug 'Zaptic/elm-vim',            { 'for': 'elm' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
 Plug 'dart-lang/dart-vim-plugin', { 'for': 'dart' }
 
-Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
-
-Plug 'machakann/vim-highlightedyank'
-Plug 'flazz/vim-colorschemes'
 
 call plug#end()
 "}}}
@@ -75,8 +72,8 @@ set lazyredraw
 set termguicolors
 set t_Co=256
 set background=dark
-
 colorscheme badwolf
+
 set signcolumn=yes
 set tabstop=2
 set shiftwidth=2
@@ -118,6 +115,10 @@ augroup netrw_buf_hidden_fix
         \| endif
 augroup end
 "}}}
+
+" {{{ FUGITIVE
+set diffopt+=vertical
+" }}}
 
 " {{{ SUPERTAB
 let g:SuperTabDefaultCompletionType = "<c-n>"
@@ -186,7 +187,7 @@ let g:ale_linters = {
 
 " {{{ LSP
   set omnifunc=syntaxcomplete#Complete
-  let g:LanguageClient_loggingFile = '/home/martin/Desktop/lsp.log'
+  let g:LanguageClient_loggingFile = '/home/martin.asquino/Desktop/lsp.log'
   let g:LanguageClient_useFloatingHover = 1
   let g:LanguageClient_hoverPreview = 'Always'
   let g:LanguageClient_diagnosticsList = 'disabled'
@@ -253,7 +254,6 @@ nmap <leader>bq :bdelete!<CR>
 nmap <leader>ba :bufdo bd<CR>
 nmap <leader>bo :BufOnly<CR>
 nmap <leader>f :ALEFix<CR>
-nmap <leader>lg :term lazygit<CR>i
 nmap <leader>S :,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 nmap <leader>s :%s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 nmap <leader>w :!surf "duckduckgo.com?q="&<Left><Left>
