@@ -128,6 +128,8 @@ imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 nmap <leader><tab> <plug>(fzf-maps-n)
+
+command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".<q-args>, <bang>0)
 " }}}
 
 " {{{ ULTISNIPS
@@ -177,7 +179,8 @@ let g:ale_linters = {
       \ 'vue': ['tslint', 'vls'],
       \ 'go': ['vet', 'golint', 'errcheck'],
       \ 'python': ['flake8'],
-      \ 'cpp': ['clang']
+      \ 'cpp': ['clang'],
+      \ 'c': ['clang']
       \}
 "}}}
 
@@ -191,13 +194,15 @@ let g:ale_linters = {
   let g:LanguageClient_serverCommands = {
       \ 'ruby': ['solargraph', 'stdio'],
       \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-      \ 'go': ['go-langserver'],
+      \ 'go': ['bingo'],
       \ 'vue': ['vls'],
       \ 'javascript': ['javascript-typescript-stdio'],
       \ 'typescript': ['javascript-typescript-stdio'],
       \ 'javascript.jsx': ['javascript-typescript-stdio'],
       \ 'python': ['/usr/local/bin/pyls'],
       \ 'dart': ['dart_language_server'],
+      \ 'cpp': ['clangd'],
+      \ 'c': ['clangd'],
       \ }
 
   nnoremap <F5> :call LanguageClient_contextMenu()<CR>
@@ -247,7 +252,6 @@ nmap <leader>bd :bdelete<CR>
 nmap <leader>bq :bdelete!<CR>
 nmap <leader>ba :bufdo bd<CR>
 nmap <leader>bo :BufOnly<CR>
-nmap <leader>ls :ls<CR>
 nmap <leader>f :ALEFix<CR>
 nmap <leader>lg :term lazygit<CR>i
 nmap <leader>S :,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
@@ -271,7 +275,7 @@ inoremap <LeftMouse> <NOP>
 nmap <c-s><c-v> :vsplit<CR>
 nmap <c-s><c-h> :split<CR>
 nmap ,. :TagbarToggle<CR>
-nnoremap ls :buffers<CR>:buffer<Space>
+nnoremap <leader>ls :buffers<CR>:buffer<Space>
 
 vmap <C-c> <ESC>
 vnoremap <leader>pj :!python -m json.tool<CR>
@@ -296,5 +300,3 @@ function! ProfileEnd()
   :profile pause
   :noautocmd qall!
 endfunction
-
-command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".<q-args>, <bang>0)
