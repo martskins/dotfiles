@@ -4,6 +4,7 @@ filetype off
 "{{{ PLUGINS
 call plug#begin('~/.vim/plugged')
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
+Plug 'itchyny/lightline.vim'
 Plug 'w0rp/ale'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'}
 Plug 'junegunn/fzf.vim'
@@ -52,6 +53,7 @@ filetype plugin indent on
 
 "{{{ GENERAL
 syntax enable
+set timeoutlen=1000 ttimeoutlen=0
 let g:ftplugin_sql_omni_key = '<C-j>'
 set encoding=utf-8
 set shell=/usr/bin/fish
@@ -114,6 +116,19 @@ augroup netrw_buf_hidden_fix
         \|     set bufhidden=hide
         \| endif
 augroup end
+"}}}
+
+"{{{ LIGHTLINE
+let g:lightline = {
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'fugitive#head'
+      \ },
+      \ }
+set laststatus=2
 "}}}
 
 " {{{ FUGITIVE
