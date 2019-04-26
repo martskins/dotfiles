@@ -129,6 +129,7 @@ let g:lightline = {
       \ },
       \ }
 set laststatus=2
+set noshowmode
 "}}}
 
 " {{{ FUGITIVE
