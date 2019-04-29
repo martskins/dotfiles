@@ -50,7 +50,7 @@ font-3 = "Noto Sans Symbols2:size=9;1"
 
 modules-left = i3 xwindow
 modules-center =
-modules-right = pulseaudio spotify eth battery memory cpu date
+modules-right = pulseaudio spotify eth battery filesystem memory cpu date
 
 tray-position = right
 tray-padding = 2
@@ -77,6 +77,17 @@ poll-interval = 5
 [module/xwindow]
 type = internal/xwindow
 label = %title:0:80:...%
+
+[module/filesystem]
+type = internal/fs
+mount-0 = /
+interval = 10
+fixed-values = true
+spacing = 4
+format-mounted = "HD <label-mounted>"
+label-mounted = %free%
+format-mounted-prefix-foreground = ${colors.primary}
+format-mounted-underline = #f4d142
 
 [module/bspwm]
 type = internal/bspwm
