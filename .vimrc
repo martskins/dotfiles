@@ -22,6 +22,7 @@ Plug 'schickling/vim-bufonly'
 Plug 'majutsushi/tagbar'
 Plug 'machakann/vim-highlightedyank'
 Plug 'flazz/vim-colorschemes'
+Plug 'adelarsq/vim-matchit'
 
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
@@ -34,6 +35,8 @@ Plug 'ncm2/ncm2-neosnippet'
 Plug 'majutsushi/tagbar'
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 
+Plug 'zah/nim.vim',               { 'for': 'nim' }
+Plug 'tpope/vim-rails',           { 'for': 'ruby' }
 Plug 'mattn/emmet-vim',           { 'for': ['vue', 'html'] }
 Plug 'cespare/vim-toml',          { 'for': 'toml' }
 Plug 'davidhalter/jedi-vim',      { 'for': 'python' }
@@ -53,6 +56,7 @@ filetype plugin indent on
 
 "{{{ GENERAL
 syntax enable
+set re=1
 set timeoutlen=1000 ttimeoutlen=0
 let g:ftplugin_sql_omni_key = '<C-j>'
 set encoding=utf-8
@@ -74,7 +78,8 @@ set lazyredraw
 set termguicolors
 set t_Co=256
 set background=dark
-colorscheme badwolf
+" colorscheme badwolf
+colorscheme gruvbox
 
 set signcolumn=yes
 set tabstop=2
@@ -172,6 +177,7 @@ set completeopt=noinsert,menuone,noselect
 "}}}
 
 " {{{ ALE
+      " \ 'nim': ['nimpretty'],
 let g:ale_fixers = {
       \ 'javascript': ['eslint'],
       \ 'dart': ['dartfmt'],
@@ -181,7 +187,6 @@ let g:ale_fixers = {
       \ 'ruby': ['rubocop'],
       \ 'c': ['uncrustify'],
       \ 'rust': ['rustfmt'],
-      \ 'nim': ['nimpretty'],
       \ 'vue': [],
       \ '*': ['trim_whitespace']
       \}
@@ -194,7 +199,7 @@ let g:ale_linters = {
       \ 'javascript': ['eslint'],
       \ 'typescript': ['tslint'],
       \ 'vue': ['tslint', 'vls'],
-      \ 'go': ['vet', 'golint', 'errcheck'],
+      \ 'go': ['vet', 'errcheck', 'lint'],
       \ 'python': ['flake8'],
       \ 'cpp': ['clang'],
       \ 'c': ['clang']
@@ -203,16 +208,17 @@ let g:ale_linters = {
 
 " {{{ LSP
   set omnifunc=syntaxcomplete#Complete
-  let g:LanguageClient_loggingFile = '/home/martin.asquino/Desktop/lsp.log'
+  let g:LanguageClient_loggingFile = '/home/martin/Desktop/lsp.log'
   let g:LanguageClient_useFloatingHover = 1
   let g:LanguageClient_hoverPreview = 'Always'
   let g:LanguageClient_diagnosticsList = 'disabled'
-  let g:LanguageClient_useVirtualText = 0
+  let g:LanguageClient_useVirtualText = 1
   let g:LanguageClient_serverCommands = {
       \ 'ruby': ['solargraph', 'stdio'],
       \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
       \ 'go': ['bingo'],
       \ 'vue': ['vls'],
+      \ 'nim': ['nimlsp'],
       \ 'javascript': ['javascript-typescript-stdio'],
       \ 'typescript': ['javascript-typescript-stdio'],
       \ 'javascript.jsx': ['javascript-typescript-stdio'],
@@ -250,20 +256,28 @@ let g:ale_linters = {
 " }}}
 
 " {{{ MAPPINGS
-nnoremap <silent> <F3> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 command! WQ wq
 command! Wq wq
 command! W w
 command! Q q
+nnoremap <silent> <F3> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 nnoremap <S-F5> ggvG=
-nmap <tab> :bnext<CR>
-nmap <s-tab> :bprevious<CR>
-nmap <c-p> :Files<CR>
-nmap <c-f> :Rg<space>
 nnoremap Q @q
 nnoremap 0 ^
 nnoremap ^ 0
 nnoremap Q :norm @q<cr>
+nnoremap gev :e $MYVIMRC<CR>
+nnoremap gsv :so $MYVIMRC<CR>
+nnoremap <LeftMouse> <NOP>
+nnoremap <leader>ls :buffers<CR>:buffer<Space>
+nnoremap <Left> <NOP>
+nnoremap <Right> <NOP>
+nnoremap <Up> <NOP>
+nnoremap <Down> <NOP>
+nmap <tab> :bnext<CR>
+nmap <s-tab> :bprevious<CR>
+nmap <c-p> :FZF<CR>
+nmap <c-f> :Rg<space>
 nmap <leader>o :only<CR>
 nmap <leader>bd :bdelete<CR>
 nmap <leader>bq :bdelete!<CR>
@@ -278,22 +292,17 @@ nmap <leader>e :!
 nmap <leader>be :!<UP><CR>
 nmap <leader>x :%!xxd<CR>
 nmap <C-v><C-v> gg<C-V>G$
-noremap <Left> <NOP>
-noremap <Right> <NOP>
+nmap <c-s><c-v> :vsplit<CR>
+nmap <c-s><c-h> :split<CR>
+nmap ,. :TagbarToggle<CR>
 nmap <Down> :cnext<cr>
 nmap <Up> :cprevious<cr>
 nmap <space> ,
 nmap <space><space> :e#<cr>
-nnoremap gev :e $MYVIMRC<CR>
-nnoremap gsv :so $MYVIMRC<CR>
-nnoremap <LeftMouse> <NOP>
-inoremap <LeftMouse> <NOP>
-nmap <c-s><c-v> :vsplit<CR>
-nmap <c-s><c-h> :split<CR>
-nmap ,. :TagbarToggle<CR>
-nnoremap <leader>ls :buffers<CR>:buffer<Space>
-
+noremap <Left> <NOP>
+noremap <Right> <NOP>
 vmap <C-c> <ESC>
+inoremap <LeftMouse> <NOP>
 vnoremap <leader>pj :!python -m json.tool<CR>
 
 if has('nvim')
