@@ -27,4 +27,5 @@ nmap <leader>tf <Plug>(go-test-func)
 nmap <leader>a <Plug>(go-alternate-edit)
 nmap <leader>g <Plug>(go-generate)
 inoremap ;err <ESC>:GoIfErr<CR>O
-nmap <leader>d :!surf "https://golang.org/search?q="&<Left><Left>
+
+nnoremap <leader>d :silent ! surf 1>/dev/null 2>/dev/null "https://golang.org/search?q=" &<left><left><left>
