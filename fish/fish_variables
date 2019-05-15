@@ -1,5 +1,6 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
+SETUVAR --export FZF_DEFAULT_COMMAND:rg\x20\x2d\x2dfiles\x20\x2d\x2dhidden\x20\x2d\x2dfollow\x20\x2d\x2dglob\x20\x22\x21\x2egit/\x2a\x22
 SETUVAR __fish_init_2_39_8:\x1d
 SETUVAR __fish_init_2_3_0:\x1d
 SETUVAR __fish_init_3_x:\x1d
@@ -30,4 +31,4 @@ SETUVAR fish_pager_color_completion:\x1d
 SETUVAR fish_pager_color_description:B3A06D\x1eyellow
 SETUVAR fish_pager_color_prefix:white\x1e\x2d\x2dbold\x1e\x2d\x2dunderline
 SETUVAR fish_pager_color_progress:brwhite\x1e\x2d\x2dbackground\x3dcyan
-SETUVAR fish_user_paths:/home/martin/go/bin/\x1e/usr/local/go/bin\x1e/opt/flutter/bin/\x1e/opt/idea/bin/\x1e/home/martin/\x2ervm/bin\x1e/home/martin/\x2egem/ruby/2\x2e5\x2e0/bin\x1e/home/martin/\x2egem/ruby/2\x2e6\x2e0/bin
+SETUVAR fish_user_paths:/home/martin/go/bin/\x1e/usr/local/go/bin\x1e/opt/flutter/bin/\x1e/opt/idea/bin/\x1e/home/martin/\x2ervm/bin\x1e/home/martin/\x2egem/ruby/2\x2e5\x2e0/bin\x1e/home/martin/\x2egem/ruby/2\x2e6\x2e0/bin\x1e/home/martin/\x2efzf/bin\x1e/home/martin/\x2enimble/bin
