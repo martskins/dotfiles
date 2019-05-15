@@ -1,7 +1,7 @@
 .PHONY: clean link
 
 link: clean
-	ln -s ~/dotfiles/vim ~/.config/
+	ln -s ~/dotfiles/vim ~/
 	ln -s ~/dotfiles/.vimrc ~/.vimrc
 	ln -s ~/dotfiles/tmux.conf ~/.tmux.conf
 	ln -s ~/dotfiles/i3 ~/.config/i3
@@ -12,7 +12,7 @@ link: clean
 	ln -s ~/dotfiles/kitty.conf ~/.config/kitty/kitty.conf
 
 clean:
-	rm -f ~/.config/vim
+	rm -f ~/vim
 	rm -f ~/.config/.vimrc
 	rm -f ~/.tmux.conf
 	rm -f ~/.config/kitty/kitty.conf
