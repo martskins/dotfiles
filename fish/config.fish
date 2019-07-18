@@ -5,11 +5,6 @@ begin
     end
 end
 
-if status is-interactive
-and not set -q TMUX
-    exec tmux new-session -A -s main
-end
-
 function fish_user_key_bindings
 	fzf_key_bindings
 end
@@ -21,4 +16,6 @@ alias lg "lazygit"
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/opt/gcloud/path.fish.inc' ]; . '/opt/gcloud/path.fish.inc'; end
+
 # rvm default
+# source /home/martin/.cache/pacaur/rvm/src/rvm/scripts/rvm
