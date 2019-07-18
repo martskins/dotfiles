@@ -16,9 +16,13 @@ let g:go_metalinter_autosave_enabled = ['golint']
 let g:go_metalinter_deadline = "5s"
 let g:go_list_type = "quickfix"
 let g:go_def_reuse_buffer = 1
-" let g:go_addtags_transform = "camelcase"
 let g:go_doc_keywordprg_enabled = 0
 let g:go_def_mapping_enabled = 0 " leave this to the language server
+let g:go_term_enabled = 1
+let g:go_code_completion_enabled = 0
+let g:go_test_show_name = 1
+let g:go_auto_type_info = 1
+" let g:go_addtags_transform = "camelcase"
 
 nmap <leader>c <Plug>(go-coverage)
 nmap <leader>ct <Plug>(go-coverage-toggle)
