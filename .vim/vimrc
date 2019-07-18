@@ -2,7 +2,8 @@ set nocompatible
 filetype off
 
 "{{{ PLUGINS
-call plug#begin('~/.vim/plugged')
+" call plug#begin('~/.vim/plugged')
+call plug#begin()
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
 Plug 'itchyny/lightline.vim'
 Plug 'w0rp/ale'
@@ -21,21 +22,10 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'schickling/vim-bufonly'
 Plug 'majutsushi/tagbar'
 Plug 'machakann/vim-highlightedyank'
-Plug 'flazz/vim-colorschemes'
-Plug 'adelarsq/vim-matchit'
-
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
-Plug 'ncm2/ncm2'
-Plug 'roxma/vim-hug-neovim-rpc'
-Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-neosnippet'
-Plug 'majutsushi/tagbar'
+Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
-
-Plug 'zah/nim.vim',               { 'for': 'nim' }
+Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-rails',           { 'for': 'ruby' }
 Plug 'mattn/emmet-vim',           { 'for': ['vue', 'html'] }
 Plug 'cespare/vim-toml',          { 'for': 'toml' }
@@ -46,8 +36,6 @@ Plug 'fatih/vim-go',              { 'for': 'go' }
 Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
-Plug 'dart-lang/dart-vim-plugin', { 'for': 'dart' }
-
 
 call plug#end()
 "}}}
@@ -57,6 +45,7 @@ filetype plugin indent on
 "{{{ GENERAL
 syntax enable
 set re=1
+set shortmess+=c
 set timeoutlen=1000 ttimeoutlen=0
 let g:ftplugin_sql_omni_key = '<C-j>'
 set encoding=utf-8
@@ -66,7 +55,7 @@ set number relativenumber
 set hid
 set colorcolumn=100
 set guifont=monospace
-set synmaxcol=128
+set list listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
 set nobk
 set textwidth=100
 set noswapfile
@@ -75,12 +64,11 @@ if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 set lazyredraw
-" set termguicolors
+set termguicolors
 " set t_Co=256
 set background=dark
-" colorscheme badwolf
-" colorscheme gruvbox
-
+colorscheme challenger_deep
+let g:challenger_deep_termcolors = 1
 set signcolumn=yes
 set tabstop=2
 set shiftwidth=2
@@ -123,14 +111,24 @@ augroup netrw_buf_hidden_fix
 augroup end
 "}}}
 
+" {{{ VIM-MARKDOWN
+let g:markdown_fenced_languages = ['rust', 'go']
+" }}}
+
+"{{{ TAGBAR
+let g:tagbar_foldlevel = 0
+"}}}
+
 "{{{ LIGHTLINE
 let g:lightline = {
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \             [ 'cocstatus', 'gitbranch', 'readonly', 'filename', 'modified' ] ]
       \ },
+      \ 'colorscheme': 'challenger_deep',
       \ 'component_function': {
-      \   'gitbranch': 'fugitive#head'
+      \   'gitbranch': 'fugitive#head',
+      \   'cocstatus': 'coc#status'
       \ },
       \ }
 set laststatus=2
@@ -152,6 +150,8 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 nmap <leader><tab> <plug>(fzf-maps-n)
 
 command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".<q-args>, <bang>0)
+command! -bang -nargs=? -complete=dir Files
+ \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 " }}}
 
 " {{{ ULTISNIPS
@@ -167,17 +167,14 @@ let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
 " }}}
 
-" {{{ AIRLINE
-let g:airline#extensions#tabline#enabled = 1
-" }}}
-
-"{{{ NCM2
-autocmd BufEnter * call ncm2#enable_for_buffer()
-set completeopt=noinsert,menuone,noselect
-"}}}
+""{{{ DEOPLETE
+let g:deoplete#enable_at_startup = 1
+set completeopt-=preview
+"autocmd BufEnter * call ncm2#enable_for_buffer()
+"set completeopt=noinsert,menuone,noselect
+""}}}
 
 " {{{ ALE
-      " \ 'nim': ['nimpretty'],
 let g:ale_fixers = {
       \ 'javascript': ['eslint'],
       \ 'dart': ['dartfmt'],
@@ -193,9 +190,9 @@ let g:ale_fixers = {
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 1
 let g:ale_emit_conflict_warnings = 1
+let g:ale_rust_cargo_use_clippy = 1
 let g:ale_go_gometalinter_options = '--fast'
 let g:ale_linters = {
-      \ 'rust': ['cargo'],
       \ 'javascript': ['eslint'],
       \ 'typescript': ['tslint'],
       \ 'vue': ['tslint', 'vls'],
@@ -208,11 +205,12 @@ let g:ale_linters = {
 
 " {{{ LSP
   set omnifunc=syntaxcomplete#Complete
-  let g:LanguageClient_loggingFile = '/home/martin/Desktop/lsp.log'
+  let g:LanguageClient_loggingFile = '~/Desktop/lsp.log'
   let g:LanguageClient_useFloatingHover = 1
   let g:LanguageClient_hoverPreview = 'Always'
   let g:LanguageClient_diagnosticsList = 'disabled'
   let g:LanguageClient_useVirtualText = 1
+  let g:LanguageClient_loadSettings = 0
   let g:LanguageClient_serverCommands = {
       \ 'ruby': ['solargraph', 'stdio'],
       \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
@@ -223,7 +221,6 @@ let g:ale_linters = {
       \ 'typescript': ['javascript-typescript-stdio'],
       \ 'javascript.jsx': ['javascript-typescript-stdio'],
       \ 'python': ['/usr/local/bin/pyls'],
-      \ 'dart': ['dart_language_server'],
       \ 'cpp': ['clangd'],
       \ 'c': ['clangd'],
       \ }
@@ -236,24 +233,24 @@ let g:ale_linters = {
   nnoremap <silent> R :call LanguageClient#textDocument_rename()<CR>
 "}}}
 
-" {{{ NEOSNIPPET
-  let g:neosnippet#enable_snipmate_compatibility = 1
+" " {{{ NEOSNIPPET
+"   let g:neosnippet#enable_snipmate_compatibility = 1
 
-  imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-  smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-  xmap <C-k>     <Plug>(neosnippet_expand_target)
+"   imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+"   smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+"   xmap <C-k>     <Plug>(neosnippet_expand_target)
 
-  imap <expr><TAB>
-   \ pumvisible() ? "\<C-n>" :
-   \ neosnippet#expandable_or_jumpable() ?
-   \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-  smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-  \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+"   imap <expr><TAB>
+"    \ pumvisible() ? "\<C-n>" :
+"    \ neosnippet#expandable_or_jumpable() ?
+"    \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+"   smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+"   \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
-  if has('conceal')
-    set conceallevel=0 concealcursor=niv
-  endif
-" }}}
+"   if has('conceal')
+"     set conceallevel=0 concealcursor=niv
+"   endif
+" " }}}
 
 " {{{ MAPPINGS
 command! WQ wq
@@ -276,7 +273,7 @@ nnoremap <Up> <NOP>
 nnoremap <Down> <NOP>
 nmap <tab> :bnext<CR>
 nmap <s-tab> :bprevious<CR>
-nmap <c-p> :FZF<CR>
+nmap <c-p> :Files<CR>
 nmap <c-f> :Rg<space>
 nmap <leader>o :only<CR>
 nmap <leader>bd :bdelete<CR>
@@ -294,7 +291,7 @@ nmap <leader>x :%!xxd<CR>
 nmap <C-v><C-v> gg<C-V>G$
 nmap <c-s><c-v> :vsplit<CR>
 nmap <c-s><c-h> :split<CR>
-nmap ,. :TagbarToggle<CR>
+nmap ,. :TagbarToggle<CR><C-w><C-w>
 nmap <Down> :cnext<cr>
 nmap <Up> :cprevious<cr>
 nmap <space> ,
