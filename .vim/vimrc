@@ -6,6 +6,7 @@ filetype off
 call plug#begin()
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
 Plug 'itchyny/lightline.vim'
+Plug 'godlygeek/tabular'
 Plug 'w0rp/ale'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'}
 Plug 'junegunn/fzf.vim'
@@ -22,7 +23,7 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'schickling/vim-bufonly'
 Plug 'majutsushi/tagbar'
 Plug 'machakann/vim-highlightedyank'
-Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
+Plug 'morhetz/gruvbox'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 Plug 'majutsushi/tagbar'
@@ -65,10 +66,8 @@ if (has("nvim"))
 endif
 set lazyredraw
 set termguicolors
-" set t_Co=256
 set background=dark
-colorscheme challenger_deep
-let g:challenger_deep_termcolors = 1
+colorscheme gruvbox
 set signcolumn=yes
 set tabstop=2
 set shiftwidth=2
@@ -78,7 +77,6 @@ set autoindent
 set wrap
 set pastetoggle=<leader>z
 set clipboard=unnamed
-" set showtabline=2
 set ignorecase
 set history=100
 set hlsearch
@@ -184,7 +182,7 @@ let g:ale_fixers = {
       \ 'ruby': ['rubocop'],
       \ 'c': ['uncrustify'],
       \ 'rust': ['rustfmt'],
-      \ 'vue': [],
+      \ 'vue': ['eslint'],
       \ '*': ['trim_whitespace']
       \}
 let g:ale_fix_on_save = 1
@@ -198,7 +196,7 @@ let g:ale_linters = {
       \ 'vue': ['tslint', 'vls'],
       \ 'go': ['vet', 'errcheck', 'lint'],
       \ 'python': ['flake8'],
-      \ 'cpp': ['clang'],
+      \ 'cpp': ['clangd'],
       \ 'c': ['clang']
       \}
 "}}}
