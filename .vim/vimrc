@@ -121,12 +121,11 @@ let g:tagbar_foldlevel = 0
 let g:lightline = {
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'cocstatus', 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
       \ },
-      \ 'colorscheme': 'challenger_deep',
+      \ 'colorscheme': 'gruvbox',
       \ 'component_function': {
       \   'gitbranch': 'fugitive#head',
-      \   'cocstatus': 'coc#status'
       \ },
       \ }
 set laststatus=2
