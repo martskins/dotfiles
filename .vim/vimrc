@@ -23,7 +23,6 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'schickling/vim-bufonly'
 Plug 'majutsushi/tagbar'
 Plug 'machakann/vim-highlightedyank'
-Plug 'morhetz/gruvbox'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 Plug 'majutsushi/tagbar'
@@ -38,6 +37,8 @@ Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
 
+Plug 'morhetz/gruvbox'
+Plug 'tomasiser/vim-code-dark'
 call plug#end()
 "}}}
 
@@ -65,9 +66,10 @@ if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 set lazyredraw
-set termguicolors
-set background=dark
-colorscheme gruvbox
+" set termguicolors
+" set background=dark
+" colorscheme gruvbox
+" colorscheme codedark
 set signcolumn=yes
 set tabstop=2
 set shiftwidth=2
@@ -85,7 +87,8 @@ set wildmenu
 set updatetime=100
 set autoread
 set ttyfast
-set t_ut=
+" set t_Co=256
+" set t_ut=
 set mouse=a
 let mapleader = ','
 
@@ -121,9 +124,8 @@ let g:tagbar_foldlevel = 0
 let g:lightline = {
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'cocstatus', 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
       \ },
-      \ 'colorscheme': 'challenger_deep',
       \ 'component_function': {
       \   'gitbranch': 'fugitive#head',
       \   'cocstatus': 'coc#status'
@@ -211,7 +213,7 @@ let g:ale_linters = {
   let g:LanguageClient_loadSettings = 0
   let g:LanguageClient_serverCommands = {
       \ 'ruby': ['solargraph', 'stdio'],
-      \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+      \ 'rust': ['~/.cargo/bin/rustup', 'run', 'nightly', 'rls'],
       \ 'go': ['bingo'],
       \ 'vue': ['vls'],
       \ 'nim': ['nimlsp'],
@@ -273,6 +275,8 @@ nmap <tab> :bnext<CR>
 nmap <s-tab> :bprevious<CR>
 nmap <c-p> :Files<CR>
 nmap <c-f> :Rg<space>
+nmap <leader>en :ALENext<CR>
+nmap <leader>ep :ALEPrevious<CR>
 nmap <leader>o :only<CR>
 nmap <leader>bd :bdelete<CR>
 nmap <leader>bq :bdelete!<CR>
@@ -296,7 +300,7 @@ nmap <space> ,
 nmap <space><space> :e#<cr>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
-vmap <C-c> <ESC>
+inoremap <C-c> <ESC>
 inoremap <LeftMouse> <NOP>
 vnoremap <leader>pj :!python -m json.tool<CR>
 
@@ -320,3 +324,14 @@ function! ProfileEnd()
   :profile pause
   :noautocmd qall!
 endfunction
+
+hi Folded ctermfg=white ctermbg=8 guifg=white guibg=gray12
+hi Pmenu ctermbg=8 guibg=gray22
+hi ColorColumn ctermbg=8 guibg=gray12
+hi NonText ctermfg=8 guifg=gray24
+hi LineNr ctermfg=8 guifg=gray27
+hi Error ctermbg=black ctermfg=1 guifg=red guibg=black
+hi Todo ctermbg=black ctermfg=3 guifg=yellow guibg=black
+hi SpellBad cterm=underline ctermbg=black
+hi SpellCap cterm=underline ctermbg=black
+hi CursorLine cterm=bold ctermbg=8
