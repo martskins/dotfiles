@@ -2,7 +2,6 @@ set nocompatible
 filetype off
 
 "{{{ PLUGINS
-" call plug#begin('~/.vim/plugged')
 call plug#begin()
 Plug 'git://github.com/jiangmiao/auto-pairs.git'
 Plug 'itchyny/lightline.vim'
@@ -36,7 +35,7 @@ Plug 'fatih/vim-go',              { 'for': 'go' }
 Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
-
+Plug 'SirVer/ultisnips'
 Plug 'morhetz/gruvbox'
 Plug 'tomasiser/vim-code-dark'
 call plug#end()
@@ -66,10 +65,9 @@ if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 set lazyredraw
-" set termguicolors
+set termguicolors
 " set background=dark
-" colorscheme gruvbox
-" colorscheme codedark
+colorscheme gruvbox
 set signcolumn=yes
 set tabstop=2
 set shiftwidth=2
@@ -213,7 +211,7 @@ let g:ale_linters = {
   let g:LanguageClient_loadSettings = 0
   let g:LanguageClient_serverCommands = {
       \ 'ruby': ['solargraph', 'stdio'],
-      \ 'rust': ['~/.cargo/bin/rustup', 'run', 'nightly', 'rls'],
+      \ 'rust': ['ra_lsp_server'],
       \ 'go': ['bingo'],
       \ 'vue': ['vls'],
       \ 'nim': ['nimlsp'],
@@ -324,14 +322,3 @@ function! ProfileEnd()
   :profile pause
   :noautocmd qall!
 endfunction
-
-hi Folded ctermfg=white ctermbg=8 guifg=white guibg=gray12
-hi Pmenu ctermbg=8 guibg=gray22
-hi ColorColumn ctermbg=8 guibg=gray12
-hi NonText ctermfg=8 guifg=gray24
-hi LineNr ctermfg=8 guifg=gray27
-hi Error ctermbg=black ctermfg=1 guifg=red guibg=black
-hi Todo ctermbg=black ctermfg=3 guifg=yellow guibg=black
-hi SpellBad cterm=underline ctermbg=black
-hi SpellCap cterm=underline ctermbg=black
-hi CursorLine cterm=bold ctermbg=8
