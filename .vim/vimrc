@@ -3,7 +3,7 @@ filetype off
 
 "{{{ PLUGINS
 call plug#begin()
-Plug 'git://github.com/jiangmiao/auto-pairs.git'
+Plug 'jiangmiao/auto-pairs'
 Plug 'itchyny/lightline.vim'
 Plug 'godlygeek/tabular'
 Plug 'w0rp/ale'
