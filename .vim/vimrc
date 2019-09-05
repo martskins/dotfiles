@@ -9,9 +9,9 @@ Plug 'godlygeek/tabular'
 Plug 'w0rp/ale'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'}
 Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'      "better netrw
 Plug 'tpope/vim-abolish'      "toggle casing (snake or camel) with crs and crc
-Plug 'tpope/vim-fugitive'     "git commands
 Plug 'tpope/vim-dispatch'     "provides :Make and :Start
 Plug 'tpope/vim-surround'     "provides mappings to surround stuff with stuff
 Plug 'tpope/vim-commentary'   "mappings to comment/uncomment blocks of code
@@ -22,21 +22,25 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'schickling/vim-bufonly'
 Plug 'majutsushi/tagbar'
 Plug 'machakann/vim-highlightedyank'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-rails',           { 'for': 'ruby' }
 Plug 'mattn/emmet-vim',           { 'for': ['vue', 'html'] }
 Plug 'cespare/vim-toml',          { 'for': 'toml' }
 Plug 'davidhalter/jedi-vim',      { 'for': 'python' }
-Plug 'digitaltoad/vim-pug',       { 'for': ['pug', 'jade'] }
+Plug 'digitaltoad/vim-pug',       { 'for': ['pug', 'jade', 'vue'] }
 Plug 'posva/vim-vue',             { 'for': 'vue' }
 Plug 'fatih/vim-go',              { 'for': 'go' }
 Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
-Plug 'SirVer/ultisnips'
 Plug 'morhetz/gruvbox'
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+
 Plug 'tomasiser/vim-code-dark'
 call plug#end()
 "}}}
@@ -61,12 +65,11 @@ set nobk
 set textwidth=100
 set noswapfile
 if (has("nvim"))
-  set wildoptions=pum
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 set lazyredraw
 set termguicolors
-" set background=dark
+set background=dark
 colorscheme gruvbox
 set signcolumn=yes
 set tabstop=2
@@ -152,25 +155,10 @@ command! -bang -nargs=? -complete=dir Files
  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 " }}}
 
-" {{{ ULTISNIPS
-let g:UltiSnipsExpandTrigger="<Plug>(ultisnips_expand)"
-let g:UltiSnipsJumpForwardTrigger="<c-k>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-" }}}
-
 " {{{ BETTER WHITESPACE
 let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
 " }}}
-
-""{{{ DEOPLETE
-let g:deoplete#enable_at_startup = 1
-set completeopt-=preview
-"autocmd BufEnter * call ncm2#enable_for_buffer()
-"set completeopt=noinsert,menuone,noselect
-""}}}
 
 " {{{ ALE
 let g:ale_fixers = {
@@ -178,6 +166,7 @@ let g:ale_fixers = {
       \ 'dart': ['dartfmt'],
       \ 'python': ['autopep8', 'isort'],
       \ 'cpp': ['clang-format'],
+      \ 'html': ['prettier'],
       \ 'css': ['prettier'],
       \ 'ruby': ['rubocop'],
       \ 'c': ['uncrustify'],
@@ -199,36 +188,6 @@ let g:ale_linters = {
       \ 'cpp': ['clangd'],
       \ 'c': ['clang']
       \}
-"}}}
-
-" {{{ LSP
-  set omnifunc=syntaxcomplete#Complete
-  let g:LanguageClient_loggingFile = '~/Desktop/lsp.log'
-  let g:LanguageClient_useFloatingHover = 1
-  let g:LanguageClient_hoverPreview = 'Always'
-  let g:LanguageClient_diagnosticsList = 'disabled'
-  let g:LanguageClient_useVirtualText = 1
-  let g:LanguageClient_loadSettings = 0
-  let g:LanguageClient_serverCommands = {
-      \ 'ruby': ['solargraph', 'stdio'],
-      \ 'rust': ['ra_lsp_server'],
-      \ 'go': ['bingo'],
-      \ 'vue': ['vls'],
-      \ 'nim': ['nimlsp'],
-      \ 'javascript': ['javascript-typescript-stdio'],
-      \ 'typescript': ['javascript-typescript-stdio'],
-      \ 'javascript.jsx': ['javascript-typescript-stdio'],
-      \ 'python': ['/usr/local/bin/pyls'],
-      \ 'cpp': ['clangd'],
-      \ 'c': ['clangd'],
-      \ }
-
-  nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-  nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-  nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-  nnoremap <silent> gi :call LanguageClient#textDocument_implementation()<CR>
-  nnoremap <silent> gr :call LanguageClient#textDocument_references()<CR>
-  nnoremap <silent> R :call LanguageClient#textDocument_rename()<CR>
 "}}}
 
 " " {{{ NEOSNIPPET
@@ -310,6 +269,30 @@ augroup qf
    autocmd!
    autocmd FileType qf set nobuflisted
 augroup END
+"}}}
+
+"{{{ VIM-LSP
+" let g:lsp_log_file = expand('~/Desktop/vim-lsp.log')
+let g:asyncomplete_auto_popup = 1
+let g:lsp_diagnostics_enabled = 0
+imap <c-space> <Plug>(asyncomplete_force_refresh)
+
+au User lsp_setup call lsp#register_server({ 'name': 'gopls', 'cmd': {server_info->['gopls']}, 'whitelist': ['go'] })
+autocmd FileType go setlocal omnifunc=lsp#complete
+
+au User lsp_setup call lsp#register_server({ 'name': 'javascript-ls', 'cmd': {server_info->['javascript-typescript-stdio']}, 'whitelist': ['javascript', 'typescript'] })
+autocmd FileType javascript setlocal omnifunc=lsp#complete
+autocmd FileType typescript setlocal omnifunc=lsp#complete
+
+au User lsp_setup call lsp#register_server({ 'name': 'ra_lsp_server', 'cmd': {server_info->['rls']}, 'whitelist': ['rust'] })
+autocmd FileType rust setlocal omnifunc=lsp#complete
+
+nnoremap <F5> :LspCodeAction<CR>
+nnoremap <silent> K :LspHover<CR>
+nnoremap <silent> gd :LspDefinition<CR>
+nnoremap <silent> gi :LspImplementation<CR>
+nnoremap <silent> gr :LspReferences<CR>
+nnoremap <silent> R :LspRename<CR>
 "}}}
 
 function! ProfileStart()
