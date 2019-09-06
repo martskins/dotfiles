@@ -18,7 +18,6 @@ Plug 'tpope/vim-commentary'   "mappings to comment/uncomment blocks of code
 Plug 'tpope/vim-sleuth'       "automagically adjusts tab width
 Plug 'tpope/vim-repeat'       "enables repeating commands from plugins
 Plug 'ervandew/supertab'
-Plug 'ntpeters/vim-better-whitespace'
 Plug 'schickling/vim-bufonly'
 Plug 'majutsushi/tagbar'
 Plug 'machakann/vim-highlightedyank'
@@ -40,8 +39,6 @@ Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
-
-Plug 'tomasiser/vim-code-dark'
 call plug#end()
 "}}}
 
@@ -60,7 +57,6 @@ set number relativenumber
 set hid
 set colorcolumn=100
 set guifont=monospace
-set list listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
 set nobk
 set textwidth=100
 set noswapfile
@@ -97,6 +93,8 @@ let g:netrw_list_hide= '.*\.swp$,.DS_Store,*/tmp/*,*.so,*.swp,*.swo,*.zip,*.git,
 let g:python_host_prog="/usr/bin/python2.7"
 let g:python3_host_prog="/usr/bin/python3"
 
+au FileType java set list listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
+
 set fdm=expr
 set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
 set foldmethod=expr |
@@ -111,6 +109,14 @@ augroup netrw_buf_hidden_fix
         \|     set bufhidden=hide
         \| endif
 augroup end
+
+" highlight extra whitespace
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
 "}}}
 
 " {{{ VIM-MARKDOWN
