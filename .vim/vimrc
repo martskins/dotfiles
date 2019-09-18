@@ -6,9 +6,10 @@ call plug#begin()
 Plug 'jiangmiao/auto-pairs'
 Plug 'itchyny/lightline.vim'
 Plug 'godlygeek/tabular'
-Plug 'w0rp/ale'
+Plug 'dense-analysis/ale'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'}
 Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'      "better netrw
 Plug 'tpope/vim-abolish'      "toggle casing (snake or camel) with crs and crc
@@ -19,9 +20,9 @@ Plug 'tpope/vim-sleuth'       "automagically adjusts tab width
 Plug 'tpope/vim-repeat'       "enables repeating commands from plugins
 Plug 'ervandew/supertab'
 Plug 'schickling/vim-bufonly'
-Plug 'majutsushi/tagbar'
 Plug 'machakann/vim-highlightedyank'
 Plug 'majutsushi/tagbar'
+Plug 'jceb/vim-orgmode',          { 'for': 'org' }
 Plug 'tpope/vim-rails',           { 'for': 'ruby' }
 Plug 'mattn/emmet-vim',           { 'for': ['vue', 'html'] }
 Plug 'cespare/vim-toml',          { 'for': 'toml' }
@@ -32,17 +33,29 @@ Plug 'fatih/vim-go',              { 'for': 'go' }
 Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
+Plug '~/Projects/ballerina-vim',  { 'for': 'ballerina' }
 Plug 'morhetz/gruvbox'
+
+Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
 call plug#end()
 "}}}
 
 filetype plugin indent on
+
+" {{{ DEOPLETE
+let g:deoplete#enable_at_startup = 1
+set completeopt-=preview
+" }}}
 
 "{{{ GENERAL
 syntax enable
@@ -58,7 +71,7 @@ set hid
 set colorcolumn=100
 set guifont=monospace
 set nobk
-set textwidth=100
+" set textwidth=100
 set noswapfile
 if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -73,7 +86,7 @@ set shiftwidth=2
 set expandtab
 set backspace=indent,eol,start
 set autoindent
-set wrap
+" set wrap
 set pastetoggle=<leader>z
 set clipboard=unnamed
 set ignorecase
@@ -88,7 +101,8 @@ set ttyfast
 " set t_ut=
 set mouse=a
 let mapleader = ','
-
+let maplocalleader = "\\"
+let g:loaded_clipboard_provider = 1
 let g:netrw_list_hide= '.*\.swp$,.DS_Store,*/tmp/*,*.so,*.swp,*.swo,*.zip,*.git,^\.\.\=/\=$'
 let g:python_host_prog="/usr/bin/python2.7"
 let g:python3_host_prog="/usr/bin/python3"
@@ -161,11 +175,6 @@ command! -bang -nargs=? -complete=dir Files
  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 " }}}
 
-" {{{ BETTER WHITESPACE
-let g:better_whitespace_enabled=1
-let g:strip_whitespace_on_save=1
-" }}}
-
 " {{{ ALE
 let g:ale_fixers = {
       \ 'javascript': ['eslint'],
@@ -180,6 +189,9 @@ let g:ale_fixers = {
       \ 'vue': ['eslint'],
       \ '*': ['trim_whitespace']
       \}
+
+let g:ale_completion_enabled = 1
+let g:ale_disable_lsp = 1
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 1
 let g:ale_emit_conflict_warnings = 1
@@ -190,32 +202,41 @@ let g:ale_linters = {
       \ 'typescript': ['tslint'],
       \ 'vue': ['tslint', 'vls'],
       \ 'go': ['vet', 'errcheck', 'lint'],
-      \ 'python': ['flake8'],
-      \ 'cpp': ['clangd'],
-      \ 'c': ['clang']
+      \ 'python': ['flake8']
       \}
 "}}}
 
-" " {{{ NEOSNIPPET
-"   let g:neosnippet#enable_snipmate_compatibility = 1
+" {{{ NEOSNIPPET
+  let g:neosnippet#enable_snipmate_compatibility = 1
 
-"   imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-"   smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-"   xmap <C-k>     <Plug>(neosnippet_expand_target)
+  imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+  smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+  xmap <C-k>     <Plug>(neosnippet_expand_target)
 
-"   imap <expr><TAB>
-"    \ pumvisible() ? "\<C-n>" :
-"    \ neosnippet#expandable_or_jumpable() ?
-"    \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-"   smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-"   \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+  imap <expr><TAB>
+   \ pumvisible() ? "\<C-n>" :
+   \ neosnippet#expandable_or_jumpable() ?
+   \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+  smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+  \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
-"   if has('conceal')
-"     set conceallevel=0 concealcursor=niv
-"   endif
-" " }}}
+  if has('conceal')
+    set conceallevel=0 concealcursor=niv
+  endif
+" }}}
 
 " {{{ MAPPINGS
+function! ProfileStart()
+  :profile start profile.log
+  :profile func *
+  :profile file *
+endfunction
+
+function! ProfileEnd()
+  :profile pause
+  :noautocmd qall!
+endfunction
+
 command! WQ wq
 command! Wq wq
 command! W w
@@ -277,37 +298,19 @@ augroup qf
 augroup END
 "}}}
 
-"{{{ VIM-LSP
-" let g:lsp_log_file = expand('~/Desktop/vim-lsp.log')
-let g:asyncomplete_auto_popup = 1
-let g:lsp_diagnostics_enabled = 0
-imap <c-space> <Plug>(asyncomplete_force_refresh)
+" {{{ LCN
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ 'javascript': ['javascript-typescript-stdio'],
+    \ 'ruby': ['solargraph', 'stdio'],
+    \ 'cpp': ['clangd'],
+    \ 'c': ['clangd'],
+    \ 'go': ['gopls']
+    \ }
 
-au User lsp_setup call lsp#register_server({ 'name': 'gopls', 'cmd': {server_info->['gopls']}, 'whitelist': ['go'] })
-autocmd FileType go setlocal omnifunc=lsp#complete
-
-au User lsp_setup call lsp#register_server({ 'name': 'javascript-ls', 'cmd': {server_info->['javascript-typescript-stdio']}, 'whitelist': ['javascript', 'typescript'] })
-autocmd FileType javascript setlocal omnifunc=lsp#complete
-autocmd FileType typescript setlocal omnifunc=lsp#complete
-
-au User lsp_setup call lsp#register_server({ 'name': 'ra_lsp_server', 'cmd': {server_info->['rls']}, 'whitelist': ['rust'] })
-autocmd FileType rust setlocal omnifunc=lsp#complete
-
-nnoremap <F5> :LspCodeAction<CR>
-nnoremap <silent> K :LspHover<CR>
-nnoremap <silent> gd :LspDefinition<CR>
-nnoremap <silent> gi :LspImplementation<CR>
-nnoremap <silent> gr :LspReferences<CR>
-nnoremap <silent> R :LspRename<CR>
-"}}}
-
-function! ProfileStart()
-  :profile start profile.log
-  :profile func *
-  :profile file *
-endfunction
-
-function! ProfileEnd()
-  :profile pause
-  :noautocmd qall!
-endfunction
+noremap <F5> :call LanguageClient_contextMenu()<CR>
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> R :call LanguageClient#textDocument_rename()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> gi :call LanguageClient#textDocument_implementation()<CR>
+" }}}
