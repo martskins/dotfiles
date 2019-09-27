@@ -16,7 +16,6 @@ Plug 'tpope/vim-abolish'      "toggle casing (snake or camel) with crs and crc
 Plug 'tpope/vim-dispatch'     "provides :Make and :Start
 Plug 'tpope/vim-surround'     "provides mappings to surround stuff with stuff
 Plug 'tpope/vim-commentary'   "mappings to comment/uncomment blocks of code
-Plug 'tpope/vim-sleuth'       "automagically adjusts tab width
 Plug 'tpope/vim-repeat'       "enables repeating commands from plugins
 Plug 'ervandew/supertab'
 Plug 'schickling/vim-bufonly'
@@ -35,18 +34,17 @@ Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
 Plug 'udalov/kotlin-vim',         { 'for': 'kotlin' }
 Plug 'martskins/vim-ballerina',   { 'for': 'ballerina' }
-Plug 'morhetz/gruvbox'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
+Plug '~/Projects/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 
-Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'roxma/nvim-yarp'
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
+" NCM2
+Plug 'ncm2/ncm2'
+Plug 'ncm2/ncm2-neosnippet'
+Plug 'roxma/nvim-yarp'
+
+Plug 'morhetz/gruvbox'
+Plug 'sjl/badwolf'
 call plug#end()
 "}}}
 
@@ -71,18 +69,19 @@ if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 set lazyredraw
-set termguicolors
-set background=dark
-colorscheme gruvbox
+" set termguicolors
+" set background=dark
+" colorscheme badwolf
+" set t_Co=256
+" set wrap
 set signcolumn=yes
 set tabstop=2
 set shiftwidth=2
 set expandtab
 set backspace=indent,eol,start
 set autoindent
-" set wrap
 set pastetoggle=<leader>z
-set clipboard=unnamed
+set clipboard+=unnamedplus
 set ignorecase
 set history=100
 set hlsearch
@@ -94,27 +93,15 @@ set ttyfast
 set mouse=a
 let mapleader = ','
 let maplocalleader = "\\"
-let g:loaded_clipboard_provider = 1
-let g:netrw_list_hide= '.*\.swp$,.DS_Store,*/tmp/*,*.so,*.swp,*.swo,*.zip,*.git,^\.\.\=/\=$'
+let g:loaded_clipboard_provider = 0
 let g:python_host_prog="/usr/bin/python2.7"
 let g:python3_host_prog="/usr/bin/python3"
 
-au FileType java set list listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
-
-set fdm=expr
-set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
-set foldmethod=expr |
-        \ set foldexpr=getline(v:lnum)=~'^\\s*//' |
-        \ exe "normal zM``"
-
-augroup netrw_buf_hidden_fix
-  autocmd!
-  set nohidden
-  autocmd BufWinEnter *
-        \  if &ft != 'netrw'
-        \|     set bufhidden=hide
-        \| endif
-augroup end
+" set fdm=expr
+" set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
+" set foldmethod=expr |
+"         \ set foldexpr=getline(v:lnum)=~'^\\s*//' |
+"         \ exe "normal zM``"
 
 " highlight extra whitespace
 highlight ExtraWhitespace ctermbg=red guibg=red
@@ -125,9 +112,13 @@ autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
 "}}}
 
-" {{{ DEOPLETE
-let g:deoplete#enable_at_startup = 1
-set completeopt-=preview
+" {{{ NCM2
+autocmd BufEnter * call ncm2#enable_for_buffer()
+set completeopt=noinsert,menuone,noselect
+inoremap <silent> <expr> <CR> ncm2_neosnippet#expand_or("\<CR>", 'n')
+" DEOPLETE
+" let g:deoplete#enable_at_startup = 1
+" set completeopt-=preview
 " }}}
 
 " {{{ VIM-MARKDOWN
@@ -144,7 +135,6 @@ let g:lightline = {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
       \ },
-      \ 'colorscheme': 'gruvbox',
       \ 'component_function': {
       \   'gitbranch': 'fugitive#head',
       \ },
@@ -175,6 +165,8 @@ command! -bang -nargs=? -complete=dir Files
 " {{{ ALE
 let g:ale_fixers = {
       \ 'javascript': ['eslint'],
+      \ 'typescript.tsx': ['eslint'],
+      \ 'typescript': ['eslint'],
       \ 'go': ['goimports'],
       \ 'python': ['autopep8', 'isort'],
       \ 'cpp': ['clang-format'],
@@ -188,6 +180,7 @@ let g:ale_fixers = {
       \ '*': ['trim_whitespace']
       \}
 
+autocmd BufNewFile,BufRead *.tsx setlocal filetype=typescript.tsx
 let g:ale_completion_enabled = 1
 let g:ale_disable_lsp = 1
 let g:ale_fix_on_save = 1
@@ -198,6 +191,7 @@ let g:ale_go_gometalinter_options = '--fast'
 let g:ale_linters = {
       \ 'javascript': ['eslint'],
       \ 'typescript': ['tslint'],
+      \ 'cpp': [],
       \ 'vue': ['tslint', 'vls'],
       \ 'go': ['vet', 'errcheck', 'lint'],
       \ 'python': ['flake8']
@@ -223,6 +217,10 @@ let g:ale_linters = {
   endif
 " }}}
 
+" {{{ TAGBAR
+nmap ,. :TagbarToggle<CR><C-w><C-w>
+" }}}
+
 " {{{ MAPPINGS
 function! ProfileStart()
   :profile start profile.log
@@ -240,15 +238,10 @@ command! Wq wq
 command! W w
 command! Q q
 nnoremap <silent> <F3> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
-nnoremap <S-F5> ggvG=
-nnoremap Q @q
-nnoremap 0 ^
-nnoremap ^ 0
-nnoremap Q :norm @q<cr>
 nnoremap gev :e $MYVIMRC<CR>
 nnoremap gsv :so $MYVIMRC<CR>
-nnoremap <LeftMouse> <NOP>
 nnoremap <leader>ls :buffers<CR>:buffer<Space>
+nnoremap <LeftMouse> <NOP>
 nnoremap <Left> <NOP>
 nnoremap <Right> <NOP>
 nnoremap <Up> <NOP>
@@ -257,25 +250,23 @@ nmap <tab> :bnext<CR>
 nmap <s-tab> :bprevious<CR>
 nmap <c-p> :Files<CR>
 nmap <c-f> :Rg<space>
-nmap <leader>en :ALENext<CR>
-nmap <leader>ep :ALEPrevious<CR>
+nmap <leader>f :ALEFix<CR>
+nmap <leader>dn :ALENext<CR>
+nmap <leader>dp :ALEPrevious<CR>
 nmap <leader>o :only<CR>
 nmap <leader>bd :bdelete<CR>
 nmap <leader>bq :bdelete!<CR>
 nmap <leader>ba :bufdo bd<CR>
 nmap <leader>bo :BufOnly<CR>
-nmap <leader>f :ALEFix<CR>
 nmap <leader>S :,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 nmap <leader>s :%s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 nmap <leader>w :!surf "duckduckgo.com?q="&<Left><Left>
-nmap <leader>pj :norm 0v$,json<CR>
 nmap <leader>e :!
 nmap <leader>be :!<UP><CR>
 nmap <leader>x :%!xxd<CR>
 nmap <C-v><C-v> gg<C-V>G$
 nmap <c-s><c-v> :vsplit<CR>
 nmap <c-s><c-h> :split<CR>
-nmap ,. :TagbarToggle<CR><C-w><C-w>
 nmap <Down> :cnext<cr>
 nmap <Up> :cprevious<cr>
 nmap <space> ,
@@ -285,11 +276,6 @@ noremap <Right> <NOP>
 inoremap <C-c> <ESC>
 inoremap <LeftMouse> <NOP>
 vnoremap <leader>pj :!python -m json.tool<CR>
-
-augroup qf
-   autocmd!
-   autocmd FileType qf set nobuflisted
-augroup END
 "}}}
 
 " {{{ LCN
@@ -297,9 +283,11 @@ augroup END
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
     \ 'javascript': ['javascript-typescript-stdio'],
+    \ 'typescript': ['typescript-language-server', '--stdio'],
+    \ 'typescript.tsx': ['typescript-language-server', '--stdio'],
     \ 'kotlin': ['kotlin-language-server'],
     \ 'ruby': ['solargraph', 'stdio'],
-    \ 'cpp': ['clangd'],
+    \ 'cpp': ['clangd', '--header-insertion-decorators'],
     \ 'c': ['clangd'],
     \ 'go': ['gopls']
     \ }
@@ -308,5 +296,6 @@ noremap <F5> :call LanguageClient_contextMenu()<CR>
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> R :call LanguageClient#textDocument_rename()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> gr :call LanguageClient#textDocument_references()<CR>
 nnoremap <silent> gi :call LanguageClient#textDocument_implementation()<CR>
 " }}}
