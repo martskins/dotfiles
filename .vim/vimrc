@@ -3,7 +3,6 @@ filetype off
 
 "{{{ PLUGINS
 call plug#begin()
-Plug 'jiangmiao/auto-pairs'
 Plug 'itchyny/lightline.vim'
 Plug 'godlygeek/tabular'
 Plug 'dense-analysis/ale'
@@ -19,11 +18,10 @@ Plug 'tpope/vim-commentary'   "mappings to comment/uncomment blocks of code
 Plug 'tpope/vim-repeat'       "enables repeating commands from plugins
 Plug 'ervandew/supertab'
 Plug 'schickling/vim-bufonly'
-Plug 'machakann/vim-highlightedyank'
+Plug 'Raimondi/delimitMate'
 Plug 'majutsushi/tagbar'
-Plug 'jceb/vim-orgmode',          { 'for': 'org' }
 Plug 'tpope/vim-rails',           { 'for': 'ruby' }
-Plug 'mattn/emmet-vim',           { 'for': ['vue', 'html'] }
+Plug 'mattn/emmet-vim',           { 'for': ['vue', 'html', 'typescript.tsx'] }
 Plug 'cespare/vim-toml',          { 'for': 'toml' }
 Plug 'davidhalter/jedi-vim',      { 'for': 'python' }
 Plug 'digitaltoad/vim-pug',       { 'for': ['pug', 'jade', 'vue'] }
@@ -33,18 +31,19 @@ Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
 Plug 'udalov/kotlin-vim',         { 'for': 'kotlin' }
-Plug 'martskins/vim-ballerina',   { 'for': 'ballerina' }
+Plug 'MaxMEllon/vim-jsx-pretty'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
-Plug '~/Projects/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
-
-" NCM2
-Plug 'ncm2/ncm2'
-Plug 'ncm2/ncm2-neosnippet'
 Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
 
+Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
+
+Plug 'chriskempson/base16-vim'
 Plug 'morhetz/gruvbox'
-Plug 'sjl/badwolf'
 call plug#end()
 "}}}
 
@@ -69,11 +68,10 @@ if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 set lazyredraw
-" set termguicolors
-" set background=dark
-" colorscheme badwolf
-" set t_Co=256
-" set wrap
+colorscheme base16-gruvbox-dark-hard
+set termguicolors
+set background=dark
+set t_Co=256
 set signcolumn=yes
 set tabstop=2
 set shiftwidth=2
@@ -114,10 +112,6 @@ autocmd BufWinLeave * call clearmatches()
 " {{{ NCM2
 autocmd BufEnter * call ncm2#enable_for_buffer()
 set completeopt=noinsert,menuone,noselect
-inoremap <silent> <expr> <CR> ncm2_neosnippet#expand_or("\<CR>", 'n')
-" DEOPLETE
-" let g:deoplete#enable_at_startup = 1
-" set completeopt-=preview
 " }}}
 
 " {{{ VIM-MARKDOWN
@@ -161,42 +155,6 @@ command! -bang -nargs=? -complete=dir Files
  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 " }}}
 
-" {{{ ALE
-let g:ale_fixers = {
-      \ 'javascript': ['eslint'],
-      \ 'typescript.tsx': ['eslint'],
-      \ 'typescript': ['eslint'],
-      \ 'go': ['goimports'],
-      \ 'python': ['autopep8', 'isort'],
-      \ 'cpp': ['clang-format'],
-      \ 'html': ['prettier'],
-      \ 'css': ['prettier'],
-      \ 'ruby': ['rubocop'],
-      \ 'kotlin': ['ktlint'],
-      \ 'c': ['uncrustify'],
-      \ 'rust': ['rustfmt'],
-      \ 'vue': ['eslint'],
-      \ '*': ['trim_whitespace']
-      \}
-
-autocmd BufNewFile,BufRead *.tsx setlocal filetype=typescript.tsx
-let g:ale_completion_enabled = 1
-let g:ale_disable_lsp = 1
-let g:ale_fix_on_save = 1
-let g:ale_lint_on_enter = 1
-let g:ale_emit_conflict_warnings = 1
-let g:ale_rust_cargo_use_clippy = 1
-let g:ale_go_gometalinter_options = '--fast'
-let g:ale_linters = {
-      \ 'javascript': ['eslint'],
-      \ 'typescript': ['tslint'],
-      \ 'cpp': [],
-      \ 'vue': ['tslint', 'vls'],
-      \ 'go': ['vet', 'errcheck', 'lint'],
-      \ 'python': ['flake8']
-      \}
-"}}}
-
 " {{{ NEOSNIPPET
   let g:neosnippet#enable_snipmate_compatibility = 1
 
@@ -221,17 +179,6 @@ nmap ,. :TagbarToggle<CR><C-w><C-w>
 " }}}
 
 " {{{ MAPPINGS
-function! ProfileStart()
-  :profile start profile.log
-  :profile func *
-  :profile file *
-endfunction
-
-function! ProfileEnd()
-  :profile pause
-  :noautocmd qall!
-endfunction
-
 command! WQ wq
 command! Wq wq
 command! W w
@@ -248,15 +195,13 @@ nnoremap <Down> <NOP>
 nmap <tab> :bnext<CR>
 nmap <s-tab> :bprevious<CR>
 nmap <c-p> :Files<CR>
+nmap <c-l> :Buffers<CR>
 nmap <c-f> :Rg<space>
+nmap <leader>o :on<CR>
+nmap <leader>bo :bo<CR>
 nmap <leader>f :ALEFix<CR>
 nmap <leader>dn :ALENext<CR>
 nmap <leader>dp :ALEPrevious<CR>
-nmap <leader>o :only<CR>
-nmap <leader>bd :bdelete<CR>
-nmap <leader>bq :bdelete!<CR>
-nmap <leader>ba :bufdo bd<CR>
-nmap <leader>bo :BufOnly<CR>
 nmap <leader>S :,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 nmap <leader>s :%s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 nmap <leader>w :!surf "duckduckgo.com?q="&<Left><Left>
@@ -269,32 +214,66 @@ nmap <c-s><c-h> :split<CR>
 nmap <Down> :cnext<cr>
 nmap <Up> :cprevious<cr>
 nmap <space> ,
-nmap <space><space> :e#<cr>
-noremap <Left> <NOP>
-noremap <Right> <NOP>
+nmap <space><space> <C-^>
 inoremap <C-c> <ESC>
 inoremap <LeftMouse> <NOP>
 vnoremap <leader>pj :!python -m json.tool<CR>
 "}}}
 
-" {{{ LCN
-" let g:LanguageClient_loggingFile =  '~/Desktop/lsp.log'
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-    \ 'javascript': ['javascript-typescript-stdio'],
-    \ 'typescript': ['typescript-language-server', '--stdio'],
-    \ 'typescript.tsx': ['typescript-language-server', '--stdio'],
-    \ 'kotlin': ['kotlin-language-server'],
-    \ 'ruby': ['solargraph', 'stdio'],
-    \ 'cpp': ['clangd', '--header-insertion-decorators'],
-    \ 'c': ['clangd'],
-    \ 'go': ['gopls']
-    \ }
+" {{{ ALE
+let g:ale_fixers = {
+      \ 'javascript': ['eslint'],
+      \ 'typescript.tsx': ['eslint'],
+      \ 'typescript': ['eslint'],
+      \ 'go': ['goimports'],
+      \ 'python': ['autopep8', 'isort'],
+      \ 'cpp': ['clang-format'],
+      \ 'html': ['prettier'],
+      \ 'css': ['prettier'],
+      \ 'ruby': ['rubocop'],
+      \ 'kotlin': ['ktlint'],
+      \ 'c': ['uncrustify'],
+      \ 'rust': ['rustfmt'],
+      \ 'vue': ['eslint'],
+      \ '*': ['trim_whitespace']
+      \}
 
-noremap <F5> :call LanguageClient_contextMenu()<CR>
+autocmd BufNewFile,BufRead *.tsx setlocal filetype=typescript.tsx
+let g:ale_completion_enabled = 1
+let g:ale_disable_lsp = 1
+let g:ale_fix_on_save = 1
+let g:ale_lint_on_enter = 1
+let g:ale_emit_conflict_warnings = 1
+let g:ale_rust_cargo_use_clippy = 0
+let g:ale_rust_cargo_use_check = 0
+let g:ale_go_gometalinter_options = '--fast'
+let g:ale_linters = {
+      \ 'javascript': ['eslint'],
+      \ 'typescript': ['tslint'],
+      \ 'cpp': [],
+      \ 'vue': ['tslint', 'vls'],
+      \ 'go': ['vet', 'errcheck', 'lint'],
+      \ 'python': ['flake8']
+      \}
+"}}}
+
+" {{{ LCN
+" let g:LanguageClient_loggingFile = '~/Desktop/lcn.log'
+" let g:LanguageClient_loggingLevel = 'INFO'
+let g:LanguageClient_diagnosticsList = 'Disabled'
+let g:LanguageClient_hoverPreview = 'always'
+let g:LanguageClient_completionPreferTextEdit = 0
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['ra_lsp_server'],
+    \ 'go': ['gopls'],
+    \ }
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> R :call LanguageClient#textDocument_rename()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> gr :call LanguageClient#textDocument_references()<CR>
 nnoremap <silent> gi :call LanguageClient#textDocument_implementation()<CR>
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+noremap <leader>ca :call LanguageClient#textDocument_codeAction()<CR>
+command Action :call LanguageClient#textDocument_codeAction()<CR>
 " }}}
