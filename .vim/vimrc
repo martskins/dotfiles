@@ -6,9 +6,9 @@ call plug#begin()
 Plug 'itchyny/lightline.vim'
 Plug 'godlygeek/tabular'
 Plug 'dense-analysis/ale'
+Plug 'Raimondi/delimitMate'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'}
 Plug 'junegunn/fzf.vim'
-Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'      "better netrw
 Plug 'tpope/vim-abolish'      "toggle casing (snake or camel) with crs and crc
@@ -31,12 +31,10 @@ Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
 Plug 'udalov/kotlin-vim',         { 'for': 'kotlin' }
-Plug 'MaxMEllon/vim-jsx-pretty'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
 
@@ -79,7 +77,7 @@ set expandtab
 set backspace=indent,eol,start
 set autoindent
 set pastetoggle=<leader>z
-set clipboard+=unnamedplus
+set clipboard=unnamed
 set ignorecase
 set history=100
 set hlsearch
@@ -94,13 +92,6 @@ let maplocalleader = "\\"
 let g:python_host_prog="/usr/bin/python2.7"
 let g:python3_host_prog="/usr/bin/python3"
 
-" set fdm=expr
-" set fde=getline(v:lnum)=~‘^\\s\/\/‘?1:getline(prevnonblank(v:lnum))=~‘^\\s\/\/‘?1:getline(nextnonblank(v:lnum))=~‘^\\s*\/\/’?1:0
-" set foldmethod=expr |
-"         \ set foldexpr=getline(v:lnum)=~'^\\s*//' |
-"         \ exe "normal zM``"
-
-" highlight extra whitespace
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
@@ -155,6 +146,44 @@ command! -bang -nargs=? -complete=dir Files
  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 " }}}
 
+" {{{ ALE
+      " \ 'cpp': ['clang-format'],
+let g:ale_fixers = {
+      \ 'javascript': ['eslint'],
+      \ 'typescript.tsx': ['eslint'],
+      \ 'typescript': ['eslint'],
+      \ 'go': ['goimports'],
+      \ 'python': ['autopep8', 'isort'],
+      \ 'html': ['prettier'],
+      \ 'css': ['prettier'],
+      \ 'ruby': ['rubocop'],
+      \ 'kotlin': ['ktlint'],
+      \ 'c': ['uncrustify'],
+      \ 'rust': ['rustfmt'],
+      \ 'vue': ['eslint'],
+      \ '*': ['trim_whitespace']
+      \}
+
+autocmd BufNewFile,BufRead *.tsx setlocal filetype=typescript.tsx
+let g:ale_kotlin_ktlint_options = '--experimental'
+let g:ale_completion_enabled = 1
+let g:ale_disable_lsp = 1
+let g:ale_fix_on_save = 1
+let g:ale_lint_on_enter = 1
+let g:ale_emit_conflict_warnings = 1
+let g:ale_rust_cargo_use_clippy = 1
+let g:ale_go_gometalinter_options = '--fast'
+let g:ale_linters = {
+      \ 'javascript': ['eslint'],
+      \ 'typescript': ['tslint'],
+      \ 'kotlin': ['ktlint'],
+      \ 'cpp': [],
+      \ 'vue': ['tslint', 'vls'],
+      \ 'go': ['vet', 'errcheck', 'lint'],
+      \ 'python': ['flake8']
+      \}
+"}}}
+
 " {{{ NEOSNIPPET
   let g:neosnippet#enable_snipmate_compatibility = 1
 
@@ -202,6 +231,9 @@ nmap <leader>bo :bo<CR>
 nmap <leader>f :ALEFix<CR>
 nmap <leader>dn :ALENext<CR>
 nmap <leader>dp :ALEPrevious<CR>
+nmap <leader>ba :bufdo bd<CR>
+nmap <leader>o :only<CR>
+nmap <leader>bo :bo<CR>
 nmap <leader>S :,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 nmap <leader>s :%s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 nmap <leader>w :!surf "duckduckgo.com?q="&<Left><Left>
@@ -218,43 +250,6 @@ nmap <space><space> <C-^>
 inoremap <C-c> <ESC>
 inoremap <LeftMouse> <NOP>
 vnoremap <leader>pj :!python -m json.tool<CR>
-"}}}
-
-" {{{ ALE
-let g:ale_fixers = {
-      \ 'javascript': ['eslint'],
-      \ 'typescript.tsx': ['eslint'],
-      \ 'typescript': ['eslint'],
-      \ 'go': ['goimports'],
-      \ 'python': ['autopep8', 'isort'],
-      \ 'cpp': ['clang-format'],
-      \ 'html': ['prettier'],
-      \ 'css': ['prettier'],
-      \ 'ruby': ['rubocop'],
-      \ 'kotlin': ['ktlint'],
-      \ 'c': ['uncrustify'],
-      \ 'rust': ['rustfmt'],
-      \ 'vue': ['eslint'],
-      \ '*': ['trim_whitespace']
-      \}
-
-autocmd BufNewFile,BufRead *.tsx setlocal filetype=typescript.tsx
-let g:ale_completion_enabled = 1
-let g:ale_disable_lsp = 1
-let g:ale_fix_on_save = 1
-let g:ale_lint_on_enter = 1
-let g:ale_emit_conflict_warnings = 1
-let g:ale_rust_cargo_use_clippy = 0
-let g:ale_rust_cargo_use_check = 0
-let g:ale_go_gometalinter_options = '--fast'
-let g:ale_linters = {
-      \ 'javascript': ['eslint'],
-      \ 'typescript': ['tslint'],
-      \ 'cpp': [],
-      \ 'vue': ['tslint', 'vls'],
-      \ 'go': ['vet', 'errcheck', 'lint'],
-      \ 'python': ['flake8']
-      \}
 "}}}
 
 " {{{ LCN
