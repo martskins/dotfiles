@@ -19,3 +19,15 @@ if [ -f '/opt/gcloud/path.fish.inc' ]; . '/opt/gcloud/path.fish.inc'; end
 
 # rvm default
 # source /home/martin/.cache/pacaur/rvm/src/rvm/scripts/rvm
+
+function fish_prompt
+  set --local git_branch (git branch ^/dev/null | grep \* | sed 's/* //')(set_color normal)
+
+  echo -n (prompt_pwd)
+  set_color red
+  if [ "$git_branch" = "" ]
+    echo -n ' | '
+  else
+    echo -n ' ('"$git_branch"') | '
+  end
+end

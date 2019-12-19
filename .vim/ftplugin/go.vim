@@ -23,6 +23,7 @@ let g:go_term_enabled = 0
 let g:go_code_completion_enabled = 0
 let g:go_test_show_name = 1
 let g:go_auto_type_info = 0
+let g:go_gopls_enabled = 0
 " let g:go_addtags_transform = "camelcase"
 
 nmap <leader>c <Plug>(go-coverage)

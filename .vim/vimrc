@@ -6,7 +6,6 @@ call plug#begin()
 Plug 'itchyny/lightline.vim'
 Plug 'godlygeek/tabular'
 Plug 'dense-analysis/ale'
-Plug 'Raimondi/delimitMate'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'}
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
@@ -18,9 +17,7 @@ Plug 'tpope/vim-commentary'   "mappings to comment/uncomment blocks of code
 Plug 'tpope/vim-repeat'       "enables repeating commands from plugins
 Plug 'ervandew/supertab'
 Plug 'schickling/vim-bufonly'
-Plug 'Raimondi/delimitMate'
 Plug 'majutsushi/tagbar'
-Plug 'tpope/vim-rails',           { 'for': 'ruby' }
 Plug 'mattn/emmet-vim',           { 'for': ['vue', 'html', 'typescript.tsx'] }
 Plug 'cespare/vim-toml',          { 'for': 'toml' }
 Plug 'davidhalter/jedi-vim',      { 'for': 'python' }
@@ -28,20 +25,18 @@ Plug 'digitaltoad/vim-pug',       { 'for': ['pug', 'jade', 'vue'] }
 Plug 'posva/vim-vue',             { 'for': 'vue' }
 Plug 'fatih/vim-go',              { 'for': 'go' }
 Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
+Plug 'martskins/vim-cargo-search',{ 'for': 'rust' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
-Plug 'udalov/kotlin-vim',         { 'for': 'kotlin' }
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
+Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
-
-Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': './install.sh' }
-
+Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 Plug 'chriskempson/base16-vim'
-Plug 'morhetz/gruvbox'
 call plug#end()
 "}}}
 
@@ -57,19 +52,15 @@ set encoding=utf-8
 set shell=/usr/bin/fish
 set cmdheight=2
 set number relativenumber
-set hid
 set colorcolumn=100
 set guifont=monospace
 set nobk
+set hid
 set noswapfile
+set textwidth=100
 if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
-set lazyredraw
-colorscheme base16-gruvbox-dark-hard
-set termguicolors
-set background=dark
-set t_Co=256
 set signcolumn=yes
 set tabstop=2
 set shiftwidth=2
@@ -83,7 +74,7 @@ set history=100
 set hlsearch
 set showmatch
 set wildmenu
-set updatetime=100
+set updatetime=300
 set autoread
 set ttyfast
 set mouse=a
@@ -91,6 +82,18 @@ let mapleader = ','
 let maplocalleader = "\\"
 let g:python_host_prog="/usr/bin/python2.7"
 let g:python3_host_prog="/usr/bin/python3"
+
+set t_Co=256
+set background=dark
+set notermguicolors
+colorscheme peachpuff
+hi CursorLine   cterm=reverse
+hi Folded       ctermbg=245 ctermfg=0
+hi SpellRare    cterm=underline ctermbg=0
+hi SpellBad     cterm=underline ctermbg=0
+hi Spell        cterm=underline ctermbg=0
+hi Search       ctermbg=221 ctermfg=black
+hi MatchParen   ctermbg=0 ctermfg=214
 
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
@@ -165,21 +168,19 @@ let g:ale_fixers = {
       \}
 
 autocmd BufNewFile,BufRead *.tsx setlocal filetype=typescript.tsx
-let g:ale_kotlin_ktlint_options = '--experimental'
+autocmd BufNewFile,BufRead *.jsx setlocal filetype=javascript.jsx
 let g:ale_completion_enabled = 1
 let g:ale_disable_lsp = 1
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 1
 let g:ale_emit_conflict_warnings = 1
-let g:ale_rust_cargo_use_clippy = 1
-let g:ale_go_gometalinter_options = '--fast'
 let g:ale_linters = {
       \ 'javascript': ['eslint'],
       \ 'typescript': ['tslint'],
       \ 'kotlin': ['ktlint'],
       \ 'cpp': [],
       \ 'vue': ['tslint', 'vls'],
-      \ 'go': ['vet', 'errcheck', 'lint'],
+      \ 'go': ['gobuild', 'golangci-lint'],
       \ 'python': ['flake8']
       \}
 "}}}
@@ -197,10 +198,6 @@ let g:ale_linters = {
    \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
   smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
   \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-  if has('conceal')
-    set conceallevel=0 concealcursor=niv
-  endif
 " }}}
 
 " {{{ TAGBAR
@@ -208,6 +205,7 @@ nmap ,. :TagbarToggle<CR><C-w><C-w>
 " }}}
 
 " {{{ MAPPINGS
+command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".<q-args>, <bang>0)
 command! WQ wq
 command! Wq wq
 command! W w
@@ -252,14 +250,18 @@ inoremap <LeftMouse> <NOP>
 vnoremap <leader>pj :!python -m json.tool<CR>
 "}}}
 
-" {{{ LCN
+"{{{ LCN
 " let g:LanguageClient_loggingFile = '~/Desktop/lcn.log'
-" let g:LanguageClient_loggingLevel = 'INFO'
+" let g:LanguageClient_loggingLevel = 'WARN'
 let g:LanguageClient_diagnosticsList = 'Disabled'
 let g:LanguageClient_hoverPreview = 'always'
 let g:LanguageClient_completionPreferTextEdit = 0
+let g:LanguageClient_diagnosticsEnable = 0
+let g:LanguageClient_useVirtualText = 'CodeLens'
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['ra_lsp_server'],
+    \ 'javascript': ['javascript-typescript-stdio'],
+    \ 'typescript': ['javascript-typescript-stdio'],
     \ 'go': ['gopls'],
     \ }
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
@@ -268,7 +270,7 @@ nnoremap <silent> R :call LanguageClient#textDocument_rename()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> gr :call LanguageClient#textDocument_references()<CR>
 nnoremap <silent> gi :call LanguageClient#textDocument_implementation()<CR>
-nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 noremap <leader>ca :call LanguageClient#textDocument_codeAction()<CR>
+noremap <leader>cl :call LanguageClient#handleCodeLensAction()<CR>
 command Action :call LanguageClient#textDocument_codeAction()<CR>
-" }}}
+"}}}
