@@ -21,8 +21,8 @@ if [ -f '/opt/gcloud/path.fish.inc' ]; . '/opt/gcloud/path.fish.inc'; end
 # source /home/martin/.cache/pacaur/rvm/src/rvm/scripts/rvm
 
 function fish_prompt
-  set --local git_branch (git branch ^/dev/null | grep \* | sed 's/* //')(set_color normal)
-
+  set --local git_branch (git branch ^/dev/null | sed -n '/\* /s///p')
+  set_color $fish_color_cwd
   echo -n (prompt_pwd)
   set_color red
   if [ "$git_branch" = "" ]
