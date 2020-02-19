@@ -24,7 +24,6 @@ Plug 'davidhalter/jedi-vim',      { 'for': 'python' }
 Plug 'digitaltoad/vim-pug',       { 'for': ['pug', 'jade', 'vue'] }
 Plug 'posva/vim-vue',             { 'for': 'vue' }
 Plug 'fatih/vim-go',              { 'for': 'go' }
-Plug 'rust-lang/rust.vim',        { 'for': 'rust' }
 Plug 'martskins/vim-cargo-search',{ 'for': 'rust' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
@@ -36,6 +35,7 @@ Plug 'ncm2/ncm2'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
+" Plug '~/dev/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 Plug 'chriskempson/base16-vim'
 call plug#end()
 "}}}
@@ -85,16 +85,8 @@ let g:python3_host_prog="/usr/bin/python3"
 
 set t_Co=256
 set background=dark
-set notermguicolors
-colorscheme peachpuff
-hi CursorLine   cterm=reverse
-hi Folded       ctermbg=245 ctermfg=0
-hi SpellRare    cterm=underline ctermbg=0
-hi SpellBad     cterm=underline ctermbg=0
-hi Spell        cterm=underline ctermbg=0
-hi Search       ctermbg=221 ctermfg=black
-hi MatchParen   ctermbg=0 ctermfg=214
-
+set termguicolors
+colorscheme base16-gruvbox-dark-hard
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
@@ -106,6 +98,9 @@ autocmd BufWinLeave * call clearmatches()
 " {{{ NCM2
 autocmd BufEnter * call ncm2#enable_for_buffer()
 set completeopt=noinsert,menuone,noselect
+
+" when the menu is visible pressing enter only closes it, unless this mapping is used
+inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 " }}}
 
 " {{{ VIM-MARKDOWN
@@ -258,6 +253,7 @@ let g:LanguageClient_hoverPreview = 'always'
 let g:LanguageClient_completionPreferTextEdit = 0
 let g:LanguageClient_diagnosticsEnable = 0
 let g:LanguageClient_useVirtualText = 'CodeLens'
+let g:LanguageClient_preferredMarkupKind = ['plaintext']
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['ra_lsp_server'],
     \ 'javascript': ['javascript-typescript-stdio'],

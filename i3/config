@@ -182,16 +182,7 @@ bindsym XF86AudioPrev exec playerctl previous
 
 exec "setxkbmap -layout us"
 exec "~/.screenlayout/default.sh"
-exec "xinput set-prop 14 301 1"
-exec "xinput set-prop 14 293 1"
-exec "xinput set-prop 14 295 0"
-# exec "xinput set-prop 14 296 0"
-# exec "xinput set-prop 14 302 1"
-# exec "xinput set-prop 14 294 1"
 exec ssh-add ~/.ssh/id_rsa
 exec xautolock -corners ---- -time 15 -locker "betterlockscreen -l" \
         -notify 30 \
         -notifier "notify-send -u critical -t 10000 -- 'LOCKING screen in 30 seconds'"
-
-for_window  [title="Android Emulator - Nexus_5X_API_28:5554"] floating enable
-for_window  [title="Android Emulator - flutter_emulator:5554"] floating enable
