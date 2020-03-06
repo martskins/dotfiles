@@ -1,4 +1,4 @@
-let g:go_fmt_command = "goimports"
+let g:go_fmt_command = ""
 let g:go_fmt_autosave = 0
 let g:go_autodetect_gopath = 1
 let g:go_highlight_types = 1
@@ -24,7 +24,11 @@ let g:go_code_completion_enabled = 0
 let g:go_test_show_name = 1
 let g:go_auto_type_info = 0
 let g:go_gopls_enabled = 0
-" let g:go_addtags_transform = "camelcase"
+let g:go_echo_go_info = 0
+
+let g:ale_go_golangci_lint_package = 1
+let g:ale_go_golangci_lint_options = ''
+let g:ale_go_gofmt_options = '-s'
 
 nmap <leader>c <Plug>(go-coverage)
 nmap <leader>ct <Plug>(go-coverage-toggle)

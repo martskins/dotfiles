@@ -8,7 +8,6 @@ Plug 'godlygeek/tabular'
 Plug 'dense-analysis/ale'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'}
 Plug 'junegunn/fzf.vim'
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'      "better netrw
 Plug 'tpope/vim-abolish'      "toggle casing (snake or camel) with crs and crc
 Plug 'tpope/vim-dispatch'     "provides :Make and :Start
@@ -23,20 +22,23 @@ Plug 'cespare/vim-toml',          { 'for': 'toml' }
 Plug 'davidhalter/jedi-vim',      { 'for': 'python' }
 Plug 'digitaltoad/vim-pug',       { 'for': ['pug', 'jade', 'vue'] }
 Plug 'posva/vim-vue',             { 'for': 'vue' }
-Plug 'fatih/vim-go',              { 'for': 'go' }
 Plug 'martskins/vim-cargo-search',{ 'for': 'rust' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
+Plug 'fatih/vim-go',              { 'for': 'go' }
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
+Plug 'ncm2/ncm2-neosnippet'
 Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
-Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
-" Plug '~/dev/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
+Plug '~/dev/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 Plug 'chriskempson/base16-vim'
+
+" Plug 'tpope/vim-fugitive'
+" Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 call plug#end()
 "}}}
 
@@ -99,7 +101,7 @@ autocmd BufWinLeave * call clearmatches()
 autocmd BufEnter * call ncm2#enable_for_buffer()
 set completeopt=noinsert,menuone,noselect
 
-" when the menu is visible pressing enter only closes it, unless this mapping is used
+" enter inserts newline when completion window is open
 inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 " }}}
 
@@ -143,42 +145,6 @@ command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-hea
 command! -bang -nargs=? -complete=dir Files
  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 " }}}
-
-" {{{ ALE
-      " \ 'cpp': ['clang-format'],
-let g:ale_fixers = {
-      \ 'javascript': ['eslint'],
-      \ 'typescript.tsx': ['eslint'],
-      \ 'typescript': ['eslint'],
-      \ 'go': ['goimports'],
-      \ 'python': ['autopep8', 'isort'],
-      \ 'html': ['prettier'],
-      \ 'css': ['prettier'],
-      \ 'ruby': ['rubocop'],
-      \ 'kotlin': ['ktlint'],
-      \ 'c': ['uncrustify'],
-      \ 'rust': ['rustfmt'],
-      \ 'vue': ['eslint'],
-      \ '*': ['trim_whitespace']
-      \}
-
-autocmd BufNewFile,BufRead *.tsx setlocal filetype=typescript.tsx
-autocmd BufNewFile,BufRead *.jsx setlocal filetype=javascript.jsx
-let g:ale_completion_enabled = 1
-let g:ale_disable_lsp = 1
-let g:ale_fix_on_save = 1
-let g:ale_lint_on_enter = 1
-let g:ale_emit_conflict_warnings = 1
-let g:ale_linters = {
-      \ 'javascript': ['eslint'],
-      \ 'typescript': ['tslint'],
-      \ 'kotlin': ['ktlint'],
-      \ 'cpp': [],
-      \ 'vue': ['tslint', 'vls'],
-      \ 'go': ['gobuild', 'golangci-lint'],
-      \ 'python': ['flake8']
-      \}
-"}}}
 
 " {{{ NEOSNIPPET
   let g:neosnippet#enable_snipmate_compatibility = 1
@@ -245,21 +211,80 @@ inoremap <LeftMouse> <NOP>
 vnoremap <leader>pj :!python -m json.tool<CR>
 "}}}
 
+"{{{ PROFILING
+function! ProfileStart()
+  :profile start profile.log
+  :profile func *
+  :profile file *
+endfunction
+
+function! ProfileStop()
+  :profile stop
+endfunction
+
+command! ProfileStart :call ProfileStart()
+command! ProfileStop :call ProfileStop()
+"}}}
+
+" {{{ ALE
+let g:ale_fixers = {
+      \ 'javascript': ['eslint'],
+      \ 'typescript.tsx': ['eslint'],
+      \ 'typescript': ['eslint'],
+      \ 'go': ['goimports'],
+      \ 'python': ['autopep8', 'isort'],
+      \ 'html': ['prettier'],
+      \ 'css': ['prettier'],
+      \ 'ruby': ['rubocop'],
+      \ 'kotlin': ['ktlint'],
+      \ 'c': ['uncrustify'],
+      \ 'rust': ['rustfmt'],
+      \ 'vue': ['eslint'],
+      \ '*': ['trim_whitespace']
+      \}
+
+autocmd BufNewFile,BufRead *.tsx setlocal filetype=typescript.tsx
+autocmd BufNewFile,BufRead *.jsx setlocal filetype=javascript.jsx
+let g:ale_completion_enabled = 0
+let g:ale_disable_lsp = 1
+let g:ale_fix_on_save = 1
+let g:ale_lint_on_enter = 1
+let g:ale_emit_conflict_warnings = 1
+let g:ale_linters = {
+      \ 'javascript': ['eslint'],
+      \ 'typescript': ['tslint'],
+      \ 'kotlin': ['ktlint'],
+      \ 'cpp': [],
+      \ 'vue': ['tslint', 'vls'],
+      \ 'go': ['gobuild', 'golangci-lint'],
+      \ 'python': ['flake8']
+      \}
+"}}}
+
 "{{{ LCN
 " let g:LanguageClient_loggingFile = '~/Desktop/lcn.log'
-" let g:LanguageClient_loggingLevel = 'WARN'
+" let g:LanguageClient_loggingLevel = 'INFO'
 let g:LanguageClient_diagnosticsList = 'Disabled'
 let g:LanguageClient_hoverPreview = 'always'
 let g:LanguageClient_completionPreferTextEdit = 0
 let g:LanguageClient_diagnosticsEnable = 0
 let g:LanguageClient_useVirtualText = 'CodeLens'
+let g:LanguageClient_hideVirtualTextsOnInsert = 1
 let g:LanguageClient_preferredMarkupKind = ['plaintext']
+let g:LanguageClient_applyCompletionAdditionalTextEdits = 0
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['ra_lsp_server'],
     \ 'javascript': ['javascript-typescript-stdio'],
     \ 'typescript': ['javascript-typescript-stdio'],
     \ 'go': ['gopls'],
     \ }
+
+let g:LanguageClient_documentHighlightDisplay = {
+      \ 1: { "name": "Text", "texthl": "Visual" },
+      \ 2: { "name": "Read", "texthl": "SpellLocal" },
+      \ 3: { "name": "Write", "texthl": "SpellRare" },
+      \ }
+
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> R :call LanguageClient#textDocument_rename()<CR>
@@ -268,5 +293,6 @@ nnoremap <silent> gr :call LanguageClient#textDocument_references()<CR>
 nnoremap <silent> gi :call LanguageClient#textDocument_implementation()<CR>
 noremap <leader>ca :call LanguageClient#textDocument_codeAction()<CR>
 noremap <leader>cl :call LanguageClient#handleCodeLensAction()<CR>
-command Action :call LanguageClient#textDocument_codeAction()<CR>
+nnoremap <c-s><c-s> :call LanguageClient#textDocument_documentHighlight()<CR>
+command! Action :call LanguageClient#textDocument_codeAction()<CR>
 "}}}

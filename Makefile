@@ -4,6 +4,7 @@ link: clean
 	ln -s ~/dotfiles/.vim ~/
 	ln -s ~/dotfiles/tmux.conf ~/.tmux.conf
 	ln -s ~/dotfiles/i3 ~/.config/i3
+	ln -s ~/dotfiles/i3status ~/.config/i3status
 	ln -s ~/dotfiles/polybar ~/.config/polybar
 	ln -s ~/dotfiles/fish ~/.config/fish
 	ln -s ~/dotfiles/dunstrc ~/.config/dunst/dunstrc
