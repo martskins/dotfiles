@@ -22,7 +22,6 @@ Plug 'cespare/vim-toml',          { 'for': 'toml' }
 Plug 'davidhalter/jedi-vim',      { 'for': 'python' }
 Plug 'digitaltoad/vim-pug',       { 'for': ['pug', 'jade', 'vue'] }
 Plug 'posva/vim-vue',             { 'for': 'vue' }
-Plug 'martskins/vim-cargo-search',{ 'for': 'rust' }
 Plug 'leafgarland/typescript-vim',{ 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',   { 'for': 'javascript' }
 Plug 'fatih/vim-go',              { 'for': 'go' }
@@ -37,6 +36,7 @@ Plug 'ncm2/ncm2-path'
 Plug '~/dev/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 Plug 'chriskempson/base16-vim'
 
+" Plug 'martskins/vim-cargo-search',{ 'for': 'rust' }
 " Plug 'tpope/vim-fugitive'
 " Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 call plug#end()
@@ -46,13 +46,12 @@ filetype plugin indent on
 
 "{{{ GENERAL
 syntax enable
-set re=1
+" set re=1
 set shortmess+=c
 set timeoutlen=1000 ttimeoutlen=0
 let g:ftplugin_sql_omni_key = '<C-j>'
 set encoding=utf-8
 set shell=/usr/bin/fish
-set cmdheight=2
 set number relativenumber
 set colorcolumn=100
 set guifont=monospace
@@ -263,12 +262,12 @@ let g:ale_linters = {
 
 "{{{ LCN
 " let g:LanguageClient_loggingFile = '~/Desktop/lcn.log'
-" let g:LanguageClient_loggingLevel = 'INFO'
+" let g:LanguageClient_loggingLevel = 'WARN'
 let g:LanguageClient_diagnosticsList = 'Disabled'
 let g:LanguageClient_hoverPreview = 'always'
 let g:LanguageClient_completionPreferTextEdit = 0
-let g:LanguageClient_diagnosticsEnable = 0
-let g:LanguageClient_useVirtualText = 'CodeLens'
+let g:LanguageClient_diagnosticsEnable = 1
+let g:LanguageClient_useVirtualText = 'All'
 let g:LanguageClient_hideVirtualTextsOnInsert = 1
 let g:LanguageClient_preferredMarkupKind = ['plaintext']
 let g:LanguageClient_applyCompletionAdditionalTextEdits = 0

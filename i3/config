@@ -36,7 +36,8 @@ client.focused              #353439 #34be5b #7B9F35
 # start a terminal
 # bindsym $mod+Return exec i3-sensible-terminal
 # bindsym $mod+Return exec xterm
-bindsym $mod+Return exec alacritty
+# bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec kitty
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -174,9 +175,11 @@ bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
+# Screenshot
+bindsym Print exec --no-startup-id maim -s | xclip -selection clipboard -t image/png
+
 bar {
-        status_command i3status
-        position bottom
+        i3bar_command $HOME/.config/polybar/launch.sh
 }
 
 exec "setxkbmap -layout us"

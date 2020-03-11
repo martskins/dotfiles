@@ -1,26 +1,6 @@
-;==========================================================
-;
-;
-;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
-;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
-;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
-;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
-;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
-;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
-;
-;
-;   To learn more about how to configure Polybar
-;   go to https://github.com/jaagr/polybar
-;
-;   The README contains alot of information
-;
-;==========================================================
-
 [colors]
-;background = ${xrdb:color0:#222}
 background = #222
 background-alt = #444
-;foreground = ${xrdb:color7:#222}
 foreground = #dfdfdf
 foreground-alt = #888
 primary = #ffb52a
@@ -28,12 +8,12 @@ secondary = #e60053
 alert = #bd2c40
 
 [bar/main]
-;monitor = ${env:MONITOR:HDMI-1}
+monitor = ${env:MONITOR:eDP-1}
 width = 100%
 height = 2.5%
-radius = 6.0
+radius = 0.0
 fixed-center = false
-bottom=true
+bottom = true
 
 background = ${colors.background}
 foreground = ${colors.foreground}
@@ -43,51 +23,21 @@ line-size = 2
 padding = 1
 module-margin = 1
 
-font-0 = "Noto Sans Mono:size=13;1"
-font-1 = "Noto Sans Mono:size=13;1"
-font-2 = "Noto Sans Symbols:size=13;1"
-font-3 = "Noto Sans Symbols2:size=13;1"
+font-0 = "Noto Sans Mono:size=8;1"
+font-1 = "Noto Sans Mono:size=8;1"
+font-2 = "Noto Sans Symbols:size=8;1"
+font-3 = "Noto Sans Symbols2:size=8;1"
 
 modules-left = i3 xwindow
 modules-center =
-modules-right = pulseaudio spotify eth battery filesystem memory cpu date
+modules-right = xbacklight volume wlan cpu battery date
 
 tray-position = right
 tray-padding = 2
-tray-maxsize = 12
+tray-maxsize = 24
 
-; override-redirect = true
-; wm-restack = i3
-
-;scroll-up = i3wm-wsnext
-;scroll-down = i3wm-wsprev
-
-cursor-click = pointer
-cursor-scroll = ns-resize
-
-[module/battery]
-type = internal/battery
-label-charging = "Charging %percentage%%"
-label-discharging = "Discharging %percentage%%"
-full-at = 99
-battery = BAT0
-adapter = ADP1
-poll-interval = 5
-
-[module/xwindow]
-type = internal/xwindow
-label = %title:0:80:...%
-
-[module/filesystem]
-type = internal/fs
-mount-0 = /
-interval = 10
-fixed-values = true
-spacing = 4
-format-mounted = "HD <label-mounted>"
-label-mounted = %free%
-format-mounted-prefix-foreground = ${colors.primary}
-format-mounted-underline = #f4d142
+[global/wm]
+margin-top = 0
 
 [module/bspwm]
 type = internal/bspwm
@@ -95,18 +45,18 @@ type = internal/bspwm
 label-focused = %index%
 label-focused-background = ${colors.background-alt}
 label-focused-underline= ${colors.primary}
-label-focused-padding = 2
+label-focused-padding = 1
 
 label-occupied = %index%
-label-occupied-padding = 2
+label-occupied-padding = 1
 
 label-urgent = %index%!
 label-urgent-background = ${colors.alert}
-label-urgent-padding = 2
+label-urgent-padding = 1
 
 label-empty = %index%
 label-empty-foreground = ${colors.foreground-alt}
-label-empty-padding = 2
+label-empty-padding = 1
 
 ; Separator in between workspaces
 ; label-separator = |
@@ -120,14 +70,14 @@ wrapping-scroll = false
 ; Only show workspaces on the same output as the bar
 ;pin-workspaces = true
 
-label-mode-padding = 2
+label-mode-padding = 1
 label-mode-foreground = #000
 label-mode-background = ${colors.primary}
 
 ; focused = Active workspace on focused monitor
 label-focused = %index%
 label-focused-background = ${module/bspwm.label-focused-background}
-label-focused-underline = ${module/bspwm.label-focused-underline}
+;label-focused-underline = ${module/bspwm.label-focused-underline}
 label-focused-padding = ${module/bspwm.label-focused-padding}
 
 ; unfocused = Inactive workspace on any monitor
@@ -137,7 +87,7 @@ label-unfocused-padding = ${module/bspwm.label-occupied-padding}
 ; visible = Active workspace on unfocused monitor
 label-visible = %index%
 label-visible-background = ${self.label-focused-background}
-label-visible-underline = ${self.label-focused-underline}
+;label-visible-underline = ${self.label-focused-underline}
 label-visible-padding = ${self.label-focused-padding}
 
 ; urgent = Workspace with urgency hint set
@@ -148,140 +98,131 @@ label-urgent-padding = ${module/bspwm.label-urgent-padding}
 ; Separator in between workspaces
 ; label-separator = |
 
+
+[module/xwindow]
+type = internal/xwindow
+format = <label>
+label-maxlen = 75
+
+[module/volume]
+type = internal/volume
+;speaker-mixer = Speaker
+;speaker-mixer = default
+;headphone-mixer = Headphone
+headphone-id = 9
+
+format-volume = <ramp-volume> <label-volume>
+label-volume = %percentage%%
+label-volume-foreground = ${root.foreground}
+
+format-muted-prefix = "🔇 "
+format-muted-foreground = #999
+label-muted = sound muted
+
+ramp-volume-0 = 🔈
+ramp-volume-1 = 🔈
+ramp-volume-2 = 🔉
+ramp-volume-3 = 🔊
+ramp-volume-foreground = #999
+
+ramp-headphones-0 = 🕩
+ramp-headphones-1 = 🕪
+ramp-headphones-foreground = #999
+
+[module/xbacklight]
+type = internal/xbacklight
+format = <ramp> <label>
+ramp-0 = ☀
+ramp-1 = ☼
+ramp-2 = ☼
+ramp-foreground = #999
+label-foreground = ${root.foreground}
+
 [module/cpu]
 type = internal/cpu
 interval = 2
-format-prefix = "CPU "
-format-prefix-foreground = ${colors.primary}
-format-underline = #f90000
+format-prefix = "💻 "
+format-prefix-foreground = ${colors.foreground-alt}
+;format-underline = #f90000
 label = %percentage:2%%
 
 [module/memory]
 type = internal/memory
 interval = 2
-format-prefix = "RAM  "
-format-prefix-foreground = ${colors.primary}
-format-underline = #4bffdc
-label = %percentage_used%%
+format-prefix = "🗍 "
+format-prefix-foreground = ${colors.foreground-alt}
+;format-underline = #4bffdc
+label = %percentage_used:2%%
 
-[module/eth]
+[module/wlan]
 type = internal/network
 interface = wlo1
+interval = 5.0
+
+format-connected = <ramp-signal> <label-connected>
+;format-connected-underline = #9f78e1
+label-connected = %essid%
+
+label-disconnected =
+
+ramp-signal-0 = 🌧
+ramp-signal-1 = 🌦
+ramp-signal-2 = 🌥
+ramp-signal-3 = 🌤
+ramp-signal-4 = 🌣
+
+[module/eth1]
+type = internal/network
+interface = lo
 interval = 3.0
 
-format-connected-underline = #55aa55
-format-connected-prefix = "IP "
-format-connected-prefix-foreground = ${colors.primary}
+;format-connected-underline = #55aa55
+format-connected-prefix = "🖧 "
+format-connected-prefix-foreground = ${colors.foreground-alt}
 label-connected = %local_ip%
 
 format-disconnected =
-;format-disconnected = <label-disconnected>
-;format-disconnected-underline = ${self.format-connected-underline}
-;label-disconnected = %ifname% disconnected
-;label-disconnected-foreground = ${colors.foreground-alt}
 
 [module/date]
 type = internal/date
 interval = 5
 
-date = "%a %b %d"
-date-alt = " %Y-%m-%d"
+date = "%a %d"
+date-alt = %a %b %d
 
-time = %H:%M
-time-alt = %H:%M:%S
+time = %I:%M
+time-alt = %I:%M%p
 
 format-prefix =
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #0a6cf5
+;format-underline = #0a6cf5
 
-label = %time% %date%
+label = %date% - %time%
 
-[module/alsa]
-type = internal/alsa
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = AC
+full-at = 98
 
-; Soundcard to be used
-; Usually in the format hw:# where # is the card number
-; You can find the different card numbers in `/proc/asound/cards`
-master-soundcard = default
-speaker-soundcard = default
-headphone-soundcard = default
+format-charging = <label-charging>
+;format-charging-underline = #ffb52a
 
-; Name of the master, speaker and headphone mixers
-; Use the following command to list available mixer controls:
-; $ amixer scontrols | sed -nr "s/.*'([[:alnum:]]+)'.*/\1/p"
-; If master, speaker or headphone-soundcard isn't the default,
-; use `amixer -c # scontrols` instead where # is the number
-; of the master, speaker or headphone soundcard respectively
-;
-; Default: Master
-master-mixer = Master
+format-discharging = <ramp-capacity> <label-discharging>
+;format-discharging-underline = ${self.format-charging-underline}
 
-; Optionally define speaker and headphone mixers
-; Default: none
-speaker-mixer = Speaker
-; Default: none
-headphone-mixer = Headphone
+format-full = <label-full>
+;format-full-underline = ${self.format-charging-underline}
 
-; NOTE: This is required if headphone_mixer is defined
-; Use the following command to list available device controls
-; $ amixer controls | sed -r "/CARD/\!d; s/.*=([0-9]+).*name='([^']+)'.*/printf '%3.0f: %s\n' '\1' '\2'/e" | sort
-; You may also need to use `amixer -c # controls` as above for the mixer names
-; Default: none
-headphone-id = 9
+ramp-capacity-0 = ⚋
+ramp-capacity-1 = ⚊
+ramp-capacity-2 = ⚍
+ramp-capacity-3 = ⚌
+ramp-capacity-foreground = ${colors.foreground-alt}
 
-; Use volume mapping (similar to amixer -M and alsamixer), where the increase in volume is linear to the ear
-; Default: false
-mapped = true
-
-; Interval for volume increase/decrease (in percent points)
-; Default: 5
-interval = 5
-
-[module/pulseaudio]
-type = internal/pulseaudio
-
-; Sink to be used, if it exists (find using `pacmd list-sinks`, name field)
-; If not, uses default sink
-sink = alsa_output.pci-0000_12_00.3.analog-stereo
-
-; Use PA_VOLUME_UI_MAX (~153%) if true, or PA_VOLUME_NORM (100%) if false
-; Default: true
-use-ui-max = true
-
-; Interval for volume increase/decrease (in percent points)
-; Default: 5
-interval = 5
-
-label-muted = 🔇 muted
-label-muted-foreground = #666
-
-; Only applies if <ramp-volume> is used
-ramp-volume-0 = 🔈
-ramp-volume-1 = 🔉
-ramp-volume-2 = 🔊
-
-[module/github]
-type = internal/github
-token = ${file:~/.config/github/notifications.token}
-format-prefix = "📫 "
-format-prefix-foreground = ${colors.primary}
-empty-notifications = false
-label = %notifications%
-interval = 10
-
-[module/spotify]
-type = custom/script
-interval = 1
-format-prefix = " "
-format = <label>
-exec = python ~/.config/polybar/spotify.py -f '{artist}: {song}'
-format-underline = #1db954
+label-charging = ⚡ %percentage%%
+label-discharging = %percentage%%
+label-full = " ☀ "
 
 [settings]
 screenchange-reload = true
-
-[global/wm]
-margin-top = 5
-margin-bottom = 5
-
-; vim:ft=dosini

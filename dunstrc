@@ -2,7 +2,7 @@ frame_width = 2
 fram_color = "#4d679a"
 
 [global]
-    font = monospace 10
+    font = monospace 16
     markup = yes
     plain_text = no
 
@@ -37,7 +37,7 @@ fram_color = "#4d679a"
     # the top and down respectively.
     # The width can be negative.  In this case the actual width is the
     # screen width minus the width defined in within the geometry option.
-    geometry = "300x5-30+20"
+    geometry = "300x5-100+20"
 
     shrink = yes
     transparency = 0
