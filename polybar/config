@@ -30,11 +30,16 @@ font-3 = "Noto Sans Symbols2:size=8;1"
 
 modules-left = i3 xwindow
 modules-center =
-modules-right = xbacklight volume wlan cpu battery date
+modules-right = vpn xbacklight volume wlan cpu battery date
 
 tray-position = right
 tray-padding = 2
 tray-maxsize = 24
+
+[module/vpn]
+type = custom/script
+exec = printf "VPN: " && /bin/sh ./.config/polybar/vpn.sh
+interval = 5
 
 [global/wm]
 margin-top = 0

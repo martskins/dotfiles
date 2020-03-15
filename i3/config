@@ -182,6 +182,8 @@ bar {
         i3bar_command $HOME/.config/polybar/launch.sh
 }
 
+exec --no-startup-id picom
+exec --no-startup-id feh --bg-scale ~/Pictures/desktop-background.jpg
 exec "setxkbmap -layout us"
 exec xautolock -corners ---- -time 15 -locker "betterlockscreen -l" \
         -notify 30 \
