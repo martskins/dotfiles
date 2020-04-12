@@ -1,13 +1,13 @@
-set nocompatible
+" set nocompatible
 filetype off
 
 "{{{ PLUGINS
 call plug#begin()
 Plug 'itchyny/lightline.vim'
-Plug 'godlygeek/tabular'
 Plug 'dense-analysis/ale'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'}
 Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'      "better netrw
 Plug 'tpope/vim-abolish'      "toggle casing (snake or camel) with crs and crc
 Plug 'tpope/vim-dispatch'     "provides :Make and :Start
@@ -33,12 +33,12 @@ Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
-Plug '~/dev/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
+Plug '~/dev/vlc'
+" Plug '~/dev/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 Plug 'chriskempson/base16-vim'
+Plug 'zeekay/vim-color-switch'
 
-" Plug 'martskins/vim-cargo-search',{ 'for': 'rust' }
-" Plug 'tpope/vim-fugitive'
-" Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
+Plug 'martskins/vim-cargo-search',{ 'for': 'rust' }
 call plug#end()
 "}}}
 
@@ -46,7 +46,6 @@ filetype plugin indent on
 
 "{{{ GENERAL
 syntax enable
-" set re=1
 set shortmess+=c
 set timeoutlen=1000 ttimeoutlen=0
 let g:ftplugin_sql_omni_key = '<C-j>'
@@ -55,11 +54,11 @@ set shell=/usr/bin/fish
 set number relativenumber
 set colorcolumn=100
 set guifont=monospace
-set nobk
-set hid
+set nobackup
+set hidden
 set noswapfile
 set textwidth=100
-if (has("nvim"))
+if (has('nvim'))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 set signcolumn=yes
@@ -81,19 +80,25 @@ set ttyfast
 set mouse=a
 let mapleader = ','
 let maplocalleader = "\\"
-let g:python_host_prog="/usr/bin/python2.7"
-let g:python3_host_prog="/usr/bin/python3"
+let g:python_host_prog='/usr/bin/python2.7'
+let g:python3_host_prog='/usr/bin/python3'
 
 set t_Co=256
-set background=dark
 set termguicolors
-colorscheme base16-gruvbox-dark-hard
+" colorscheme base16-atelier-plateau-light
+" colorscheme base16-gruvbox-dark-hard
+" colorscheme base16-ashes
+colorscheme base16-atelier-savanna
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
-autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-autocmd BufWinLeave * call clearmatches()
+
+augroup whitespace
+  autocmd!
+  autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+  autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+  autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+  autocmd BufWinLeave * call clearmatches()
+augroup END
 "}}}
 
 " {{{ NCM2
@@ -117,10 +122,10 @@ let g:lightline = {
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'gitbranch': 'fugitive#head',
-      \ },
+      \   },
+      \   'component_function': {
+      \     'gitbranch': 'fugitive#head',
+      \   },
       \ }
 set laststatus=2
 set noshowmode
@@ -131,7 +136,7 @@ set diffopt+=vertical
 " }}}
 
 " {{{ SUPERTAB
-let g:SuperTabDefaultCompletionType = "<c-n>"
+let g:SuperTabDefaultCompletionType = '<c-n>'
 " }}}
 
 " {{{ FZF
@@ -186,9 +191,6 @@ nmap <c-l> :Buffers<CR>
 nmap <c-f> :Rg<space>
 nmap <leader>o :on<CR>
 nmap <leader>bo :bo<CR>
-nmap <leader>f :ALEFix<CR>
-nmap <leader>dn :ALENext<CR>
-nmap <leader>dp :ALEPrevious<CR>
 nmap <leader>ba :bufdo bd<CR>
 nmap <leader>o :only<CR>
 nmap <leader>bo :bo<CR>
@@ -242,8 +244,10 @@ let g:ale_fixers = {
       \ '*': ['trim_whitespace']
       \}
 
-autocmd BufNewFile,BufRead *.tsx setlocal filetype=typescript.tsx
-autocmd BufNewFile,BufRead *.jsx setlocal filetype=javascript.jsx
+nmap <leader>f :ALEFix<CR>
+nmap <a-]> :ALENext<CR>
+nmap <a-[> :ALEPrevious<CR>
+
 let g:ale_completion_enabled = 0
 let g:ale_disable_lsp = 1
 let g:ale_fix_on_save = 1
@@ -261,26 +265,30 @@ let g:ale_linters = {
 "}}}
 
 "{{{ LCN
-" let g:LanguageClient_loggingFile = '~/Desktop/lcn.log'
+let g:LanguageClient_loggingFile = '~/Desktop/lcn.log'
+let g:LanguageClient_loggingLevel = 'INFO'
 " let g:LanguageClient_loggingLevel = 'WARN'
 let g:LanguageClient_diagnosticsList = 'Disabled'
 let g:LanguageClient_hoverPreview = 'always'
 let g:LanguageClient_completionPreferTextEdit = 0
-let g:LanguageClient_useVirtualText = 'All'
+let g:LanguageClient_useVirtualText = 'CodeLens'
 let g:LanguageClient_echoProjectRoot = 0
 let g:LanguageClient_preferredMarkupKind = ['plaintext']
 let g:LanguageClient_applyCompletionAdditionalTextEdits = 0
+let g:LanguageClient_diagnosticsEnable = 1
+    " \ 'rust': ['rls'],
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['ra_lsp_server'],
+    \ 'python': ['pyls'],
     \ 'javascript': ['javascript-typescript-stdio'],
     \ 'typescript': ['javascript-typescript-stdio'],
     \ 'go': ['gopls'],
     \ }
 
 let g:LanguageClient_documentHighlightDisplay = {
-      \ 1: { "name": "Text", "texthl": "Visual" },
-      \ 2: { "name": "Read", "texthl": "SpellLocal" },
-      \ 3: { "name": "Write", "texthl": "SpellRare" },
+      \ 1: { 'name': 'Text', 'texthl': 'Visual' },
+      \ 2: { 'name': 'Read', 'texthl': 'SpellLocal' },
+      \ 3: { 'name': 'Write', 'texthl': 'SpellRare' },
       \ }
 
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
@@ -293,4 +301,26 @@ noremap <leader>ca :call LanguageClient#textDocument_codeAction()<CR>
 noremap <leader>cl :call LanguageClient#handleCodeLensAction()<CR>
 nnoremap <c-s><c-s> :call LanguageClient#textDocument_documentHighlight()<CR>
 command! Action :call LanguageClient#textDocument_codeAction()<CR>
+command! CodeLens :call LanguageClient#handleCodeLensAction()<CR>
+"}}}
+
+"{{{ VIM COLOR SWITCHER
+nnoremap <F8> :ColorNext<CR>
+nnoremap <F7> :ColorPrev<CR>
+"}}}
+
+"{{{ VLC
+let g:vlc#binpath = '~/dev/vlc/target/release/vlc'
+let g:vlc#config = '~/.vlc/config.toml'
+
+nnoremap <silent>gl         :call vlc#codeLensAction()<CR>
+nnoremap <silent>ga         :call vlc#codeAction()<CR>
+vnoremap <silent>ga         :call vlc#codeAction()<CR>
+nnoremap <silent>gd         :call vlc#goToDefinition()<CR>
+nnoremap <silent>K          :call vlc#hover()<CR>
+nnoremap <silent>R          :call vlc#rename()<CR>
+nnoremap <silent>gr         :call vlc#references()<CR>
+nnoremap <silent>gi         :call vlc#implementation()<CR>
+nnoremap <c-s>              :call vlc#start()<CR>
+nnoremap <c-k>              :call vlc#stop()<CR>
 "}}}
