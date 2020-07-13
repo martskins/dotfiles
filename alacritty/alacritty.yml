@@ -84,24 +84,12 @@ scrolling:
   # to allow mouse scrolling for applications like `man`.
   #
   # Specifying `0` will disable faux scrolling.
-  faux_multiplier: 3
-
-  # Scroll to the bottom when new text is written to the terminal.
-  auto_scroll: false
-
-# Spaces per Tab (changes require restart)
-#
-# This setting defines the width of a tab in cells.
-#
-# Some applications, like Emacs, rely on knowing about the width of a tab.
-# To prevent unexpected behavior in these applications, it's also required to
-# change the `it` value in terminfo when altering this setting.
-tabspaces: 8
+  multiplier: 3
 
 # Font configuration (changes require restart)
 font:
   # Normal (roman) font face
-  normal:
+  # normal:
     # Font family
     #
     # Default:
@@ -111,55 +99,55 @@ font:
     # family: Fira Code
     # family: Noto Sans Mono
     # style: Condensed
-    family: Hack
+    # family: Hack
     # style: Condensed
 
     # The `style` can be specified to pick a specific face.
     #style: Regular
 
   # Bold font face
-  bold:
+  # bold:
     # Font family
     #
     # If the bold family is not specified, it will fall back to the
     # value specified for the normal font.
     # family: Noto Sans Mono
     # style: Condensed Medium
-    family: Hack
-    style: Bold
+    # family: Hack
+    # style: Bold
 
     # The `style` can be specified to pick a specific face.
     #style: Bold
 
   # Italic font face
-  italic:
+  # italic:
     # Font family
     #
     # If the italic family is not specified, it will fall back to the
     # value specified for the normal font.
     # family: Noto Sans Mono
     # style: Condensed Light
-    family: Hack
-    style: Italic
+    # family: Hack
+    # style: Italic
 
     # The `style` can be specified to pick a specific face.
     #style: Italic
 
   # Point size
-  size: 5.5
+  size: 9
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
-  offset:
-    x: 0
-    y: 0
+  # offset:
+  #   x: 0
+  #   y: 0
 
   # Glyph offset determines the locations of the glyphs within their cells with
   # the default being at the bottom. Increasing `x` moves the glyph to the right,
   # increasing `y` moves the glyph upwards.
-  glyph_offset:
-    x: 0
-    y: 0
+  # glyph_offset:
+  #   x: 0
+  #   y: 0
 
   # Thin stroke font rendering (macOS only)
   #
@@ -175,7 +163,7 @@ font:
   #
   # This is a global setting and will require a log out or restart to take
   # effect.
-  use_thin_strokes: true
+  # use_thin_strokes: true
 
 # If `true`, bold text is drawn using the bright color variants.
 draw_bold_text_with_bright_colors: true
@@ -288,7 +276,7 @@ visual_bell:
 #
 # Window opacity as a floating point number from `0.0` to `1.0`.
 # The value `0.0` is completely transparent and `1.0` is opaque.
-background_opacity: 0.5
+background_opacity: 1.0
 
 # Mouse bindings
 #
