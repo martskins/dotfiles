@@ -1,0 +1,60 @@
+set nocompatible
+filetype off
+
+call plug#begin()
+Plug 'preservim/nerdtree',          { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
+Plug 'tpope/vim-abolish'            "toggle casing (snake or camel) with crs and crc
+Plug 'tpope/vim-surround'           "provides mappings to surround stuff with stuff
+Plug 'tpope/vim-commentary'         "mappings to comment/uncomment blocks of code
+Plug 'tpope/vim-repeat'             "enables repeating commands from plugins
+Plug 'majutsushi/tagbar'
+Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf',                { 'do': { -> fzf#install() }}
+Plug 'tpope/vim-projectionist'
+Plug 'cespare/vim-toml',            { 'for': 'toml' }
+Plug 'davidhalter/jedi-vim',        { 'for': 'python' }
+Plug 'digitaltoad/vim-pug',         { 'for': ['pug', 'jade', 'vue'] }
+Plug 'leafgarland/typescript-vim',  { 'for': 'typescript' }
+Plug 'peitalin/vim-jsx-typescript', { 'for': 'typescriptreact' }
+Plug 'pangloss/vim-javascript',     { 'for': 'javascript' }
+Plug 'plasticboy/vim-markdown',     { 'for': 'markdown' }
+Plug 'iamcco/markdown-preview.vim', { 'for': 'markdown' }
+Plug 'jparise/vim-graphql',         { 'for': 'graphql' }
+Plug 'martskins/vim-cargo-search',  { 'for': 'rust' }
+Plug '~/dev/LanguageClient-neovim'
+Plug '~/dev/lcn-settings'
+Plug 'machakann/vim-highlightedyank'
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
+Plug 'chriskempson/base16-vim'
+Plug 'itchyny/lightline.vim'
+Plug 'schickling/vim-bufonly'
+Plug 'ap/vim-css-color'
+
+" completion
+Plug 'ervandew/supertab'
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-neosnippet'
+
+" Plug 'neovim/nvim-lspconfig'
+
+call plug#end()
+
+filetype plugin indent on
+
+source ~/.vim/partials/general.vim
+source ~/.vim/partials/colors.vim
+source ~/.vim/partials/lcn.vim
+" source ~/.vim/partials/nvim_lsp.vim
+source ~/.vim/partials/nerdtree.vim
+source ~/.vim/partials/tagbar.vim
+source ~/.vim/partials/fzf.vim
+source ~/.vim/partials/mappings.vim
+source ~/.vim/partials/projectionist.vim
+source ~/.vim/partials/lighline.vim
+source ~/.vim/partials/vim_markdown.vim
+source ~/.vim/partials/completion.vim
+source ~/.vim/partials/supertab.vim

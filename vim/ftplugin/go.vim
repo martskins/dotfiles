@@ -43,6 +43,6 @@ nmap <leader>a <Plug>(go-alternate-edit)
 nmap <leader>g <Plug>(go-generate)
 imap ;err <ESC>:GoIfErr<CR>O
 
-nnoremap <leader>d :silent ! surf 1>/dev/null 2>/dev/null "https://golang.org/search?q=" &<left><left><left>
+nnoremap <leader>d :silent ! open "https://golang.org/search?q=" &<left><left><left>
 
 " let g:LanguageClient_settingsPath = '~/.vim/go/settings.json'

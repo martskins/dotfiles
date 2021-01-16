@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =4
+let g:netrw_dirhist_4='/Users/martin/dev/lcn-settings/plugin'
+let g:netrw_dirhist_3='/Users/martin/dev/LanguageClient-neovim'
+let g:netrw_dirhist_2='/Users/martin/dev/dotfiles/vim/plugged/coc.nvim/bin'
+let g:netrw_dirhist_1='/Users/martin/dev/dotfiles/vim/plugged/coc.nvim'
+let g:netrw_dirhist_0='/Users/martin/dev/dotfiles/vim/plugged/coc.nvim/plugin'
+let g:netrw_dirhist_9='/Users/martin/dev/dotfiles/vim/plugged/coc.nvim'
+let g:netrw_dirhist_8='/Users/martin/dev/dotfiles/vim/plugged/coc.nvim/bin'
+let g:netrw_dirhist_7='/Users/martin/dev/dotfiles/vim/plugged/coc.nvim'
+let g:netrw_dirhist_6='/Users/martin/dev/testrs/src'
+let g:netrw_dirhist_5='/Users/martin/dev/testrs'
