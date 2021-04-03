@@ -1,1 +1,1 @@
-set nowrap
+autocmd FileType pug set nowrap

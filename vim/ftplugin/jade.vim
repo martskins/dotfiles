@@ -1,1 +1,1 @@
-set nowrap
+autocmd FileType jade set nowrap

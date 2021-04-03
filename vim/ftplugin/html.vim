@@ -1,1 +1,1 @@
-set nowrap
+autocmd FileType html set nowrap

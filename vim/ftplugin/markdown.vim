@@ -1,2 +1,2 @@
-set conceallevel=2
-set nofoldenable
+autocmd FileType markdown set conceallevel=2
+autocmd FileType markdown set nofoldenable
