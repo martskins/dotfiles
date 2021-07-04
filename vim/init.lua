@@ -13,7 +13,7 @@ require('packer').startup(function(use)
   use { 'tpope/vim-commentary' }
   use { 'tpope/vim-repeat' }
   use { 'tpope/vim-projectionist'}
-	use { 'tpope/vim-fugitive' }
+  use { 'tpope/vim-fugitive' }
   use { 'majutsushi/tagbar' }
   use { 'machakann/vim-highlightedyank' }
   use { 'schickling/vim-bufonly' }
@@ -51,9 +51,9 @@ require('packer').startup(function(use)
   use { 'iamcco/markdown-preview.vim' , ft = { 'markdown' }}
   use { 'martskins/vim-cargo-search', ft = { 'rust' }}
   use { 'jparise/vim-graphql', ft = { 'graphql' }}
-	use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+  use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use { 'haze/sitruuna.vim' }
-	use { 'kristijanhusak/orgmode.nvim' }
+  use { 'kristijanhusak/orgmode.nvim' }
 end)
 
 require('partials/settings')
@@ -70,7 +70,7 @@ vim.cmd[[autocmd FileType lsp_markdown set filetype=markdown]]
 
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-  ignore_install = { "javascript" }, -- List of parsers to ignore installing
+  -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
   highlight = {
     enable = true,              -- false will disable the whole extension
     -- disable = { "c", "rust" },  -- list of language that will be disabled
