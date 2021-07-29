@@ -19,26 +19,6 @@ require('packer').startup(function(use)
   use { 'schickling/vim-bufonly' }
   use { 'hrsh7th/nvim-compe' }
   use { 'L3MON4D3/LuaSnip' }
-  -- use { 'chriskempson/base16-vim',
-  --   config = function()
-  --     vim.cmd[[
-				-- colorscheme base16-gruvbox-dark-hard
-				-- hi Pmenu                            guibg=#333333 guifg=white
-				-- hi Normal                           guibg=#131313
-				-- hi Todo                             ctermbg=none ctermfg=yellow guibg=none guifg=#fabd2f
-				-- hi Error                            ctermbg=none ctermfg=red guibg=none guifg=red
-  --       hi LspDiagnosticsDefaultError       guifg=red
-  --       hi LspDiagnosticsDefaultWarning     guifg=orange
-  --       hi LspDiagnosticsUnderlineError     gui=underline
-  --       hi LspDiagnosticsUnderlineWarning   gui=underline
-  --       hi LspReferenceText                 guibg=#383838
-  --       hi LspReferenceRead                 guibg=#383838
-  --       hi LspReferenceWrite                guibg=#383838
-  --       hi ExtraWhitespace                  ctermbg=red
-  --     	hi link mkdLineBreak                Pmenu
-  --     ]]
-  --   end
-  -- }
   use { 'cespare/vim-toml', ft = { 'toml' }}
   use { 'davidhalter/jedi-vim', ft = { 'python' }}
   use { 'leafgarland/typescript-vim', ft = { 'typescript' }}
