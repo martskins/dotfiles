@@ -59,4 +59,23 @@ vim.api.nvim_exec([[
     endif
     exec "normal `k"
   endfunction
+
+	function! ProfileStart()
+		:profile start profile.log
+		:profile func *
+		:profile file *
+	endfunction
+
+	function! ProfileStop()
+		:profile stop
+	endfunction
+]], false)
+
+vim.api.nvim_exec([[
+  function! GoAddTags(struct_name, tag_name) abort
+    call system('gomodifytags -file ' . expand('%:p') . ' -struct ' . a:struct_name . ' -w -add-tags ' . a:tag_name)
+    :e!
+  endfunction
+
+  command! -nargs=+ GoAddTags execute GoAddTags(<f-args>)
 ]], false)

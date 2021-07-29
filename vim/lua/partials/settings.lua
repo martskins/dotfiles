@@ -6,7 +6,7 @@ g.loaded_python3_provider = 0
 g.loaded_ruby_provider = 0
 g.loaded_node_provider = 0
 g.loaded_perl_provider = 0
-g.python3_host_prog = '/usr/bin/python3'
+g.python3_host_prog = '/usr/local/bin/python3'
 
 local o = vim.o
 o.binary = true
@@ -16,7 +16,7 @@ o.modeline = false
 o.timeoutlen = 1000
 o.ttimeoutlen = 0
 o.encoding = 'utf-8'
-o.shell = '/usr/bin/fish'
+o.shell = '/usr/local/bin/fish'
 o.guifont = 'monospace'
 o.backup = false
 o.hidden = true
