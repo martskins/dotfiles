@@ -34,18 +34,6 @@ map('i', '<C-d>', 'compe#scroll({ \'delta\': -4 })', { expr = true, silent = tru
 
 map('i', '<C-n>', 'luasnip#expand_or_jumpable() ? "<Plug>luasnip-expand-or-jump" : "<C-n>"', { silent = true })
 map('i', '<C-n>', '<cmd> lua require("luasnip").jump(1)<CR>', { silent = true, noremap = true })
--- imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>' 
--- inoremap <silent> <S-Tab> <cmd>lua require'luasnip'.jump(-1)<Cr>
-
--- snoremap <silent> <Tab> <cmd>lua require('luasnip').jump(1)<Cr>
--- snoremap <silent> <S-Tab> <cmd>lua require('luasnip').jump(-1)<Cr>
-
--- imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
--- smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
-
--- map('i', '<C-n>', 'vsnip#available(1)  ? "<Plug>(vsnip-expand)"         : "<C-n>"', { expr = true })
--- map('i', '<C-n>', 'vsnip#available(1)  ? "<Plug>(vsnip-expand-or-jump)" : "<C-n>"', { expr = true })
--- map('s', '<C-n>', 'vsnip#available(1)  ? "<Plug>(vsnip-expand-or-jump)" : "<C-n>"', { expr = true })
 
 -- Use tab completion --
 local t = function(str)
@@ -60,32 +48,3 @@ local check_back_space = function()
         return false
     end
 end
-
--- Use (s-)tab to:
---- move to prev/next item in completion menuone
---- jump to prev/next snippet's placeholder
--- _G.tab_complete = function()
---   if vim.fn.pumvisible() == 1 then
---     return t "<C-n>"
---   elseif vim.fn.call("vsnip#available", {1}) == 1 then
---     return t "<Plug>(vsnip-expand-or-jump)"
---   elseif check_back_space() then
---     return t "<Tab>"
---   else
---     return vim.fn['compe#complete']()
---   end
--- end
--- _G.s_tab_complete = function()
---   if vim.fn.pumvisible() == 1 then
---     return t "<C-p>"
---   elseif vim.fn.call("vsnip#jumpable", {-1}) == 1 then
---     return t "<Plug>(vsnip-jump-prev)"
---   else
---     return t "<S-Tab>"
---   end
--- end
-
--- vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
--- vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
--- vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
--- vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
