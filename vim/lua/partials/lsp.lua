@@ -53,6 +53,17 @@ configs.vim_language_server = {
   };
 }
 
+configs.gopls = {
+  default_config = {
+    cmd = { 'gopls', 'serve' },
+    settings = {
+      gopls = {
+        usePlaceholders = true,
+      },
+    },
+  },
+}
+
 local servers = { "pyright", "rust_analyzer", "tsserver", "gopls", "clangd", "vim_language_server" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {

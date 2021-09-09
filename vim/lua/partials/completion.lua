@@ -1,50 +1,53 @@
 local o = vim.o
-o.completeopt = 'noinsert,menuone'
+o.completeopt = 'noinsert,menuone,noselect'
 
-require('compe').setup {
-  enabled = true;
-  autocomplete = true;
-  debug = false;
-  min_length = 1;
-  preselect = 'always';
-  throttle_time = 80;
-  source_timeout = 200;
-  incomplete_delay = 400;
-  max_abbr_width = 100;
-  max_kind_width = 100;
-  max_menu_width = 100;
-  documentation = true;
-
-  source = {
-    path = true;
-    buffer = true;
-    calc = true;
-    nvim_lsp = true;
-    nvim_lua = true;
-    luasnip = true;
-  };
-}
-
-local map = vim.api.nvim_set_keymap
-map('i', '<C-Space>', 'compe#complete()', { expr = true, silent = true, noremap = true })
-map('i', '<C-k>', 'compe#confirm(\'<C-k>\')', { expr = true, silent = true, noremap = true })
-map('i', '<C-e>', 'compe#close(\'<C-e>\')', { expr = true, silent = true, noremap = true })
-map('i', '<C-f>', 'compe#scroll({ \'delta\': +4 })', { expr = true, silent = true, noremap = true })
-map('i', '<C-d>', 'compe#scroll({ \'delta\': -4 })', { expr = true, silent = true, noremap = true })
-
-map('i', '<C-n>', 'luasnip#expand_or_jumpable() ? "<Plug>luasnip-expand-or-jump" : "<C-n>"', { silent = true })
-map('i', '<C-n>', '<cmd> lua require("luasnip").jump(1)<CR>', { silent = true, noremap = true })
-
--- Use tab completion --
 local t = function(str)
   return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
 
-local check_back_space = function()
-    local col = vim.fn.col('.') - 1
-    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
-        return true
-    else
-        return false
-    end
-end
+local cmp = require('cmp')
+cmp.setup({
+  completion = { autocomplete = false },
+  formatting = {
+    format = function(entry, vim_item)
+      vim_item.menu = ({
+        buffer = "[Buffer]",
+        nvim_lsp = "[LSP]",
+        luasnip = "[LuaSnip]",
+        nvim_lua = "[Lua]",
+        latex_symbols = "[Latex]",
+      })[entry.source.name]
+      return vim_item
+    end,
+  },
+  experimental = {
+    ghost_text = true,
+  },
+  snippet = {
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body)
+    end,
+  },
+  mapping = {
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-k>'] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+    ['<C-e>'] = cmp.mapping.close(),
+    ['<C-n>'] = function(fallback)
+        if vim.fn.pumvisible() == 1 then
+          vim.fn.feedkeys(t('<C-n>', true, true, true), 'n')
+        -- elseif check_back_space() then
+        --   vim.fn.feedkeys(t('<C-n>', true, true, true), 'n')
+        elseif vim.fn['vsnip#available']() == 1 then
+          vim.fn.feedkeys(t('<Plug>(vsnip-expand-or-jump)', true, true, true), '')
+        else
+          fallback()
+        end
+      end,
+  },
+
+  sources = {
+    { name = 'path' },
+    { name = 'nvim_lsp' },
+    { name = 'vsnip' },
+  },
+})
