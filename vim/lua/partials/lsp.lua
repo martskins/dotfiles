@@ -30,10 +30,12 @@ local on_attach = function(client, bufnr)
 
   if client.resolved_capabilities.document_formatting then
     buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-    vim.api.nvim_command('autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync(nil, 1000)')
+    vim.api.nvim_command('autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync(nil, 1000)')
   elseif client.resolved_capabilities.document_range_formatting then
     buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
   end
+
+  client.config.flags.allow_incremental_sync = true
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -53,18 +55,76 @@ configs.vim_language_server = {
   };
 }
 
+local golangcilint = {
+  lintCommand = "golangci-lint run --out-format json",
+  lintSource = "golanci-lint",
+  init_options = { documentFormatting = false }, -- SET HERE
+}
+configs.efm = {
+  default_config = {
+    cmd = { 'efm-langserver' },
+    root_dir = vim.loop.cwd,
+    settings = {
+      rootMarkers = {".git/"},
+      languages = {
+        go = { golangcilint },
+      }
+    }
+  }
+}
+
+configs.diagnosticls = {
+  default_config = {
+    cmd = { 'diagnostic-languageserver', '--stdio' },
+    filetypes = { 'go' },
+    init_options = {
+      filetypes = {
+        go = 'golangci-lint',
+      },
+      linters = {
+        ['golangci-lint'] = {
+          command = 'golangci-lint',
+          rootPatterns = { '.git', 'go.mod' },
+          debounce = 100,
+          args = { 'run', '--out-format', 'json' },
+          sourceName = 'golangci-lint',
+          parseJson = {
+            sourceName = 'Pos.Filename',
+            sourceNameFilter = true,
+            errorsRoot = 'Issues',
+            line = 'Pos.Line',
+            column = 'Pos.Column',
+            message = '${Text} [${FromLinter}]',
+            security = 'severity',
+          },
+          offsetLine = 0,
+          offsetColumn = 1,
+          securities = {
+            [''] = 'error',
+            undefined = 'error',
+          },
+        }
+      }
+    },
+  },
+}
+
 configs.gopls = {
   default_config = {
-    cmd = { 'gopls', 'serve' },
+    cmd = { 'gopls', '-logfile', '/Users/martin/Desktop/gopls.log', 'serve' },
+    filetypes = {'go', 'gomod'},
     settings = {
       gopls = {
+        ["formatting.gofumpt"] = true,
         usePlaceholders = true,
+        ["local"] = "github.com/utilitywarehouse",
+        staticcheck = true,
       },
     },
   },
 }
 
-local servers = { "pyright", "rust_analyzer", "tsserver", "gopls", "clangd", "vim_language_server" }
+local servers = { "pyright", "rust_analyzer", "tsserver", "gopls", "clangd", "vim_language_server", "clangd", "diagnosticls" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,

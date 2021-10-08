@@ -16,7 +16,7 @@ o.modeline = false
 o.timeoutlen = 1000
 o.ttimeoutlen = 0
 o.encoding = 'utf-8'
-o.shell = '/usr/local/bin/fish'
+o.shell = '/bin/bash'
 o.guifont = 'monospace'
 o.backup = false
 o.hidden = true
@@ -41,6 +41,7 @@ o.termguicolors = true
 o.background = 'dark'
 o.shortmess = 'F'
 o.mouse = 'a'
+o.completeopt = 'noinsert,menuone,noselect'
 
 local wo = vim.wo
 wo.number = true

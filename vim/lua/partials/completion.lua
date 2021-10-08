@@ -1,5 +1,14 @@
-local o = vim.o
-o.completeopt = 'noinsert,menuone,noselect'
+local has_words_before = function()
+  if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
+    return false
+  end
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
+local feedkey = function(key, mode)
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+end
 
 local t = function(str)
   return vim.api.nvim_replace_termcodes(str, true, true, true)
@@ -7,13 +16,14 @@ end
 
 local cmp = require('cmp')
 cmp.setup({
-  completion = { autocomplete = false },
+  completion = { autocomplete = true },
   formatting = {
     format = function(entry, vim_item)
       vim_item.menu = ({
         buffer = "[Buffer]",
         nvim_lsp = "[LSP]",
         luasnip = "[LuaSnip]",
+        vsnip = "[VSnip]",
         nvim_lua = "[Lua]",
         latex_symbols = "[Latex]",
       })[entry.source.name]
@@ -21,7 +31,7 @@ cmp.setup({
     end,
   },
   experimental = {
-    ghost_text = true,
+    -- ghost_text = true,
   },
   snippet = {
     expand = function(args)
@@ -30,19 +40,16 @@ cmp.setup({
   },
   mapping = {
     ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-k>'] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
     ['<C-e>'] = cmp.mapping.close(),
-    ['<C-n>'] = function(fallback)
-        if vim.fn.pumvisible() == 1 then
-          vim.fn.feedkeys(t('<C-n>', true, true, true), 'n')
-        -- elseif check_back_space() then
-        --   vim.fn.feedkeys(t('<C-n>', true, true, true), 'n')
-        elseif vim.fn['vsnip#available']() == 1 then
-          vim.fn.feedkeys(t('<Plug>(vsnip-expand-or-jump)', true, true, true), '')
+    ['<C-k>'] = cmp.mapping(function(fallback)
+        if vim.fn.pumvisible() == 1 and vim.fn.complete_info().selected ~= -1 then
+          cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true });
+        elseif vim.fn["vsnip#available"]() == 1 then
+          feedkey("<Plug>(vsnip-expand-or-jump)", "")
         else
           fallback()
         end
-      end,
+      end, { 'i', 's' }),
   },
 
   sources = {

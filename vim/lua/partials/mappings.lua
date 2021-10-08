@@ -25,40 +25,11 @@ map('n', ']p', ':pu<CR>', { silent = true })
 map('n', '[p', ':pu!<CR>', { silent = true })
 map('n', '<leader>tt', ':TestNearest<cr>', {})
 
-map('n', '<F6>',':call DoRequest("normal")<CR>', { noremap = true })
-map('v', '<F6>', ':<c-u>call DoRequest("visual")<CR>', { noremap = true })
-
-
 vim.api.nvim_exec([[
   function! SynGroup()
       let l:s = synID(line('.'), col('.'), 1)
       echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
   endfun
-]], false)
-
-vim.api.nvim_exec([[
-  function! DoRequest(mode) abort
-    :set splitright
-    if a:mode == "normal"
-      exec "normal mk\"vyip"
-    else
-      exec "normal gv\"vy"
-    endif
-
-    if !exists("g:last_terminal_chan_id")
-      vs
-      terminal
-      let g:last_terminal_chan_id = b:terminal_job_id
-      wincmd p
-    endif
-
-    if getreg('"v') =~ "^\n"
-      call chansend(g:last_terminal_chan_id, expand("%:p")."\n")
-    else
-      call chansend(g:last_terminal_chan_id, @v)
-    endif
-    exec "normal `k"
-  endfunction
 
 	function! ProfileStart()
 		:profile start profile.log
@@ -69,9 +40,7 @@ vim.api.nvim_exec([[
 	function! ProfileStop()
 		:profile stop
 	endfunction
-]], false)
 
-vim.api.nvim_exec([[
   function! GoAddTags(struct_name, tag_name) abort
     call system('gomodifytags -file ' . expand('%:p') . ' -struct ' . a:struct_name . ' -w -add-tags ' . a:tag_name)
     :e!
