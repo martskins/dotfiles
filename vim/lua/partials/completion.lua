@@ -16,14 +16,13 @@ end
 
 local cmp = require('cmp')
 cmp.setup({
-  completion = { autocomplete = true },
+  -- completion = { autocomplete = true },
   formatting = {
     format = function(entry, vim_item)
       vim_item.menu = ({
         buffer = "[Buffer]",
         nvim_lsp = "[LSP]",
-        luasnip = "[LuaSnip]",
-        vsnip = "[VSnip]",
+        luasnip = "[LuaSnip]", vsnip = "[VSnip]",
         nvim_lua = "[Lua]",
         latex_symbols = "[Latex]",
       })[entry.source.name]
@@ -32,6 +31,11 @@ cmp.setup({
   },
   experimental = {
     -- ghost_text = true,
+  },
+  sorting = {
+    comparators = {
+      require('cmp.config.compare').order
+    }
   },
   snippet = {
     expand = function(args)
@@ -42,8 +46,9 @@ cmp.setup({
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.close(),
     ['<C-k>'] = cmp.mapping(function(fallback)
-        if vim.fn.pumvisible() == 1 and vim.fn.complete_info().selected ~= -1 then
-          cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true });
+        -- if vim.fn.pumvisible() == 1 and vim.fn.complete_info().selected ~= -1 then
+        if cmp.visible() then
+          cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true });
         elseif vim.fn["vsnip#available"]() == 1 then
           feedkey("<Plug>(vsnip-expand-or-jump)", "")
         else
@@ -52,9 +57,9 @@ cmp.setup({
       end, { 'i', 's' }),
   },
 
-  sources = {
-    { name = 'path' },
+  sources = cmp.config.sources({
     { name = 'nvim_lsp' },
     { name = 'vsnip' },
-  },
+    { name = 'path' },
+  }),
 })

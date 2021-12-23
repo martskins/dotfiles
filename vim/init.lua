@@ -5,6 +5,9 @@ require('packer').startup(function(use)
   use { 'junegunn/fzf.vim' }
   use { 'junegunn/fzf', run = vim.fn['fzf#install'] }
   use { 'vim-test/vim-test' }
+  use { 'rhysd/vim-go-impl', ft = { 'go' } }
+  use { 'sk1418/QFGrep' }
+  -- use { 'puremourning/vimspector' }
   use { 'tpope/vim-abolish' }
   use { 'tpope/vim-surround' }
   use { 'tpope/vim-commentary' }
@@ -12,14 +15,13 @@ require('packer').startup(function(use)
   use { 'tpope/vim-projectionist'}
 	use { 'tpope/vim-fugitive' }
   use { 'neovim/nvim-lspconfig' }
+  use { 'tommcdo/vim-exchange' }
   use { 'kyazdani42/nvim-tree.lua',
-    commit = 'd7f73b5ae9c8fa85535c32e2861c2cb97df5d56b',
     config = { nvim_tree_show_icons = { icons = 0 } },
   }
   use { 'hrsh7th/vim-vsnip-integ' }
   use { 'hrsh7th/vim-vsnip' }
   use { 'hrsh7th/nvim-cmp',
-    commit = '7bfa33a8db7f0e9cc9bb459c2571885c6c37ea1c',
     requires = {
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-buffer',
@@ -35,7 +37,7 @@ require('packer').startup(function(use)
   use { 'cespare/vim-toml', ft = { 'toml' }}
   use { 'chriskempson/base16-vim', config = function()
     vim.cmd [[
-      let $BAT_THEME = 'gruvbox'
+      let $BAT_THEME = 'zenburn'
       colorscheme base16-gruvbox-dark-hard
       hi LspDiagnosticsDefaultError       guifg=red
       hi LspDiagnosticsDefaultWarning     guifg=orange
@@ -51,24 +53,10 @@ require('packer').startup(function(use)
 end)
 
 vim.cmd[[
+  command! PS PackerSync
   let g:rooter_patterns = ['.git', 'Makefile', '*.sln', 'build/env.sh']
   let g:rooter_resolve_links = 1
 ]]
-
--- vim.cmd[[
---   hi LspDiagnosticsDefaultError       guifg=red
---   hi LspDiagnosticsDefaultWarning     guifg=orange
---   hi LspDiagnosticsUnderlineError     gui=underline
---   hi LspDiagnosticsUnderlineWarning   gui=underline
---   hi LspReferenceText                 guibg=#383838
---   hi LspReferenceRead                 guibg=#383838
---   hi LspReferenceWrite                guibg=#383838
---   hi ExtraWhitespace                  ctermbg=red
---   hi link mkdLineBreak                Pmenu
---   hi markdownLinkText                 ctermfg=white
---   hi markdownUrl                      ctermfg=white
---   hi Pmenu                            ctermbg=darkgray guibg=darkgray
--- ]]
 
 local disabled_built_ins = {
     "netrw",
@@ -104,37 +92,14 @@ require('partials/projectionist')
 require('partials/completion')
 require('partials/tagbar')
 
-  -- use { 'rafamadriz/friendly-snippets' }
-  -- use { 'machakann/vim-highlightedyank' }
-  -- use { 'hoob3rt/lualine.nvim' }
-  -- use { 'kyazdani42/nvim-web-devicons' }
-  -- use { 'leafgarland/typescript-vim', ft = { 'typescript' }}
-  -- use { 'peitalin/vim-jsx-typescript', ft = { 'typescript' }}
-  -- use { 'pangloss/vim-javascript', ft = { 'javascript' }}
-  -- use { 'plasticboy/vim-markdown', ft = { 'markdown' }}
-  -- use { 'iamcco/markdown-preview.vim' , ft = { 'markdown' }}
-	-- use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-  --
--- require('partials/lualine')
--- require'nvim-web-devicons'.setup { default = true; }
-
--- vim.cmd[[autocmd FileType lsp_markdown set filetype=markdown]]
--- vim.cmd([[autocmd BufWritePost init.lua source <afile> | PackerCompile]])
-
--- require'nvim-treesitter.configs'.setup {
---   ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
---   ignore_install = { "javascript" }, -- List of parsers to ignore installing
---   highlight = {
---     enable = true,              -- false will disable the whole extension
---     -- disable = { "c", "rust" },  -- list of language that will be disabled
---   },
---   incremental_selection = {
---     enable = true,
---     keymaps = {
---       init_selection = "gnn",
---       node_incremental = "grn",
---       scope_incremental = "grc",
---       node_decremental = "grm",
---     },
---   },
--- }
+vim.cmd[[
+    nnoremap <silent> <F5> :lua require'dap'.continue()<CR>
+    nnoremap <silent> <F10> :lua require'dap'.step_over()<CR>
+    nnoremap <silent> <F11> :lua require'dap'.step_into()<CR>
+    nnoremap <silent> <F12> :lua require'dap'.step_out()<CR>
+    nnoremap <silent> <leader>b :lua require'dap'.toggle_breakpoint()<CR>
+    nnoremap <silent> <leader>B :lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
+    nnoremap <silent> <leader>lp :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
+    nnoremap <silent> <leader>dr :lua require'dap'.repl.open()<CR>
+    nnoremap <silent> <leader>dl :lua require'dap'.run_last()<CR>
+    ]]
