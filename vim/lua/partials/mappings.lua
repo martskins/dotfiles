@@ -24,6 +24,7 @@ map('v', '<leader>pj', ':!python -m json.tool<CR>', { noremap = true })
 map('n', ']p', ':pu<CR>', { silent = true })
 map('n', '[p', ':pu!<CR>', { silent = true })
 map('n', '<leader>tt', ':TestNearest<cr>', {})
+map('t', '<C-o>', '<C-\\><C-n>', {})
 
 vim.api.nvim_exec([[
   function! SynGroup()
@@ -47,4 +48,5 @@ vim.api.nvim_exec([[
   endfunction
 
   command! -nargs=+ GoAddTags execute GoAddTags(<f-args>)
+  command! PS PackerSync
 ]], false)

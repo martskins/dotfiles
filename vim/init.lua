@@ -7,7 +7,6 @@ require('packer').startup(function(use)
   use { 'vim-test/vim-test' }
   use { 'rhysd/vim-go-impl', ft = { 'go' } }
   use { 'sk1418/QFGrep' }
-  -- use { 'puremourning/vimspector' }
   use { 'tpope/vim-abolish' }
   use { 'tpope/vim-surround' }
   use { 'tpope/vim-commentary' }
@@ -15,16 +14,12 @@ require('packer').startup(function(use)
   use { 'tpope/vim-projectionist'}
 	use { 'tpope/vim-fugitive' }
   use { 'neovim/nvim-lspconfig' }
-  use { 'tommcdo/vim-exchange' }
-  use { 'kyazdani42/nvim-tree.lua',
-    config = { nvim_tree_show_icons = { icons = 0 } },
-  }
+  use { 'kyazdani42/nvim-tree.lua' }
   use { 'hrsh7th/vim-vsnip-integ' }
   use { 'hrsh7th/vim-vsnip' }
   use { 'hrsh7th/nvim-cmp',
     requires = {
       'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-vsnip',
     },
@@ -38,14 +33,20 @@ require('packer').startup(function(use)
   use { 'chriskempson/base16-vim', config = function()
     vim.cmd [[
       let $BAT_THEME = 'zenburn'
-      colorscheme base16-gruvbox-dark-hard
-      hi LspDiagnosticsDefaultError       guifg=red
-      hi LspDiagnosticsDefaultWarning     guifg=orange
+      colorscheme peachpuff
+      hi Search                           ctermfg=black ctermbg=178 guibg=yellow
+      hi Type                             ctermfg=28 guibg=red
+      hi Special                          ctermfg=red guibg=red
+      hi Title                            ctermfg=red guibg=red
+      hi Pmenu                            ctermbg=darkgrey guibg=darkgrey
+      hi Normal                           ctermbg=black guibg=#101010
+      hi LspDiagnosticsDefaultError       ctermbg=red guifg=red
+      hi LspDiagnosticsDefaultWarning     ctermbg=166 guifg=orange
       hi LspDiagnosticsUnderlineError     gui=underline
       hi LspDiagnosticsUnderlineWarning   gui=underline
-      hi LspReferenceText                 guibg=#383838
-      hi LspReferenceRead                 guibg=#383838
-      hi LspReferenceWrite                guibg=#383838
+      hi LspReferenceText                 ctermbg=magenta guibg=#383838
+      hi LspReferenceRead                 ctermbg=magenta guibg=#383838
+      hi LspReferenceWrite                ctermbg=magenta guibg=#383838
       hi ExtraWhitespace                  ctermbg=red
       hi link mkdLineBreak                Pmenu
     ]]
@@ -53,7 +54,6 @@ require('packer').startup(function(use)
 end)
 
 vim.cmd[[
-  command! PS PackerSync
   let g:rooter_patterns = ['.git', 'Makefile', '*.sln', 'build/env.sh']
   let g:rooter_resolve_links = 1
 ]]
@@ -91,15 +91,3 @@ require('partials/lsp')
 require('partials/projectionist')
 require('partials/completion')
 require('partials/tagbar')
-
-vim.cmd[[
-    nnoremap <silent> <F5> :lua require'dap'.continue()<CR>
-    nnoremap <silent> <F10> :lua require'dap'.step_over()<CR>
-    nnoremap <silent> <F11> :lua require'dap'.step_into()<CR>
-    nnoremap <silent> <F12> :lua require'dap'.step_out()<CR>
-    nnoremap <silent> <leader>b :lua require'dap'.toggle_breakpoint()<CR>
-    nnoremap <silent> <leader>B :lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
-    nnoremap <silent> <leader>lp :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
-    nnoremap <silent> <leader>dr :lua require'dap'.repl.open()<CR>
-    nnoremap <silent> <leader>dl :lua require'dap'.run_last()<CR>
-    ]]
