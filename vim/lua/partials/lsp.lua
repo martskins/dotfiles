@@ -124,7 +124,7 @@ configs.gopls = {
   },
 }
 
-local servers = { "pyright", "rust_analyzer", "tsserver", "gopls", "clangd" , "golangci_lint_ls", "sumneko_lua" }
+local servers = { "pyright", "rust_analyzer", "tsserver", "gopls", "clangd" , "golangci_lint_ls", "sumneko_lua", "yamlls", "terraformls" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,

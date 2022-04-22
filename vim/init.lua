@@ -2,10 +2,13 @@ vim.cmd [[packadd packer.nvim]]
 
 require('packer').startup(function(use)
   use { 'wbthomason/packer.nvim' }
+
+  use { 'nvim-treesitter/nvim-treesitter' }
+  use { 'mfussenegger/nvim-dap' }
+  use { 'leoluz/nvim-dap-go' }
   use { 'junegunn/fzf.vim' }
   use { 'junegunn/fzf', run = vim.fn['fzf#install'] }
   use { 'vim-test/vim-test' }
-  use { 'rhysd/vim-go-impl', ft = { 'go' } }
   use { 'sk1418/QFGrep' }
   use { 'tpope/vim-abolish' }
   use { 'tpope/vim-surround' }
@@ -26,19 +29,15 @@ require('packer').startup(function(use)
   }
   use { 'schickling/vim-bufonly' }
   use { 'majutsushi/tagbar' }
+  use { 'airblade/vim-rooter' }
+  use { 'rhysd/vim-go-impl', ft = { 'go' } }
   use { 'martskins/vim-cargo-search', ft = { 'rust' }}
   use { 'jparise/vim-graphql', ft = { 'graphql' }}
-  use { 'airblade/vim-rooter' }
   use { 'cespare/vim-toml', ft = { 'toml' }}
   use { 'chriskempson/base16-vim', config = function()
     vim.cmd [[
       let $BAT_THEME = 'zenburn'
-      colorscheme peachpuff
-      hi Search                           ctermfg=black ctermbg=178 guibg=yellow
-      hi Type                             ctermfg=28 guibg=red
-      hi Special                          ctermfg=red guibg=red
-      hi Title                            ctermfg=red guibg=red
-      hi Pmenu                            ctermbg=darkgrey guibg=darkgrey
+      colorscheme base16-gruvbox-dark-hard
       hi Normal                           ctermbg=black guibg=#101010
       hi LspDiagnosticsDefaultError       ctermbg=red guifg=red
       hi LspDiagnosticsDefaultWarning     ctermbg=166 guifg=orange
@@ -56,6 +55,21 @@ end)
 vim.cmd[[
   let g:rooter_patterns = ['.git', 'Makefile', '*.sln', 'build/env.sh']
   let g:rooter_resolve_links = 1
+
+  function! RangeSearch(direction)
+    call inputsave()
+    let g:srchstr = input(a:direction)
+    call inputrestore()
+    if strlen(g:srchstr) > 0
+      let g:srchstr = g:srchstr.
+            \ '\%>'.(line("'<")-1).'l'.
+            \ '\%<'.(line("'>")+1).'l'
+    else
+      let g:srchstr = ''
+    endif
+  endfunction
+  vnoremap <silent> / :<C-U>call RangeSearch('/')<CR>:if strlen(g:srchstr) > 0\|exec '/'.g:srchstr\|endif<CR>
+  vnoremap <silent> ? :<C-U>call RangeSearch('?')<CR>:if strlen(g:srchstr) > 0\|exec '?'.g:srchstr\|endif<CR>
 ]]
 
 local disabled_built_ins = {
@@ -91,3 +105,5 @@ require('partials/lsp')
 require('partials/projectionist')
 require('partials/completion')
 require('partials/tagbar')
+require('partials/dap')
+require('partials/treesitter')

@@ -43,6 +43,8 @@ cmp.setup({
     end,
   },
   mapping = {
+    ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item()),
+    ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item()),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.close(),
     ['<C-k>'] = cmp.mapping(function(fallback)
