@@ -53,6 +53,8 @@ require('packer').startup(function(use)
 end)
 
 vim.cmd[[
+  " the macro in f converts a struct field to a cli.Flag
+  let @f='0wwcw0wPli 0wi&cli.l~eliFlag{Name:lli"ebyweli"bcrkf"li, EnvVars:[]string{"pbcrsgUweli"}, Destination: &cfg.pbeli, Required: true},'
   let g:rooter_patterns = ['.git', 'Makefile', '*.sln', 'build/env.sh']
   let g:rooter_resolve_links = 1
 

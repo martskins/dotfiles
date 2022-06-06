@@ -11,11 +11,11 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', 'R', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   buf_set_keymap('v', 'ga', '<cmd>lua vim.lsp.buf.range_code_action()<CR>', opts)
+  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   buf_set_keymap('n', 'E', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
   buf_set_keymap('n', '<C-s><C-s>', '<cmd>lua vim.lsp.buf.document_highlight()<CR>', opts)
   buf_set_keymap('n', '<C-s><C-h>', '<cmd>lua vim.lsp.buf.clear_references()<CR>', opts)
@@ -37,6 +37,38 @@ local on_attach = function(client, bufnr)
 
   client.config.flags.allow_incremental_sync = true
 end
+
+local function dump(o)
+   if type(o) == 'table' then
+      local s = '{ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. dump(v) .. ','
+      end
+      return s .. '} '
+   else
+      return tostring(o)
+   end
+end
+
+-- do not include test or mocks files in Go
+local original_on_references = vim.lsp.handlers['textDocument/references']
+local original_on_implementation = vim.lsp.handlers['textDocument/implementation']
+
+local filter_quickfix_with_callback = function(callback)
+  return function (a, results, ctx, config)
+    local out = {}
+    for k, v in pairs(results) do
+      local filename = v['uri']
+      if not string.find(filename, '_test.go') and not string.match(filename, "../mocks/") then
+        table.insert(out, v)
+      end
+    end
+    callback(a, out, ctx, config)
+  end
+end
+vim.lsp.handlers['textDocument/references'] = vim.lsp.with(filter_quickfix_with_callback(original_on_references), {})
+vim.lsp.handlers['textDocument/implementation'] = vim.lsp.with(filter_quickfix_with_callback(original_on_implementation), {})
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -124,7 +156,8 @@ configs.gopls = {
   },
 }
 
-local servers = { "pyright", "rust_analyzer", "tsserver", "gopls", "clangd" , "golangci_lint_ls", "sumneko_lua", "yamlls", "terraformls" }
+-- "golangci_lint_ls", 
+local servers = { "pyright", "rust_analyzer", "tsserver", "gopls", "clangd" , "sumneko_lua", "yamlls", "terraformls", "hls" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
