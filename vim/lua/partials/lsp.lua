@@ -57,8 +57,12 @@ local original_on_implementation = vim.lsp.handlers['textDocument/implementation
 
 local filter_quickfix_with_callback = function(callback)
   return function (a, results, ctx, config)
+    if results == nil then
+      return callback(a, results, ctx, config)
+    end
+
     local out = {}
-    for k, v in pairs(results) do
+    for _, v in pairs(results) do
       local filename = v['uri']
       if not string.find(filename, '_test.go') and not string.match(filename, "../mocks/") then
         table.insert(out, v)
@@ -87,60 +91,6 @@ configs.vim_language_server = {
   };
 }
 
-local golangcilint = {
-  lintCommand = "golangci-lint run --out-format json",
-  lintSource = "golanci-lint",
-  init_options = { documentFormatting = false }, -- SET HERE
-}
-configs.efm = {
-  default_config = {
-    cmd = { 'efm-langserver' },
-    root_dir = vim.loop.cwd,
-    settings = {
-      rootMarkers = {".git/"},
-      languages = {
-        go = { golangcilint },
-      }
-    }
-  }
-}
-
-configs.diagnosticls = {
-  default_config = {
-    cmd = { 'diagnostic-languageserver', '--stdio' },
-    filetypes = { 'go' },
-    init_options = {
-      filetypes = {
-        go = 'golangci-lint',
-      },
-      linters = {
-        ['golangci-lint'] = {
-          command = 'golangci-lint',
-          rootPatterns = { '.git', 'go.mod' },
-          debounce = 100,
-          args = { 'run', '--out-format', 'json' },
-          sourceName = 'golangci-lint',
-          parseJson = {
-            sourceName = 'Pos.Filename',
-            sourceNameFilter = true,
-            errorsRoot = 'Issues',
-            line = 'Pos.Line',
-            column = 'Pos.Column',
-            message = '${Text} [${FromLinter}]',
-            security = 'severity',
-          },
-          offsetLine = 0,
-          offsetColumn = 1,
-          securities = {
-            [''] = 'error',
-            undefined = 'error',
-          },
-        }
-      }
-    },
-  },
-}
-
 configs.gopls = {
   default_config = {
     cmd = { 'gopls', 'serve' },
@@ -156,7 +106,6 @@ configs.gopls = {
   },
 }
 
--- "golangci_lint_ls", 
 local servers = { "pyright", "rust_analyzer", "tsserver", "gopls", "clangd" , "sumneko_lua", "yamlls", "terraformls", "hls" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
@@ -170,14 +119,3 @@ for _, lsp in ipairs(servers) do
     };
   }
 end
-
-nvim_lsp.omnisharp.setup {
-  capabilities = capabilities,
-  on_attach = on_attach,
-  cmd = { 'omnisharp', '--languageserver', '--hostPID', tostring(vim.fn.getpid()) },
-  filetypes = { 'cs', 'vb' },
-  init_options = {
-    AutomaticWorkspaceInit = true
-
-  },
-}

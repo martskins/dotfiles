@@ -3,13 +3,13 @@ vim.cmd [[packadd packer.nvim]]
 require('packer').startup(function(use)
   use { 'wbthomason/packer.nvim' }
 
+  use { 'github/copilot.vim' }
   use { 'nvim-treesitter/nvim-treesitter' }
   use { 'mfussenegger/nvim-dap' }
   use { 'leoluz/nvim-dap-go' }
   use { 'junegunn/fzf.vim' }
   use { 'junegunn/fzf', run = vim.fn['fzf#install'] }
   use { 'vim-test/vim-test' }
-  use { 'sk1418/QFGrep' }
   use { 'tpope/vim-abolish' }
   use { 'tpope/vim-surround' }
   use { 'tpope/vim-commentary' }
@@ -56,7 +56,7 @@ vim.cmd[[
   " the macro in f converts a struct field to a cli.Flag
   let @f='0wwcw0wPli 0wi&cli.l~eliFlag{Name:lli"ebyweli"bcrkf"li, EnvVars:[]string{"pbcrsgUweli"}, Destination: &cfg.pbeli, Required: true},'
   let g:rooter_patterns = ['.git', 'Makefile', '*.sln', 'build/env.sh']
-  let g:rooter_resolve_links = 1
+  let g:rooter_resolve_links = 0
 
   function! RangeSearch(direction)
     call inputsave()
