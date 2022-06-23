@@ -17,7 +17,7 @@ require('packer').startup(function(use)
   use { 'tpope/vim-projectionist'}
 	use { 'tpope/vim-fugitive' }
   use { 'neovim/nvim-lspconfig' }
-  use { 'kyazdani42/nvim-tree.lua' }
+  use { 'preservim/nerdtree' }
   use { 'hrsh7th/vim-vsnip-integ' }
   use { 'hrsh7th/vim-vsnip' }
   use { 'hrsh7th/nvim-cmp',
