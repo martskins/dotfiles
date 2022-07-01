@@ -2,7 +2,8 @@ local map = vim.api.nvim_set_keymap
 
 map('n', 'gev', ':e ~/.config/nvim/init.lua<CR>', { noremap = true })
 map('n', 'gsv', ':so ~/.config/nvim/init.lua<CR>', { noremap = true })
-map('n', '<C-h>', ':nohlsearch<C-R>=has(\'diff\')?\'<Bar>diffupdate\':\'\'<CR><CR><C-L>', { noremap = true, silent = true })
+map('n', '<C-h>', ':nohlsearch<C-R>=has(\'diff\')?\'<Bar>diffupdate\':\'\'<CR><CR><C-L>',
+  { noremap = true, silent = true })
 map('n', '<Up>', ':cprevious<cr>', {})
 map('n', '<Down>', ':cnext<cr>', {})
 map('n', '<Right>', ':cnext<cr>', {})
@@ -49,4 +50,24 @@ vim.api.nvim_exec([[
 
   command! -nargs=+ GoAddTags execute GoAddTags(<f-args>)
   command! PS PackerSync
+
+  " the macro in f converts a struct field to a cli.Flag
+  let @f='0wwcw0wPli 0wi&cli.l~eliFlag{Name:lli"ebyweli"bcrkf"li, EnvVars:[]string{"pbcrsgUweli"}, Destination: &cfg.pbeli, Required: true},'
+  let g:rooter_patterns = ['.git', 'Makefile', '*.sln', 'build/env.sh']
+  let g:rooter_resolve_links = 0
+
+  function! RangeSearch(direction)
+    call inputsave()
+    let g:srchstr = input(a:direction)
+    call inputrestore()
+    if strlen(g:srchstr) > 0
+      let g:srchstr = g:srchstr.
+            \ '\%>'.(line("'<")-1).'l'.
+            \ '\%<'.(line("'>")+1).'l'
+    else
+      let g:srchstr = ''
+    endif
+  endfunction
+  vnoremap <silent> / :<C-U>call RangeSearch('/')<CR>:if strlen(g:srchstr) > 0\|exec '/'.g:srchstr\|endif<CR>
+  vnoremap <silent> ? :<C-U>call RangeSearch('?')<CR>:if strlen(g:srchstr) > 0\|exec '?'.g:srchstr\|endif<CR>
 ]], false)

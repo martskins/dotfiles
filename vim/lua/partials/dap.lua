@@ -1,7 +1,5 @@
 local widgets = require('dap.ui.widgets')
 
-require('dap-go').setup()
-
 function _G.dap_open_frames()
   widgets.sidebar(widgets.frames).open()
 end

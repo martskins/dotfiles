@@ -35,14 +35,14 @@ cmp.setup({
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.close(),
     ['<C-k>'] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-          cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true });
-        elseif vim.fn["vsnip#available"]() == 1 then
-          feedkey("<Plug>(vsnip-expand-or-jump)", "")
-        else
-          fallback()
-        end
-      end, { 'i', 's' }),
+      if cmp.visible() then
+        cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true });
+      elseif vim.fn["vsnip#available"]() == 1 then
+        feedkey("<Plug>(vsnip-expand-or-jump)", "")
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
   },
 
   sources = cmp.config.sources({

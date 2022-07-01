@@ -1,10 +1,49 @@
+local function table_print(tt, indent, done)
+  done = done or {}
+  indent = indent or 0
+  if type(tt) == "table" then
+    local sb = {}
+    for key, value in pairs(tt) do
+      table.insert(sb, string.rep(" ", indent)) -- indent it
+      if type(value) == "table" and not done[value] then
+        done[value] = true
+        table.insert(sb, key .. " = {\n");
+        table.insert(sb, table_print(value, indent + 2, done))
+        table.insert(sb, string.rep(" ", indent)) -- indent it
+        table.insert(sb, "}\n");
+      elseif "number" == type(key) then
+        table.insert(sb, string.format("\"%s\"\n", tostring(value)))
+      else
+        table.insert(sb, string.format(
+          "%s = \"%s\"\n", tostring(key), tostring(value)))
+      end
+    end
+    return table.concat(sb)
+  else
+    return tt .. "\n"
+  end
+end
+
+local function to_string(tbl)
+  if "nil" == type(tbl) then
+    return tostring(nil)
+  elseif "table" == type(tbl) then
+    return table_print(tbl)
+  elseif "string" == type(tbl) then
+    return tbl
+  else
+    return tostring(tbl)
+  end
+end
+
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-  local opts = { noremap=true, silent=true }
+  local opts = { noremap = true, silent = true }
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
   buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
@@ -38,25 +77,12 @@ local on_attach = function(client, bufnr)
   client.config.flags.allow_incremental_sync = true
 end
 
-local function dump(o)
-   if type(o) == 'table' then
-      local s = '{ '
-      for k,v in pairs(o) do
-         if type(k) ~= 'number' then k = '"'..k..'"' end
-         s = s .. '['..k..'] = ' .. dump(v) .. ','
-      end
-      return s .. '} '
-   else
-      return tostring(o)
-   end
-end
-
 -- do not include test or mocks files in Go
 local original_on_references = vim.lsp.handlers['textDocument/references']
 local original_on_implementation = vim.lsp.handlers['textDocument/implementation']
 
 local filter_quickfix_with_callback = function(callback)
-  return function (a, results, ctx, config)
+  return function(a, results, ctx, config)
     if results == nil then
       return callback(a, results, ctx, config)
     end
@@ -72,50 +98,48 @@ local filter_quickfix_with_callback = function(callback)
   end
 end
 vim.lsp.handlers['textDocument/references'] = vim.lsp.with(filter_quickfix_with_callback(original_on_references), {})
-vim.lsp.handlers['textDocument/implementation'] = vim.lsp.with(filter_quickfix_with_callback(original_on_implementation), {})
+vim.lsp.handlers['textDocument/implementation'] = vim.lsp.with(filter_quickfix_with_callback(original_on_implementation)
+  , {})
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 local nvim_lsp = require('lspconfig')
-local configs = require('lspconfig/configs')
-
-configs.vim_language_server = {
-  default_config = {
-    cmd = {'vim-language-server', '--stdio'};
-    filetypes = {'vim'};
-    root_dir = function(fname)
-      return nvim_lsp.util.find_git_ancestor(fname) or vim.loop.os_homedir()
-    end;
-    settings = {};
-  };
-}
-
-configs.gopls = {
-  default_config = {
-    cmd = { 'gopls', 'serve' },
-    filetypes = {'go', 'gomod'},
-    settings = {
-      gopls = {
-        ["formatting.gofumpt"] = true,
-        usePlaceholders = true,
-        ["local"] = "github.com/utilitywarehouse",
-        staticcheck = true,
+local settings_overrides = {
+  gopls = {
+    gopls = {
+      ['local'] = "github.com/utilitywarehouse",
+      gofumpt = true,
+      staticcheck = true,
+      usePlaceholders = true,
+      hints = {
+        assignVariableTypes = true,
+        compositeLiteralFields = true,
       },
-    },
+    }
+  },
+  sumneko_lua = {
+    Lua = { diagnostics = { globals = { 'vim' } } }
   },
 }
 
-local servers = { "pyright", "rust_analyzer", "tsserver", "gopls", "clangd" , "sumneko_lua", "yamlls", "terraformls", "hls" }
+local servers = { "pyright", "rust_analyzer", "tsserver", "gopls", "sumneko_lua", "clangd", "yamlls", "terraformls",
+  "hls", "vimls" }
 for _, lsp in ipairs(servers) do
+  local settings = {}
+  if settings_overrides[lsp] then
+    settings = settings_overrides[lsp]
+  end
+
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
     capabilities = capabilities,
     root_dir = function(fname)
-			return nvim_lsp.util.find_git_ancestor(fname) or vim.loop.os_homedir()
+      return nvim_lsp.util.find_git_ancestor(fname) or vim.loop.os_homedir()
     end;
     flags = {
       debounce_did_change_notify = 250,
     };
+    settings = settings,
   }
 end
