@@ -101,6 +101,18 @@ vim.lsp.handlers['textDocument/references'] = vim.lsp.with(filter_quickfix_with_
 vim.lsp.handlers['textDocument/implementation'] = vim.lsp.with(filter_quickfix_with_callback(original_on_implementation)
   , {})
 
+local get_current_gomod = function()
+  local file = io.open("go.mod", "r")
+  if file == nil then
+    return nil
+  end
+
+  local first_line = file:read()
+  local mod_name = first_line:gsub("module ", "")
+  file:close()
+  return mod_name
+end
+
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
@@ -108,7 +120,7 @@ local nvim_lsp = require('lspconfig')
 local settings_overrides = {
   gopls = {
     gopls = {
-      ['local'] = "github.com/utilitywarehouse",
+      ['local'] = get_current_gomod(),
       gofumpt = true,
       staticcheck = true,
       usePlaceholders = true,
@@ -132,6 +144,7 @@ for _, lsp in ipairs(servers) do
   end
 
   nvim_lsp[lsp].setup {
+    cmd = { "gopls", "serve", "-rpc.trace", "-logfile", "/tmp/gopls.log" },
     on_attach = on_attach,
     capabilities = capabilities,
     root_dir = function(fname)
