@@ -1,8 +1,6 @@
 require('packer').startup(function(use)
   use { 'wbthomason/packer.nvim' }
 
-  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
-  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   use { 'lewis6991/impatient.nvim' }
   use { 'dstein64/vim-startuptime' }
   use { 'github/copilot.vim' }
