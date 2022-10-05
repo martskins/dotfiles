@@ -1,6 +1,7 @@
 local function table_print(tt, indent, done)
   done = done or {}
   indent = indent or 0
+  print(type(tt))
   if type(tt) == "table" then
     local sb = {}
     for key, value in pairs(tt) do
@@ -67,10 +68,10 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   buf_set_keymap('n', 'Q', '<cmd>lua vim.diagnostic.setloclist({open_loclist = true, workspace = true})<CR>', opts)
 
-  if client.resolved_capabilities.document_formatting then
-    buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-    vim.api.nvim_command('autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync(nil, 1000)')
-  elseif client.resolved_capabilities.document_range_formatting then
+  if client.supports_method 'textDocument/formatting' then
+    buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", opts)
+    vim.api.nvim_command('autocmd BufWritePre <buffer> lua vim.lsp.buf.format(nil, 1000)')
+  elseif client.supports_method 'textDocument/rangeFormatting' then
     buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
   end
 
@@ -135,16 +136,19 @@ local settings_overrides = {
   },
 }
 
+local filetypes_overrides = {
+  clangd = { 'c', 'cpp', 'objc', 'objcpp' },
+}
+
 local servers = { "pyright", "rust_analyzer", "tsserver", "gopls", "sumneko_lua", "clangd", "yamlls", "terraformls",
-  "hls", "vimls" }
+  "hls", "vimls", "graphql", "bufls" }
 for _, lsp in ipairs(servers) do
   local settings = {}
   if settings_overrides[lsp] then
     settings = settings_overrides[lsp]
   end
 
-  nvim_lsp[lsp].setup {
-    cmd = { "gopls", "serve", "-rpc.trace", "-logfile", "/tmp/gopls.log" },
+  local setup = {
     on_attach = on_attach,
     capabilities = capabilities,
     root_dir = function(fname)
@@ -155,4 +159,10 @@ for _, lsp in ipairs(servers) do
     };
     settings = settings,
   }
+
+  if filetypes_overrides[lsp] then
+    setup.filetypes = filetypes_overrides[lsp]
+  end
+
+  nvim_lsp[lsp].setup(setup)
 end

@@ -7,8 +7,6 @@ g.loaded_ruby_provider = 0
 g.loaded_node_provider = 0
 g.loaded_perl_provider = 0
 g.python3_host_prog = '/usr/local/bin/python3'
-g.do_filetype_lua = 1
-g.did_load_filetypes = 0
 
 local o = vim.o
 o.binary = true
@@ -44,6 +42,7 @@ o.completeopt = 'noinsert,menuone,noselect'
 o.termguicolors = true
 o.background = 'dark'
 o.foldenable = false
+o.cmdheight = 1
 
 local wo = vim.wo
 wo.number = true

@@ -1,14 +1,13 @@
 require('packer').startup(function(use)
   use { 'wbthomason/packer.nvim' }
 
-  -- use { 'mfussenegger/nvim-dap' }
-  -- use { 'leoluz/nvim-dap-go', ft = { 'go' }, config = function()
-  --   require('dap-go').setup()
-  -- end }
+  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
+  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+  use { 'lewis6991/impatient.nvim' }
+  use { 'dstein64/vim-startuptime' }
   use { 'github/copilot.vim' }
   use { 'nvim-treesitter/nvim-treesitter' }
-  use { 'junegunn/fzf.vim' }
-  use { 'junegunn/fzf', run = vim.fn['fzf#install'] }
+  use { 'ibhagwan/fzf-lua' }
   use { 'vim-test/vim-test', ft = { 'go', 'rust' } }
   use { 'tpope/vim-abolish' }
   use { 'tpope/vim-surround' }
@@ -34,25 +33,9 @@ require('packer').startup(function(use)
   use { 'martskins/vim-cargo-search', ft = { 'rust' } }
   use { 'jparise/vim-graphql', ft = { 'graphql' } }
   use { 'cespare/vim-toml', ft = { 'toml' } }
+  use { 'tyru/open-browser-github.vim', requires = { 'tyru/open-browser.vim' } }
 
   use { 'ellisonleao/gruvbox.nvim', config = function()
     require('gruvbox').load()
   end }
-
-  -- use { 'chriskempson/base16-vim', config = function()
-  --   vim.cmd [[
-  --     let $BAT_THEME = 'zenburn'
-  --     colorscheme base16-gruvbox-dark-hard
-  --     hi Normal                           ctermbg=black guibg=#101010
-  --     hi LspDiagnosticsDefaultError       ctermbg=red guifg=red
-  --     hi LspDiagnosticsDefaultWarning     ctermbg=166 guifg=orange
-  --     hi LspDiagnosticsUnderlineError     gui=underline
-  --     hi LspDiagnosticsUnderlineWarning   gui=underline
-  --     hi LspReferenceText                 ctermbg=magenta guibg=#383838
-  --     hi LspReferenceRead                 ctermbg=magenta guibg=#383838
-  --     hi LspReferenceWrite                ctermbg=magenta guibg=#383838
-  --     hi ExtraWhitespace                  ctermbg=red
-  --     hi link mkdLineBreak                Pmenu
-  --   ]]
-  -- end }
 end)

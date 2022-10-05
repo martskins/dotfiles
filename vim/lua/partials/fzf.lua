@@ -1,7 +1,19 @@
 local map = vim.api.nvim_set_keymap
 
-map('i', '<c-x><c-k>', '<plug>(fzf-complete-word)', {})
-map('i', '<c-x><c-f>', '<plug>(fzf-complete-path)', {})
-map('i', '<c-x><c-l>', '<plug>(fzf-complete-line)', {})
-map('n', '<leader><tab>', '<plug>(fzf-maps-n)', {})
-map('n', '<c-p>', ':Files<CR>', {})
+-- require('fzf-lua').setup {
+--   grep_project = {
+--     fzf_opts = {
+--       ["--nth"] = false
+--     }
+--   },
+--   lines = {
+--     fzf_opts = {
+--       ["--nth"] = false
+--     }
+--   }
+-- }
+
+map('n', '<c-p>', ':FzfLua files<CR>', {})
+map('n', '<c-f>', ':FzfLua grep<CR>', {})
+-- map('n', '<c-f>',
+--   ':lua require("fzf-lua").grep_project({ fzf_opts = { ["--nth"] = false }, search = "" })<Left><Left><Left><Left>', {})
