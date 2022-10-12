@@ -110,7 +110,7 @@
 # Font configuration
 font:
   normal:
-    family: Source Code Pro
+    family: FiraCode Nerd Font Mono
 #font:
   # Normal (roman) font face
   #normal:

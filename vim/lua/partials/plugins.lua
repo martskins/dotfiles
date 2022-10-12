@@ -1,6 +1,20 @@
 require('packer').startup(function(use)
   use { 'wbthomason/packer.nvim' }
 
+  use { 'jose-elias-alvarez/null-ls.nvim',
+    config = function()
+      require("null-ls").setup({
+        sources = {
+          require("null-ls").builtins.formatting.prettier,
+          require("null-ls").builtins.diagnostics.eslint,
+        },
+      })
+    end,
+    requires = {
+      'neovim/nvim-lspconfig',
+      'nvim-lua/plenary.nvim',
+    },
+  }
   use { 'lewis6991/impatient.nvim' }
   use { 'dstein64/vim-startuptime' }
   use { 'github/copilot.vim' }
@@ -14,7 +28,8 @@ require('packer').startup(function(use)
   use { 'tpope/vim-projectionist' }
   use { 'tpope/vim-fugitive' }
   use { 'neovim/nvim-lspconfig' }
-  use { 'preservim/nerdtree' }
+  -- use { 'preservim/nerdtree' }
+  use { 'nvim-tree/nvim-tree.lua', requires = { 'nvim-tree/nvim-web-devicons' } }
   use { 'hrsh7th/vim-vsnip-integ' }
   use { 'hrsh7th/vim-vsnip' }
   use { 'hrsh7th/nvim-cmp',

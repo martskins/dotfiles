@@ -140,7 +140,7 @@ local filetypes_overrides = {
   clangd = { 'c', 'cpp', 'objc', 'objcpp' },
 }
 
-local servers = { "pyright", "rust_analyzer", "tsserver", "gopls", "sumneko_lua", "clangd", "yamlls", "terraformls",
+local servers = { "pyright", "rust_analyzer", "gopls", "sumneko_lua", "clangd", "yamlls", "terraformls",
   "hls", "vimls", "graphql", "bufls" }
 for _, lsp in ipairs(servers) do
   local settings = {}
@@ -166,3 +166,10 @@ for _, lsp in ipairs(servers) do
 
   nvim_lsp[lsp].setup(setup)
 end
+
+nvim_lsp.tsserver.setup {
+  on_attach = function(client, _)
+    client.server_capabilities.documentFormattingProvider = false
+    vim.cmd('autocmd BufWritePre <buffer> lua vim.lsp.buf.format()')
+  end
+}
