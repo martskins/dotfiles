@@ -168,8 +168,9 @@ for _, lsp in ipairs(servers) do
 end
 
 nvim_lsp.tsserver.setup {
-  on_attach = function(client, _)
+  on_attach = function(client, bufnr)
     client.server_capabilities.documentFormattingProvider = false
+    on_attach(client, bufnr)
     vim.cmd('autocmd BufWritePre <buffer> lua vim.lsp.buf.format()')
   end
 }

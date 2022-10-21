@@ -19,6 +19,7 @@ require('packer').startup(function(use)
   use { 'dstein64/vim-startuptime' }
   use { 'github/copilot.vim' }
   use { 'nvim-treesitter/nvim-treesitter' }
+  use { 'nvim-treesitter/playground' }
   use { 'ibhagwan/fzf-lua' }
   use { 'vim-test/vim-test', ft = { 'go', 'rust' } }
   use { 'tpope/vim-abolish' }
@@ -27,8 +28,11 @@ require('packer').startup(function(use)
   use { 'tpope/vim-repeat' }
   use { 'tpope/vim-projectionist' }
   use { 'tpope/vim-fugitive' }
-  use { 'neovim/nvim-lspconfig' }
-  -- use { 'preservim/nerdtree' }
+  use { 'neovim/nvim-lspconfig', config = function()
+    vim.api.nvim_exec([[
+      hi LspReferenceText guibg=grey guifg=yellow
+    ]], false)
+  end }
   use { 'nvim-tree/nvim-tree.lua', requires = { 'nvim-tree/nvim-web-devicons' } }
   use { 'hrsh7th/vim-vsnip-integ' }
   use { 'hrsh7th/vim-vsnip' }
