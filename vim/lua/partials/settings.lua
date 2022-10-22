@@ -43,6 +43,7 @@ o.termguicolors = true
 o.background = 'dark'
 o.foldenable = false
 o.cmdheight = 1
+o.cursorline = 1
 
 local wo = vim.wo
 wo.number = true

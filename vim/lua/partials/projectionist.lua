@@ -7,8 +7,10 @@ vim.api.nvim_exec([[
     let args = {}
     let args['*.go'] =                  { 'alternate': '{}_test.go' }
     let args['*_test.go'] =             { 'alternate': '{}.go' }
-    let args['*.cpp'] =                 { 'alternate': '{}.h' }
-    let args['*.h'] =                   { 'alternate': '{}.cpp' }
+    let args['*.cpp'] =         { 'alternate': '{}.hpp' }
+    let args['*.hpp'] =           { 'alternate': '{}.cpp' }
+    let args['*.h'] =           { 'alternate': '{}.c' }
+    let args['*.c'] =           { 'alternate': '{}.h' }
     let args['*.js'] =                  { 'alternate': '{}.spec.js' }
     let args['*.spec.js'] =             { 'alternate': '{}.js' }
     let args['dev-aws/*'] =             { 'alternate': 'prod-aws/{}' }

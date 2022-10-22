@@ -1,3 +1,15 @@
+_G.__luacache_config = {
+  chunks = {
+    enable = true,
+    path = vim.fn.stdpath('cache')..'/luacache_chunks',
+  },
+  modpaths = {
+    enable = true,
+    path = vim.fn.stdpath('cache')..'/luacache_modpaths',
+  }
+}
+require('impatient')
+
 require('packer').startup(function(use)
   use { 'wbthomason/packer.nvim' }
 
@@ -33,7 +45,9 @@ require('packer').startup(function(use)
       hi LspReferenceText guibg=grey guifg=yellow
     ]], false)
   end }
-  use { 'nvim-tree/nvim-tree.lua', requires = { 'nvim-tree/nvim-web-devicons' } }
+  use { 'nvim-tree/nvim-tree.lua',
+    requires = { 'nvim-tree/nvim-web-devicons' },
+  }
   use { 'hrsh7th/vim-vsnip-integ' }
   use { 'hrsh7th/vim-vsnip' }
   use { 'hrsh7th/nvim-cmp',
@@ -53,6 +67,9 @@ require('packer').startup(function(use)
   use { 'tyru/open-browser-github.vim', requires = { 'tyru/open-browser.vim' } }
 
   use { 'ellisonleao/gruvbox.nvim', config = function()
+    require('gruvbox').setup({
+      italic = false
+    })
     require('gruvbox').load()
   end }
 end)
