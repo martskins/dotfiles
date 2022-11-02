@@ -1,11 +1,11 @@
 _G.__luacache_config = {
   chunks = {
     enable = true,
-    path = vim.fn.stdpath('cache')..'/luacache_chunks',
+    path = vim.fn.stdpath('cache') .. '/luacache_chunks',
   },
   modpaths = {
     enable = true,
-    path = vim.fn.stdpath('cache')..'/luacache_modpaths',
+    path = vim.fn.stdpath('cache') .. '/luacache_modpaths',
   }
 }
 require('impatient')
@@ -13,20 +13,7 @@ require('impatient')
 require('packer').startup(function(use)
   use { 'wbthomason/packer.nvim' }
 
-  use { 'jose-elias-alvarez/null-ls.nvim',
-    config = function()
-      require("null-ls").setup({
-        sources = {
-          require("null-ls").builtins.formatting.prettier,
-          require("null-ls").builtins.diagnostics.eslint,
-        },
-      })
-    end,
-    requires = {
-      'neovim/nvim-lspconfig',
-      'nvim-lua/plenary.nvim',
-    },
-  }
+  use { 'mhartington/formatter.nvim' }
   use { 'lewis6991/impatient.nvim' }
   use { 'dstein64/vim-startuptime' }
   use { 'github/copilot.vim' }
@@ -55,6 +42,7 @@ require('packer').startup(function(use)
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-vsnip',
+      'hrsh7th/cmp-buffer',
     }
   }
   use { 'schickling/vim-bufonly' }

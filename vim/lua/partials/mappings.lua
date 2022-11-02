@@ -23,8 +23,10 @@ map('n', '<LeftMouse>', '<NOP>', { noremap = true })
 map('v', '<leader>pj', ':!python -m json.tool<CR>', { noremap = true })
 map('n', ']p', ':pu<CR>', { silent = true })
 map('n', '[p', ':pu!<CR>', { silent = true })
-map('n', '<leader>tt', ':TestNearest<cr>', {})
 map('t', '<C-o>', '<C-\\><C-n>', {})
+map('n', '<leader>tt', ':TestNearest<cr>', {})
+map('n', '<leader>tT', ':TestFile<cr>', {})
+map('n', '<leader>ta', ':TestSuite<cr>', {})
 
 vim.api.nvim_exec([[
   function! SynGroup()

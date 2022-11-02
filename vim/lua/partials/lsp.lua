@@ -37,6 +37,20 @@ local function to_string(tbl)
   end
 end
 
+function GoOrgImports(wait_ms)
+  local params = vim.lsp.util.make_range_params()
+  params.context = { only = { "source.organizeImports" } }
+  local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, wait_ms)
+  for cid, res in pairs(result or {}) do
+    for _, r in pairs(res.result or {}) do
+      if r.edit then
+        local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or "utf-16"
+        vim.lsp.util.apply_workspace_edit(r.edit, enc)
+      end
+    end
+  end
+end
+
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
 
@@ -68,12 +82,17 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   buf_set_keymap('n', 'Q', '<cmd>lua vim.diagnostic.setloclist({open_loclist = true, workspace = true})<CR>', opts)
 
-  if client.supports_method 'textDocument/formatting' then
-    buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", opts)
-    vim.api.nvim_command('autocmd BufWritePre <buffer> lua vim.lsp.buf.format(nil, 1000)')
-  elseif client.supports_method 'textDocument/rangeFormatting' then
-    buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
-  end
+
+  vim.api.nvim_command('autocmd BufWritePost <buffer> FormatWrite')
+  -- if client.supports_method 'textDocument/formatting' then
+  --   buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", opts)
+  --   if vim.bo.filetype == "go" then
+  --     vim.api.nvim_command('autocmd BufWritePre <buffer> lua GoOrgImports(1000)')
+  --   end
+  --   vim.api.nvim_command('autocmd BufWritePre <buffer> lua vim.lsp.buf.format(nil, 1000)')
+  -- elseif client.supports_method 'textDocument/rangeFormatting' then
+  --   buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
+  -- end
 
   client.config.flags.allow_incremental_sync = true
 end
@@ -142,7 +161,7 @@ local filetypes_overrides = {
 }
 
 local servers = { "pyright", "rust_analyzer", "gopls", "sumneko_lua", "clangd", "yamlls", "terraformls",
-  "hls", "vimls", "graphql", "bufls" }
+  "hls", "vimls", "graphql", "bufls", "tsserver" }
 for _, lsp in ipairs(servers) do
   local settings = {}
   if settings_overrides[lsp] then
@@ -168,10 +187,11 @@ for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup(setup)
 end
 
-nvim_lsp.tsserver.setup {
-  on_attach = function(client, bufnr)
-    client.server_capabilities.documentFormattingProvider = false
-    on_attach(client, bufnr)
-    vim.cmd('autocmd BufWritePre <buffer> lua vim.lsp.buf.format()')
-  end
+require('formatter').setup {
+  filetype = {
+    go = { require('formatter.filetypes.go').goimports },
+    rust = { require('formatter.filetypes.rust').rust_analyzer },
+    javascript = { require('formatter.filetypes.javascript').prettier },
+    typescript = { require('formatter.filetypes.typescript').prettier },
+  }
 }

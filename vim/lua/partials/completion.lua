@@ -2,14 +2,17 @@ local feedkey = function(key, mode)
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
+local compare = require('cmp.config.compare')
 local cmp = require('cmp')
 cmp.setup({
+  preselect = cmp.PreselectMode.None,
   formatting = {
     format = function(entry, vim_item)
       vim_item.menu = ({
         buffer = "[Buffer]",
         nvim_lsp = "[LSP]",
-        luasnip = "[LuaSnip]", vsnip = "[VSnip]",
+        luasnip = "[LuaSnip]",
+        vsnip = "[VSnip]",
         nvim_lua = "[Lua]",
         latex_symbols = "[Latex]",
       })[entry.source.name]
@@ -21,7 +24,15 @@ cmp.setup({
   },
   sorting = {
     comparators = {
-      require('cmp.config.compare').order
+      compare.exact,
+      compare.offset,
+      compare.score,
+      compare.recently_used,
+      compare.locality,
+      compare.kind,
+      compare.sort_text,
+      compare.length,
+      compare.order,
     }
   },
   snippet = {
@@ -49,5 +60,5 @@ cmp.setup({
     { name = 'vsnip' },
     { name = 'nvim_lsp' },
     { name = 'path' },
-  }, { name = 'buffer' }),
+    { name = 'buffer' } }),
 })
