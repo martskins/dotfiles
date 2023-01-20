@@ -69,6 +69,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   buf_set_keymap('v', 'ga', '<cmd>lua vim.lsp.buf.range_code_action()<CR>', opts)
+  buf_set_keymap('n', 'gl', '<cmd>lua vim.lsp.codelens.run()<CR>', opts)
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   buf_set_keymap('n', 'E', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
   buf_set_keymap('n', '<C-s><C-s>', '<cmd>lua vim.lsp.buf.document_highlight()<CR>', opts)
@@ -83,7 +84,11 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'Q', '<cmd>lua vim.diagnostic.setloclist({open_loclist = true, workspace = true})<CR>', opts)
 
 
+
   vim.api.nvim_command('autocmd BufWritePost <buffer> FormatWrite')
+  if client.supports_method 'textDocument/codeLens' then
+    vim.api.nvim_command('autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.codelens.refresh()')
+  end
   -- if client.supports_method 'textDocument/formatting' then
   --   buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", opts)
   --   if vim.bo.filetype == "go" then
@@ -149,6 +154,15 @@ local settings_overrides = {
         assignVariableTypes = true,
         compositeLiteralFields = true,
       },
+      codelenses = {
+        generate = true,
+        regenerate_cgo = true,
+        tidy = true,
+        test = false,
+        upgrade_dependency = true,
+        vendor = true,
+        run_govulncheck = true,
+      },
     }
   },
   sumneko_lua = {
@@ -193,5 +207,7 @@ require('formatter').setup {
     rust = { require('formatter.filetypes.rust').rust_analyzer },
     javascript = { require('formatter.filetypes.javascript').prettier },
     typescript = { require('formatter.filetypes.typescript').prettier },
+    javascriptreact = { require('formatter.filetypes.javascript').prettier },
+    typescriptreact = { require('formatter.filetypes.typescript').prettier },
   }
 }

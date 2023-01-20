@@ -53,11 +53,11 @@ require('packer').startup(function(use)
   use { 'jparise/vim-graphql', ft = { 'graphql' } }
   use { 'cespare/vim-toml', ft = { 'toml' } }
   use { 'tyru/open-browser-github.vim', requires = { 'tyru/open-browser.vim' } }
-
   use { 'ellisonleao/gruvbox.nvim', config = function()
     require('gruvbox').setup({
       italic = false
     })
     require('gruvbox').load()
   end }
+  use { 'johejo/gomod.vim' }
 end)
