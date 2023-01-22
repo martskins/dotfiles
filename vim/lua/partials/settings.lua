@@ -50,7 +50,6 @@ wo.number = true
 wo.relativenumber = true
 wo.signcolumn = 'yes'
 
-
 -- disable unnecessary builtin plugins
 g.loaded_gzip = 1
 g.loaded_zip = 1

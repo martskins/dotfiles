@@ -11,15 +11,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require('impatient')
-
 require('partials/plugins')
 require('partials/settings')
-require('partials/fzf')
-require('partials/nerdtree')
 require('partials/mappings')
-require('partials/lsp')
-require('partials/projectionist')
-require('partials/completion')
-require('partials/tagbar')
-require('partials/treesitter')

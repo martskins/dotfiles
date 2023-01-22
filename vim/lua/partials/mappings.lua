@@ -11,12 +11,10 @@ map('n', '<Left>', ':cprevious<cr>', {})
 map('n', '<tab>', ':bnext<CR>', {})
 map('n', '<s-tab>', ':bprevious<CR>', {})
 map('n', '<leader>ba', ':bufdo bd<CR>', {})
-map('n', '<leader>bo', ':BufOnly<CR>', { silent = true })
 map('n', '<leader>x', ':%!xxd<CR>', {})
 map('n', '<c-s><c-v>', ':vsplit<CR>', {})
 map('n', '<c-s><c-h>', ':split<CR>', {})
 map('n', '<space><space>', '<C-^>', {})
-map('n', '<C-l>', ':FzfLua buffers<CR>', {})
 map('i', '<C-c>', '<ESC>', { noremap = true })
 map('i', '<LeftMouse>', '<NOP>', { noremap = true })
 map('n', '<LeftMouse>', '<NOP>', { noremap = true })
@@ -24,9 +22,6 @@ map('v', '<leader>pj', ':!python -m json.tool<CR>', { noremap = true })
 map('n', ']p', ':pu<CR>', { silent = true })
 map('n', '[p', ':pu!<CR>', { silent = true })
 map('t', '<C-o>', '<C-\\><C-n>', {})
-map('n', '<leader>tt', ':TestNearest<cr>', {})
-map('n', '<leader>tT', ':TestFile<cr>', {})
-map('n', '<leader>ta', ':TestSuite<cr>', {})
 
 vim.api.nvim_exec([[
   function! SynGroup()
@@ -50,7 +45,7 @@ vim.api.nvim_exec([[
   endfunction
 
   command! -nargs=+ GoAddTags execute GoAddTags(<f-args>)
-  command! PS PackerSync
+  command! PS Lazy sync
 
   " the macro in f converts a struct field to a cli.Flag
   let @f='0wwcw0wPli 0wi&cli.l~eliFlag{Name:lli"ebyweli"bcrkf"li, EnvVars:[]string{"pbcrsgUweli"}, Destination: &cfg.pbeli, Required: true},'

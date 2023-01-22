@@ -1,41 +1,77 @@
+vim.g.mapleader = ',' -- setting leader before lazy so mappings are correct
+
+local map = vim.api.nvim_set_keymap
 require("lazy").setup({
-  'mhartington/formatter.nvim',
-  'lewis6991/impatient.nvim',
-  'dstein64/vim-startuptime',
-  'github/copilot.vim',
+  { 'mhartington/formatter.nvim', event = { 'VeryLazy' }},
+	{ 'dstein64/vim-startuptime', cmd = 'StartupTime' },
+  { 'github/copilot.vim', event = { 'VeryLazy' }},
   { "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
-    config = function()
-      require("nvim-treesitter.configs").setup {
-        ensure_installed = { "c", "lua", "rust", "go", "vim" },
-        highlight = { enable = true, }
-      }
-    end
+    config = require('partials/treesitter').config,
+    event = { 'BufEnter' },
   },
-  'ibhagwan/fzf-lua',
-  { 'vim-test/vim-test', ft = { 'go', 'rust' }},
-  'tpope/vim-abolish',
-  'tpope/vim-surround',
-  'tpope/vim-commentary',
-  'tpope/vim-repeat',
-  'tpope/vim-projectionist',
-  'tpope/vim-fugitive',
-  { 'neovim/nvim-lspconfig', config = function()
-    vim.api.nvim_exec([[
-      hi LspReferenceText guibg=grey guifg=yellow
-    ]], false)
-  end },
-  'nvim-tree/nvim-tree.lua',
-    'nvim-tree/nvim-web-devicons',
-  'hrsh7th/vim-vsnip-integ',
-  'hrsh7th/vim-vsnip',
-  'hrsh7th/nvim-cmp',
-    'hrsh7th/cmp-nvim-lsp',
-    'hrsh7th/cmp-path',
-    'hrsh7th/cmp-vsnip',
-    'hrsh7th/cmp-buffer',
-  'schickling/vim-bufonly',
-  'majutsushi/tagbar',
+  { 'ibhagwan/fzf-lua',
+    init = require('partials/fzf').init,
+    config = require('partials/fzf').config,
+    cmd = { 'FzfLua' },
+  },
+  { 'vim-test/vim-test',
+    ft = { 'go', 'rust' },
+    init = function()
+      map('n', '<leader>tt', ':TestNearest<cr>', {})
+      map('n', '<leader>tT', ':TestFile<cr>', {})
+      map('n', '<leader>ta', ':TestSuite<cr>', {})
+    end,
+  },
+	{ 'tpope/vim-abolish', event = { 'VeryLazy' } },
+  { 'tpope/vim-surround', event = { 'VeryLazy' } },
+  { 'tpope/vim-commentary', event = { 'VeryLazy' } },
+  { 'tpope/vim-repeat', event = { 'VeryLazy' } },
+	{ 'tpope/vim-projectionist',
+    init = require('partials/projectionist').init,
+    config = require('partials/projectionist').config,
+		event = { 'VeryLazy' },
+  },
+  { 'tpope/vim-fugitive', event = { 'VeryLazy' } },
+  { 'neovim/nvim-lspconfig',
+    config = function()
+      require('partials/lsp')
+
+      vim.api.nvim_exec([[
+        hi LspReferenceText guibg=grey guifg=yellow
+      ]], false)
+    end,
+    event = { 'VeryLazy' },
+  },
+	{ 'nvim-tree/nvim-tree.lua',
+		dependencies = { 'nvim-tree/nvim-web-devicons' },
+		init = require('partials/nerdtree').init,
+		config = require('partials/nerdtree').config,
+		cmd = { 'NvimTreeToggle', 'NvimTreeOpen', 'NvimTreeFindFile' },
+	},
+  { 'hrsh7th/vim-vsnip-integ', event = { 'VeryLazy' }},
+  { 'hrsh7th/vim-vsnip', event = { 'VeryLazy' }},
+	{ 'hrsh7th/nvim-cmp',
+    dependencies = {
+      'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-path',
+      'hrsh7th/cmp-vsnip',
+      'hrsh7th/cmp-buffer',
+    },
+    config = require('partials/completion').config,
+    event = { 'VeryLazy' }
+  },
+  { 'schickling/vim-bufonly',
+    init = function()
+      map('n', '<leader>bo', ':BufOnly<CR>', { silent = true })
+    end,
+    cmd = { 'BufOnly' }
+  },
+  { 'majutsushi/tagbar',
+    init = require('partials/tagbar').init,
+    config = require('partials/tagbar').config,
+    cmd = { 'TagbarToggle' },
+  },
   'airblade/vim-rooter',
   { 'johejo/gomod.vim', ft = { 'gomod' }},
   { 'rhysd/vim-go-impl', ft = { 'go' }},
@@ -48,4 +84,8 @@ require("lazy").setup({
     })
     require('gruvbox').load()
   end },
+}, {
+	defaults = {
+		lazy = true
+	}
 })
