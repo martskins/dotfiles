@@ -4,7 +4,7 @@ local map = vim.api.nvim_set_keymap
 require("lazy").setup({
   { 'mhartington/formatter.nvim', event = { 'VeryLazy' }},
 	{ 'dstein64/vim-startuptime', cmd = 'StartupTime' },
-  { 'github/copilot.vim', event = { 'VeryLazy' }},
+  { 'github/copilot.vim', event = { 'VeryLazy' }, },
   { "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     config = require('partials/treesitter').config,
@@ -48,6 +48,7 @@ require("lazy").setup({
 		init = require('partials/nerdtree').init,
 		config = require('partials/nerdtree').config,
 		cmd = { 'NvimTreeToggle', 'NvimTreeOpen', 'NvimTreeFindFile' },
+    -- commit = 'ba1778e061f25814bc5940be886a7f41d7d7736e',
 	},
   { 'hrsh7th/vim-vsnip-integ', event = { 'VeryLazy' }},
   { 'hrsh7th/vim-vsnip', event = { 'VeryLazy' }},

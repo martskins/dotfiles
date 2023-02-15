@@ -144,6 +144,11 @@ capabilities.offsetEncodings = "utf-8"
 
 local nvim_lsp = require('lspconfig')
 local settings_overrides = {
+  lua_ls = {
+    Lua = {
+      telemetry = { enable = false },
+    },
+  },
   gopls = {
     gopls = {
       ['local'] = get_current_gomod(),
@@ -165,16 +170,13 @@ local settings_overrides = {
       },
     }
   },
-  sumneko_lua = {
-    Lua = { diagnostics = { globals = { 'vim' } } }
-  },
 }
 
 local filetypes_overrides = {
   clangd = { 'c', 'cpp', 'objc', 'objcpp' },
 }
 
-local servers = { "pyright", "rust_analyzer", "gopls", "sumneko_lua", "clangd", "yamlls", "terraformls",
+local servers = { "pyright", "rust_analyzer", "gopls", "lua_ls", "clangd", "yamlls", "terraformls",
   "hls", "vimls", "graphql", "bufls", "tsserver" }
 for _, lsp in ipairs(servers) do
   local settings = {}
