@@ -2,7 +2,27 @@ vim.g.mapleader = ',' -- setting leader before lazy so mappings are correct
 
 local map = vim.api.nvim_set_keymap
 require("lazy").setup({
-  { 'mhartington/formatter.nvim', event = { 'VeryLazy' }},
+  { 'mhartington/formatter.nvim',
+    event = { 'VeryLazy' },
+    cmd = { 'FormatWrite' },
+    config = function()
+      local group = vim.api.nvim_create_augroup('FormatAutogroup', { clear = true })
+      vim.api.nvim_create_autocmd('BufWritePost', {
+        group = group,
+        command = 'FormatWrite'
+      })
+      require('formatter').setup {
+        filetype = {
+          go = { require('formatter.filetypes.go').goimports },
+          rust = { require('formatter.filetypes.rust').rust_analyzer },
+          javascript = { require('formatter.filetypes.javascript').prettier },
+          typescript = { require('formatter.filetypes.typescript').prettier },
+          javascriptreact = { require('formatter.filetypes.javascript').prettier },
+          typescriptreact = { require('formatter.filetypes.typescript').prettier },
+        }
+      }
+    end
+  },
 	{ 'dstein64/vim-startuptime', cmd = 'StartupTime' },
   { 'github/copilot.vim', event = { 'VeryLazy' }, },
   { "nvim-treesitter/nvim-treesitter",

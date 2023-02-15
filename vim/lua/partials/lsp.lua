@@ -85,7 +85,6 @@ local on_attach = function(client, bufnr)
 
 
 
-  vim.api.nvim_command('autocmd BufWritePost <buffer> FormatWrite')
   if client.supports_method 'textDocument/codeLens' then
     vim.api.nvim_command('autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.codelens.refresh()')
   end
@@ -202,14 +201,3 @@ for _, lsp in ipairs(servers) do
 
   nvim_lsp[lsp].setup(setup)
 end
-
-require('formatter').setup {
-  filetype = {
-    go = { require('formatter.filetypes.go').goimports },
-    rust = { require('formatter.filetypes.rust').rust_analyzer },
-    javascript = { require('formatter.filetypes.javascript').prettier },
-    typescript = { require('formatter.filetypes.typescript').prettier },
-    javascriptreact = { require('formatter.filetypes.javascript').prettier },
-    typescriptreact = { require('formatter.filetypes.typescript').prettier },
-  }
-}
