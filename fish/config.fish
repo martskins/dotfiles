@@ -3,10 +3,11 @@ jump shell fish | source
 alias lg "lazygit"
 alias kp "kubectl --context prod-aws --namespace"
 alias kd "kubectl --context dev-merit --namespace"
-alias gsmp "git checkout master; git pull"
+alias gsmp "git checkout master && git pull || git checkout main && git pull"
 alias gsc "git switch -c "
 alias gs "git switch "
-alias docker podman
+alias docker colima
+export DOCKER_HOST="unix:///Users/martin/.colima/default/docker.sock"
 
 # eval (minikube docker-env)
 
@@ -15,3 +16,5 @@ set -q GHCUP_INSTALL_BASE_PREFIX[1]; or set GHCUP_INSTALL_BASE_PREFIX $HOME ; se
 export NVM_DIR="$HOME/.nvm"
 [ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+status --is-interactive; and rbenv init - fish | source
