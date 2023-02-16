@@ -1,56 +1,3 @@
-local function table_print(tt, indent, done)
-  done = done or {}
-  indent = indent or 0
-  print(type(tt))
-  if type(tt) == "table" then
-    local sb = {}
-    for key, value in pairs(tt) do
-      table.insert(sb, string.rep(" ", indent)) -- indent it
-      if type(value) == "table" and not done[value] then
-        done[value] = true
-        table.insert(sb, key .. " = {\n");
-        table.insert(sb, table_print(value, indent + 2, done))
-        table.insert(sb, string.rep(" ", indent)) -- indent it
-        table.insert(sb, "}\n");
-      elseif "number" == type(key) then
-        table.insert(sb, string.format("\"%s\"\n", tostring(value)))
-      else
-        table.insert(sb, string.format(
-          "%s = \"%s\"\n", tostring(key), tostring(value)))
-      end
-    end
-    return table.concat(sb)
-  else
-    return tt .. "\n"
-  end
-end
-
-local function to_string(tbl)
-  if "nil" == type(tbl) then
-    return tostring(nil)
-  elseif "table" == type(tbl) then
-    return table_print(tbl)
-  elseif "string" == type(tbl) then
-    return tbl
-  else
-    return tostring(tbl)
-  end
-end
-
-function GoOrgImports(wait_ms)
-  local params = vim.lsp.util.make_range_params()
-  params.context = { only = { "source.organizeImports" } }
-  local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, wait_ms)
-  for cid, res in pairs(result or {}) do
-    for _, r in pairs(res.result or {}) do
-      if r.edit then
-        local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or "utf-16"
-        vim.lsp.util.apply_workspace_edit(r.edit, enc)
-      end
-    end
-  end
-end
-
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
 
@@ -88,15 +35,6 @@ local on_attach = function(client, bufnr)
   if client.supports_method 'textDocument/codeLens' then
     vim.api.nvim_command('autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.codelens.refresh()')
   end
-  -- if client.supports_method 'textDocument/formatting' then
-  --   buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", opts)
-  --   if vim.bo.filetype == "go" then
-  --     vim.api.nvim_command('autocmd BufWritePre <buffer> lua GoOrgImports(1000)')
-  --   end
-  --   vim.api.nvim_command('autocmd BufWritePre <buffer> lua vim.lsp.buf.format(nil, 1000)')
-  -- elseif client.supports_method 'textDocument/rangeFormatting' then
-  --   buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
-  -- end
 
   client.config.flags.allow_incremental_sync = true
 end
@@ -122,8 +60,7 @@ local filter_quickfix_with_callback = function(callback)
   end
 end
 vim.lsp.handlers['textDocument/references'] = vim.lsp.with(filter_quickfix_with_callback(original_on_references), {})
-vim.lsp.handlers['textDocument/implementation'] = vim.lsp.with(filter_quickfix_with_callback(original_on_implementation)
-  , {})
+vim.lsp.handlers['textDocument/implementation'] = vim.lsp.with(filter_quickfix_with_callback(original_on_implementation) , {})
 
 local get_current_gomod = function()
   local file = io.open("go.mod", "r")
@@ -146,6 +83,7 @@ local settings_overrides = {
   lua_ls = {
     Lua = {
       telemetry = { enable = false },
+      diagnostics = { globals = {'vim'} },
     },
   },
   gopls = {

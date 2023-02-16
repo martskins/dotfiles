@@ -93,7 +93,7 @@ require("lazy").setup({
     config = require('partials/tagbar').config,
     cmd = { 'TagbarToggle' },
   },
-  'airblade/vim-rooter',
+  { 'airblade/vim-rooter', event = { 'VeryLazy' }},
   { 'johejo/gomod.vim', ft = { 'gomod' }},
   { 'rhysd/vim-go-impl', ft = { 'go' }},
   { 'martskins/vim-cargo-search', ft = { 'rust' }},
