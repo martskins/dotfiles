@@ -14,6 +14,7 @@ require("lazy").setup({
       require('formatter').setup {
         filetype = {
           go = { require('formatter.filetypes.go').goimports },
+          cpp = { require('formatter.filetypes.cpp').clangformat },
           rust = { require('formatter.filetypes.rust').rust_analyzer },
           javascript = { require('formatter.filetypes.javascript').prettier },
           typescript = { require('formatter.filetypes.typescript').prettier },
@@ -68,7 +69,6 @@ require("lazy").setup({
 		init = require('partials/nerdtree').init,
 		config = require('partials/nerdtree').config,
 		cmd = { 'NvimTreeToggle', 'NvimTreeOpen', 'NvimTreeFindFile' },
-    -- commit = 'ba1778e061f25814bc5940be886a7f41d7d7736e',
 	},
   { 'hrsh7th/vim-vsnip-integ', event = { 'VeryLazy' }},
   { 'hrsh7th/vim-vsnip', event = { 'VeryLazy' }},
@@ -103,7 +103,8 @@ require("lazy").setup({
     require('gruvbox').setup({
       italic = false
     })
-    require('gruvbox').load()
+    -- require('gruvbox').load()
+    vim.api.nvim_exec([[colorscheme quiet]], false)
   end },
 }, {
 	defaults = {

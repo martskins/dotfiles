@@ -3,11 +3,12 @@ jump shell fish | source
 alias lg "lazygit"
 alias kp "kubectl --context prod-aws --namespace"
 alias kd "kubectl --context dev-merit --namespace"
-alias gsmp "git checkout master && git pull || git checkout main && git pull"
+alias gsmp "git checkout (git remote show origin | sed -n '/HEAD branch/s/.*: //p') && git pull"
 alias gsc "git switch -c "
 alias gs "git switch "
-alias docker colima
+# alias docker colima
 export DOCKER_HOST="unix:///Users/martin/.colima/default/docker.sock"
+export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="/var/run/docker.sock"
 
 # eval (minikube docker-env)
 
