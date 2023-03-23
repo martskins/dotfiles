@@ -6,7 +6,6 @@ local on_attach = function(client, bufnr)
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   local opts = { noremap = true, silent = true }
-  buf_set_keymap('n', '<leader>sd', '<Cmd>lua vim.diagnostic.setqflist()<CR>', opts)
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
   buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
@@ -111,10 +110,10 @@ local settings_overrides = {
 }
 
 local filetypes_overrides = {
-  clangd = { 'c', 'cpp', 'objc', 'objcpp' },
+  ccls = { 'c', 'cpp', 'objc', 'objcpp' },
 }
 
-local servers = { "pyright", "rust_analyzer", "gopls", "lua_ls", "clangd", "yamlls", "terraformls",
+local servers = { "pyright", "rust_analyzer", "gopls", "lua_ls", "ccls", "yamlls", "terraformls",
   "hls", "vimls", "graphql", "bufls", "tsserver" }
 for _, lsp in ipairs(servers) do
   local settings = {}

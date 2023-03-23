@@ -15,7 +15,16 @@ require("lazy").setup({
         filetype = {
           go = { require('formatter.filetypes.go').goimports },
           cpp = { require('formatter.filetypes.cpp').clangformat },
-          rust = { require('formatter.filetypes.rust').rust_analyzer },
+          c = { require('formatter.filetypes.cpp').clangformat },
+          rust = {
+            function()
+              return {
+                exe = "rustfmt",
+                args = {"--emit=stdout"},
+                stdin = true
+              }
+            end
+          },
           javascript = { require('formatter.filetypes.javascript').prettier },
           typescript = { require('formatter.filetypes.typescript').prettier },
           javascriptreact = { require('formatter.filetypes.javascript').prettier },
@@ -30,6 +39,7 @@ require("lazy").setup({
     build = ":TSUpdate",
     config = require('partials/treesitter').config,
     event = { 'BufEnter' },
+    enabled = true,
   },
   { 'ibhagwan/fzf-lua',
     init = require('partials/fzf').init,
@@ -59,7 +69,8 @@ require("lazy").setup({
       require('partials/lsp')
 
       vim.api.nvim_exec([[
-        hi LspReferenceText guibg=grey guifg=yellow
+        hi LspReferenceText guibg=grey guifg=red
+        hi QuickFixLine guibg=none
       ]], false)
     end,
     event = { 'VeryLazy' },
@@ -68,7 +79,7 @@ require("lazy").setup({
 		dependencies = { 'nvim-tree/nvim-web-devicons' },
 		init = require('partials/nerdtree').init,
 		config = require('partials/nerdtree').config,
-		cmd = { 'NvimTreeToggle', 'NvimTreeOpen', 'NvimTreeFindFile' },
+		event = { 'VeryLazy' },
 	},
   { 'hrsh7th/vim-vsnip-integ', event = { 'VeryLazy' }},
   { 'hrsh7th/vim-vsnip', event = { 'VeryLazy' }},
@@ -99,12 +110,19 @@ require("lazy").setup({
   { 'martskins/vim-cargo-search', ft = { 'rust' }},
   { 'jparise/vim-graphql', ft = { 'graphql' }},
   { 'cespare/vim-toml', ft = { 'toml' }},
+
   { 'ellisonleao/gruvbox.nvim', lazy = false, config = function()
     require('gruvbox').setup({
-      italic = false
+      italic = {
+        strings = false,
+        comments = false,
+        operators = false,
+        folds = false,
+      },
+      bold = false,
+      contrast = "high"
     })
-    -- require('gruvbox').load()
-    vim.api.nvim_exec([[colorscheme quiet]], false)
+    require('gruvbox').load()
   end },
 }, {
 	defaults = {

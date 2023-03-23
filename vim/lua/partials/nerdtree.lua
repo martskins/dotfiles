@@ -3,6 +3,10 @@ local module = {}
 function module.config()
   require('nvim-tree').setup {
     sort_by = "case_sensitive",
+    hijack_cursor = true,
+    diagnostics = {
+      enable = true,
+    },
     view = {
       adaptive_size = true,
       mappings = {
@@ -36,7 +40,7 @@ end
 function module.init()
   local map = vim.api.nvim_set_keymap
   map('n', '<C-n>', ':NvimTreeToggle<CR>', { silent = true })
-  map('n', '-', ':NvimTreeFindFile<CR>', { silent = true })
+  map('n', '-', ':NvimTreeFindFileToggle<CR>', { silent = true })
 end
 
 return module
