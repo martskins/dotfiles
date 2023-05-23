@@ -1,7 +1,6 @@
 local map = vim.api.nvim_set_keymap
 
 map('n', 'gev', ':e ~/.config/nvim/init.lua<CR>', { noremap = true })
-map('n', 'gsv', ':so ~/.config/nvim/init.lua<CR>', { noremap = true })
 map('n', '<C-h>', ':nohlsearch<C-R>=has(\'diff\')?\'<Bar>diffupdate\':\'\'<CR><CR><C-L>',
   { noremap = true, silent = true })
 map('n', '<Up>', ':cprevious<cr>', {})
@@ -66,23 +65,4 @@ vim.api.nvim_exec([[
   endfunction
   vnoremap <silent> / :<C-U>call RangeSearch('/')<CR>:if strlen(g:srchstr) > 0\|exec '/'.g:srchstr\|endif<CR>
   vnoremap <silent> ? :<C-U>call RangeSearch('?')<CR>:if strlen(g:srchstr) > 0\|exec '?'.g:srchstr\|endif<CR>
-
-  let g:colors = getcompletion('', 'color')
-  func! NextColors()
-      let l:colors_name = get(g:, 'colors_name', 'default')
-      let idx = index(g:colors, colors_name)
-      let l:new_colors = (idx + 1 >= len(g:colors) ? g:colors[0] : g:colors[idx + 1])
-      echom l:new_colors
-      return l:new_colors
-  endfunc
-  func! PrevColors()
-      let l:colors_name = get(g:, 'colors_name', 'default')
-      let idx = index(g:colors, colors_name)
-      let l:new_colors = (idx - 1 < 0 ? g:colors[-1] : g:colors[idx - 1])
-      echom l:new_colors
-      return l:new_colors
-  endfunc
-
-  nnoremap <C-]> :exe "colo " .. NextColors()<CR>
-  nnoremap <C-[> :exe "colo " .. PrevColors()<CR>
 ]], false)

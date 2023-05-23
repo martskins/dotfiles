@@ -113,8 +113,8 @@ local filetypes_overrides = {
   ccls = { 'c', 'cpp', 'objc', 'objcpp' },
 }
 
-local servers = { "pyright", "rust_analyzer", "gopls", "lua_ls", "ccls", "yamlls", "terraformls",
-  "hls", "vimls", "graphql", "bufls", "tsserver" }
+local servers = { "pyright", "rust_analyzer", "gopls", "lua_ls", "clangd", "yamlls", "terraformls",
+  "hls", "vimls", "graphql", "bufls", "tsserver", "zls" }
 for _, lsp in ipairs(servers) do
   local settings = {}
   if settings_overrides[lsp] then

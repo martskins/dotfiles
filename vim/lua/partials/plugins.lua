@@ -1,7 +1,7 @@
 vim.g.mapleader = ',' -- setting leader before lazy so mappings are correct
 
 local map = vim.api.nvim_set_keymap
-require("lazy").setup({
+return {
   { 'mhartington/formatter.nvim',
     event = { 'VeryLazy' },
     cmd = { 'FormatWrite' },
@@ -16,6 +16,7 @@ require("lazy").setup({
           go = { require('formatter.filetypes.go').goimports },
           cpp = { require('formatter.filetypes.cpp').clangformat },
           c = { require('formatter.filetypes.cpp').clangformat },
+          zig = { require('formatter.filetypes.zig').zigfmt },
           rust = {
             function()
               return {
@@ -34,7 +35,7 @@ require("lazy").setup({
     end
   },
 	{ 'dstein64/vim-startuptime', cmd = 'StartupTime' },
-  { 'github/copilot.vim', event = { 'VeryLazy' }, },
+  { 'github/copilot.vim', ft = { 'go', 'rust', 'zig' } },
   { "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     config = require('partials/treesitter').config,
@@ -52,6 +53,10 @@ require("lazy").setup({
       map('n', '<leader>tt', ':TestNearest<cr>', {})
       map('n', '<leader>tT', ':TestFile<cr>', {})
       map('n', '<leader>ta', ':TestSuite<cr>', {})
+      vim.api.nvim_exec([[
+        let test#strategy = "neovim"
+        let test#neovim#start_normal = 1
+      ]], false)
     end,
   },
 	{ 'tpope/vim-abolish', event = { 'VeryLazy' } },
@@ -63,6 +68,7 @@ require("lazy").setup({
     config = require('partials/projectionist').config,
 		event = { 'VeryLazy' },
   },
+  { 'tpope/vim-rhubarb', event = { 'VeryLazy' } },
   { 'tpope/vim-fugitive', event = { 'VeryLazy' } },
   { 'neovim/nvim-lspconfig',
     config = function()
@@ -73,13 +79,15 @@ require("lazy").setup({
         hi QuickFixLine guibg=none
       ]], false)
     end,
-    event = { 'VeryLazy' },
+    -- event = { 'VeryLazy' }, -- this one
+    lazy = false,
   },
 	{ 'nvim-tree/nvim-tree.lua',
 		dependencies = { 'nvim-tree/nvim-web-devicons' },
-		init = require('partials/nerdtree').init,
-		config = require('partials/nerdtree').config,
-		event = { 'VeryLazy' },
+		init = require('partials/nvim_tree').init,
+		config = require('partials/nvim_tree').config,
+		-- event = { 'VeryLazy' }, -- this one
+    lazy = false,
 	},
   { 'hrsh7th/vim-vsnip-integ', event = { 'VeryLazy' }},
   { 'hrsh7th/vim-vsnip', event = { 'VeryLazy' }},
@@ -91,7 +99,8 @@ require("lazy").setup({
       'hrsh7th/cmp-buffer',
     },
     config = require('partials/completion').config,
-    event = { 'VeryLazy' }
+    -- event = { 'VeryLazy' } -- this one
+    lazy = false,
   },
   { 'schickling/vim-bufonly',
     init = function()
@@ -110,7 +119,6 @@ require("lazy").setup({
   { 'martskins/vim-cargo-search', ft = { 'rust' }},
   { 'jparise/vim-graphql', ft = { 'graphql' }},
   { 'cespare/vim-toml', ft = { 'toml' }},
-
   { 'ellisonleao/gruvbox.nvim', lazy = false, config = function()
     require('gruvbox').setup({
       italic = {
@@ -124,8 +132,4 @@ require("lazy").setup({
     })
     require('gruvbox').load()
   end },
-}, {
-	defaults = {
-		lazy = true
-	}
-})
+}

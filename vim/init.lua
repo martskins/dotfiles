@@ -11,6 +11,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require('partials/plugins')
+require("lazy").setup("partials/plugins", { defaults = { lazy = true }})
 require('partials/settings')
 require('partials/mappings')
