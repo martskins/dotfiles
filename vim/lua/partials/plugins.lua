@@ -73,11 +73,6 @@ return {
   { 'neovim/nvim-lspconfig',
     config = function()
       require('partials/lsp')
-
-      vim.api.nvim_exec([[
-        hi LspReferenceText guibg=grey guifg=red
-        hi QuickFixLine guibg=none
-      ]], false)
     end,
     -- event = { 'VeryLazy' }, -- this one
     lazy = false,
@@ -119,17 +114,20 @@ return {
   { 'martskins/vim-cargo-search', ft = { 'rust' }},
   { 'jparise/vim-graphql', ft = { 'graphql' }},
   { 'cespare/vim-toml', ft = { 'toml' }},
-  { 'ellisonleao/gruvbox.nvim', lazy = false, config = function()
-    require('gruvbox').setup({
-      italic = {
-        strings = false,
-        comments = false,
-        operators = false,
-        folds = false,
-      },
-      bold = false,
-      contrast = "high"
-    })
-    require('gruvbox').load()
-  end },
+  { 'ellisonleao/gruvbox.nvim',
+    lazy = false,
+    config = function()
+      require('gruvbox').setup({
+        italic = {
+          strings = false,
+          comments = false,
+          operators = false,
+          folds = false,
+        },
+        bold = false,
+        contrast = "high"
+      })
+      require('gruvbox').load()
+    end
+  },
 }

@@ -37,6 +37,7 @@ local on_attach = function(client, bufnr)
   end
 
   client.config.flags.allow_incremental_sync = true
+  client.server_capabilities.semanticTokensProvider = nil
 end
 
 -- do not include test or mocks files in Go
@@ -95,6 +96,8 @@ local settings_overrides = {
       hints = {
         assignVariableTypes = true,
         compositeLiteralFields = true,
+        parameterNames = false,
+        functionTypeParameters = false,
       },
       codelenses = {
         generate = true,
