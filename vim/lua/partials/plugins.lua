@@ -2,6 +2,14 @@ vim.g.mapleader = ',' -- setting leader before lazy so mappings are correct
 
 local map = vim.api.nvim_set_keymap
 return {
+  {
+    'folke/trouble.nvim',
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    event = { 'VeryLazy' },
+    init = function()
+      map('n', 'T', ':TroubleToggle<cr>', {})
+    end
+  },
   { 'mhartington/formatter.nvim',
     event = { 'VeryLazy' },
     cmd = { 'FormatWrite' },
@@ -41,6 +49,9 @@ return {
     config = require('partials/treesitter').config,
     event = { 'BufEnter' },
     enabled = true,
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects'
+    }
   },
   { 'ibhagwan/fzf-lua',
     init = require('partials/fzf').init,

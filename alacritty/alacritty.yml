@@ -111,7 +111,7 @@
 font:
   normal:
     # family: Source Code Pro
-    family: Blex Mono Nerd Font
+    family: BlexMono Nerd Font Mono
 #font:
   # Normal (roman) font face
   #normal:
@@ -430,10 +430,10 @@ font:
 #   - (macOS) /bin/bash --login
 #   - (Linux/BSD) user login shell
 #   - (Windows) powershell
-#shell:
-#  program: /bin/bash
-#  args:
-#    - --login
+shell:
+  program: /opt/homebrew/bin/fish
+  args:
+    - --login
 
 # Startup directory
 #

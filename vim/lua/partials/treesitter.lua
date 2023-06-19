@@ -28,7 +28,20 @@ function module.config()
       additional_vim_regex_highlighting = false,
     },
 
-    textobjects = { enabled = false },
+    textobjects = {
+      enabled = true,
+      textobjects = {
+        move = {
+          enable = true,
+          goto_next_start = {
+            [']]'] = '@function.outer',
+          },
+          goto_previous_start = {
+            ['[['] = '@function.outer',
+          },
+        },
+      },
+    },
     incremental_selection = {
       enable = false,
       keymaps = {
