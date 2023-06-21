@@ -30,15 +30,13 @@ function module.config()
 
     textobjects = {
       enabled = true,
-      textobjects = {
-        move = {
-          enable = true,
-          goto_next_start = {
-            [']]'] = '@function.outer',
-          },
-          goto_previous_start = {
-            ['[['] = '@function.outer',
-          },
+      move = {
+        enable = true,
+        goto_next_start = {
+          [']]'] = '@function.outer',
+        },
+        goto_previous_start = {
+          ['[['] = '@function.outer',
         },
       },
     },

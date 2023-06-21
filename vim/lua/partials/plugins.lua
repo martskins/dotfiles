@@ -44,7 +44,7 @@ return {
   },
 	{ 'dstein64/vim-startuptime', cmd = 'StartupTime' },
   { 'github/copilot.vim', ft = { 'go', 'rust', 'zig' } },
-  { "nvim-treesitter/nvim-treesitter",
+  { 'nvim-treesitter/nvim-treesitter',
     build = ":TSUpdate",
     config = require('partials/treesitter').config,
     event = { 'BufEnter' },
