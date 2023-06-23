@@ -47,7 +47,7 @@ return {
   { 'nvim-treesitter/nvim-treesitter',
     build = ":TSUpdate",
     config = require('partials/treesitter').config,
-    event = { 'BufEnter' },
+    event = { 'VeryLazy' },
     enabled = true,
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects'
@@ -85,15 +85,15 @@ return {
     config = function()
       require('partials/lsp')
     end,
-    -- event = { 'VeryLazy' }, -- this one
-    lazy = false,
+    event = { 'VeryLazy' }, -- this one
+    -- lazy = false,
   },
 	{ 'nvim-tree/nvim-tree.lua',
 		dependencies = { 'nvim-tree/nvim-web-devicons' },
 		init = require('partials/nvim_tree').init,
 		config = require('partials/nvim_tree').config,
-		-- event = { 'VeryLazy' }, -- this one
-    lazy = false,
+		event = { 'VeryLazy' }, -- this one
+    -- lazy = false,
 	},
   { 'hrsh7th/vim-vsnip-integ', event = { 'VeryLazy' }},
   { 'hrsh7th/vim-vsnip', event = { 'VeryLazy' }},
@@ -105,8 +105,8 @@ return {
       'hrsh7th/cmp-buffer',
     },
     config = require('partials/completion').config,
-    -- event = { 'VeryLazy' } -- this one
-    lazy = false,
+    event = { 'VeryLazy' } -- this one
+    -- lazy = false,
   },
   { 'schickling/vim-bufonly',
     init = function()
@@ -126,6 +126,7 @@ return {
   { 'jparise/vim-graphql', ft = { 'graphql' }},
   { 'cespare/vim-toml', ft = { 'toml' }},
   { 'ellisonleao/gruvbox.nvim',
+    priority = 1000,
     lazy = false,
     config = function()
       require('gruvbox').setup({
