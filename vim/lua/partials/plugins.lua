@@ -3,6 +3,13 @@ vim.g.mapleader = ',' -- setting leader before lazy so mappings are correct
 local map = vim.api.nvim_set_keymap
 return {
   {
+    'echasnovski/mini.statusline',
+    event = { 'VeryLazy' },
+    config = function()
+      require('mini.statusline').setup()
+    end
+  },
+  {
     'folke/trouble.nvim',
     dependencies = { "nvim-tree/nvim-web-devicons" },
     event = { 'VeryLazy' },
@@ -21,6 +28,7 @@ return {
       })
       require('formatter').setup {
         filetype = {
+          dart = { require('formatter.filetypes.dart').dartformat },
           go = { require('formatter.filetypes.go').goimports },
           cpp = { require('formatter.filetypes.cpp').clangformat },
           c = { require('formatter.filetypes.cpp').clangformat },

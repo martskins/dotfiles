@@ -117,7 +117,7 @@ local filetypes_overrides = {
 }
 
 local servers = { "pyright", "rust_analyzer", "gopls", "lua_ls", "clangd", "yamlls", "terraformls",
-  "hls", "vimls", "graphql", "bufls", "tsserver", "zls" }
+  "hls", "vimls", "graphql", "bufls", "tsserver", "zls", "dartls" }
 for _, lsp in ipairs(servers) do
   local settings = {}
   if settings_overrides[lsp] then
