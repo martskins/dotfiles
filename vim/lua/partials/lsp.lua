@@ -38,6 +38,10 @@ local on_attach = function(client, bufnr)
 
   client.config.flags.allow_incremental_sync = true
   client.server_capabilities.semanticTokensProvider = nil
+
+  -- if client.server_capabilities.inlayHintProvider then
+  --   vim.lsp.inlay_hint(bufnr, true)
+  -- end
 end
 
 -- do not include test or mocks files in Go
@@ -94,10 +98,13 @@ local settings_overrides = {
       staticcheck = true,
       usePlaceholders = true,
       hints = {
-        assignVariableTypes = true,
+        assignVariableTypes = false,
         compositeLiteralFields = true,
-        parameterNames = false,
-        functionTypeParameters = false,
+        compositeLiteralTypes = true,
+        constantValues = false,
+        functionTypeParameters = true,
+        parameterNames = true,
+        rangeVariableTypes = true,
       },
       codelenses = {
         generate = true,

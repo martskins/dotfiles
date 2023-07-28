@@ -28,6 +28,7 @@ return {
       })
       require('formatter').setup {
         filetype = {
+          graphql = { require('formatter.filetypes.graphql').prettier },
           dart = { require('formatter.filetypes.dart').dartformat },
           go = { require('formatter.filetypes.go').goimports },
           cpp = { require('formatter.filetypes.cpp').clangformat },
