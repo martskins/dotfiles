@@ -107,14 +107,7 @@ function module.config()
       ignore = true,
       timeout = 500,
     },
-    view = {
-      adaptive_size = true,
-      mappings = {
-        list = {
-          { key = "u", action = "dir_up" },
-        },
-      },
-    },
+    view = { adaptive_size = true },
     trash = {
       cmd = "trash",
       require_confirm = true

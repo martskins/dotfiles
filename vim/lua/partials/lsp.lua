@@ -120,7 +120,7 @@ local settings_overrides = {
 }
 
 local filetypes_overrides = {
-  ccls = { 'c', 'cpp', 'objc', 'objcpp' },
+  clangd = { 'c', 'cpp', 'objc', 'objcpp' },
 }
 
 local servers = { "pyright", "rust_analyzer", "gopls", "lua_ls", "clangd", "yamlls", "terraformls",
