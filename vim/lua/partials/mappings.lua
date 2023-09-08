@@ -65,4 +65,8 @@ vim.api.nvim_exec([[
   endfunction
   vnoremap <silent> / :<C-U>call RangeSearch('/')<CR>:if strlen(g:srchstr) > 0\|exec '/'.g:srchstr\|endif<CR>
   vnoremap <silent> ? :<C-U>call RangeSearch('?')<CR>:if strlen(g:srchstr) > 0\|exec '?'.g:srchstr\|endif<CR>
+
+  " fugitive config
+  command! -nargs=1 Browse silent execute '!open' shellescape(<q-args>,1)
+  nnoremap <leader>gb :GBrowse<CR>
 ]], false)
