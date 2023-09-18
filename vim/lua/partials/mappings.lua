@@ -38,12 +38,7 @@ vim.api.nvim_exec([[
 		:profile stop
 	endfunction
 
-  function! GoAddTags(struct_name, tag_name) abort
-    call system('gomodifytags -file ' . expand('%:p') . ' -struct ' . a:struct_name . ' -w -add-tags ' . a:tag_name)
-    :e!
-  endfunction
-
-  command! -nargs=+ GoAddTags execute GoAddTags(<f-args>)
+  command! -nargs=+ GoAddTags lua GoAddTags(<f-args>)
   command! PS Lazy sync
 
   " the macro in f converts a struct field to a cli.Flag
@@ -70,3 +65,58 @@ vim.api.nvim_exec([[
   command! -nargs=1 Browse silent execute '!open' shellescape(<q-args>,1)
   nnoremap <leader>gb :GBrowse<CR>
 ]], false)
+
+
+-- function GoAddTags(struct_name, tag_name)
+--   local filename = vim.fn.expand('%p')
+--   vim.fn.system('gomodifytags -file ' .. filename .. ' -struct ' .. struct_name .. ' -w -add-tags ' .. tag_name)
+--   vim.cmd('edit!')
+-- end
+
+
+
+
+local ts_utils = require'nvim-treesitter.ts_utils'
+
+local function get_struct_name()
+  local current_node = ts_utils.get_node_at_cursor()
+
+  if not current_node then return "" end
+
+  local expr = current_node
+
+  while expr do
+      if expr:type() == 'type_declaration' then
+          break
+      end
+      expr = expr:parent()
+  end
+
+  if not expr then return "" end
+
+  local struct_name = ''
+
+  for line in vim.treesitter.get_node_text(expr:child(1), 0):gmatch("([^\n]*)\n?") do
+    if string.find(line, "struct {" ) then
+      struct_name = string.gsub(line, "struct {", "")
+      break
+    end
+  end
+
+  return struct_name
+end
+
+function GoAddTags(tag_name, transformation, opt)
+  local filename = vim.fn.expand('%p')
+  local struct_name = get_struct_name()
+
+  transformation = transformation or "camelcase"
+
+  if opt == "omitempty" then
+    vim.fn.system('gomodifytags -file ' .. filename .. ' -struct ' .. struct_name .. ' -w -add-tags ' .. tag_name .. ' -transform ' .. transformation .. ' --skip-unexported' .. ' -add-options json=omitempty')
+  else
+    vim.fn.system('gomodifytags -file ' .. filename .. ' -struct ' .. struct_name .. ' -w -add-tags ' .. tag_name .. ' -transform ' .. transformation .. ' --skip-unexported')
+  end
+
+  vim.cmd('edit!')
+end

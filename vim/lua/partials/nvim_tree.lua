@@ -107,7 +107,13 @@ function module.config()
       ignore = true,
       timeout = 500,
     },
-    view = { adaptive_size = true },
+    view = {
+      width = {
+        min = 30,
+        max = -1,
+        padding = 1,
+      }
+    },
     trash = {
       cmd = "trash",
       require_confirm = true
