@@ -111,7 +111,7 @@ function module.config()
       width = {
         min = 30,
         max = -1,
-        padding = 1,
+        -- padding = 1,
       }
     },
     trash = {
