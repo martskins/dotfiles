@@ -14,10 +14,17 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     event = { 'VeryLazy' },
     init = function()
+      require('trouble').setup {
+        icons = false,
+        auto_preview = false,
+        cycle_results = false,
+      }
+
       map('n', 'T', ':TroubleToggle<cr>', {})
     end
   },
   { 'mhartington/formatter.nvim',
+  -- { dir = '~/dev/formatter.nvim',
     event = { 'VeryLazy' },
     cmd = { 'FormatWrite' },
     config = function()
@@ -29,6 +36,7 @@ return {
       require('formatter').setup {
         filetype = {
           graphql = { require('formatter.filetypes.graphql').prettier },
+          proto = { require('formatter.filetypes.proto').buf_format },
           dart = { require('formatter.filetypes.dart').dartformat },
           go = { require('formatter.filetypes.go').goimports },
           cpp = { require('formatter.filetypes.cpp').clangformat },
