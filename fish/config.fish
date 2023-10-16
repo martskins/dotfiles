@@ -4,6 +4,7 @@ alias lg "lazygit"
 alias kp "kubectl --context prod-aws --namespace"
 alias kd "kubectl --context dev-merit --namespace"
 alias gsmp "git checkout (git remote show origin | sed -n '/HEAD branch/s/.*: //p') && git pull"
+alias gsm "git checkout master | git checkout main"
 alias gsc "git switch -c "
 alias gs "git switch "
 # alias docker colima
