@@ -11,7 +11,7 @@ return {
   },
   {
     'folke/trouble.nvim',
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    -- dependencies = { "nvim-tree/nvim-web-devicons" },
     event = { 'VeryLazy' },
     init = function()
       require('trouble').setup {
@@ -59,7 +59,7 @@ return {
       }
     end
   },
-	-- { 'dstein64/vim-startuptime', cmd = 'StartupTime' },
+	{ 'dstein64/vim-startuptime', cmd = 'StartupTime' },
   { 'github/copilot.vim', ft = { 'go', 'rust', 'zig' } },
   { 'nvim-treesitter/nvim-treesitter',
     build = ":TSUpdate",
@@ -104,12 +104,13 @@ return {
     end,
     event = { 'BufEnter' },
   },
-	{ 'nvim-tree/nvim-tree.lua',
-		dependencies = { 'nvim-tree/nvim-web-devicons' },
-		init = require('partials/nvim_tree').init,
-		config = require('partials/nvim_tree').config,
-		cmd = { 'NvimTreeToggle', 'NvimTreeFindFileToggle' },
-	},
+  { 'tpope/vim-vinegar', lazy = false},
+	-- { 'nvim-tree/nvim-tree.lua',
+	-- 	dependencies = { 'nvim-tree/nvim-web-devicons' },
+	-- 	init = require('partials/nvim_tree').init,
+	-- 	config = require('partials/nvim_tree').config,
+	-- 	cmd = { 'NvimTreeToggle', 'NvimTreeFindFileToggle' },
+	-- },
   { 'hrsh7th/vim-vsnip-integ', event = { 'VeryLazy' }},
   { 'hrsh7th/vim-vsnip', event = { 'VeryLazy' }},
 	{ 'hrsh7th/nvim-cmp',
