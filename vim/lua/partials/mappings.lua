@@ -66,16 +66,6 @@ vim.api.nvim_exec([[
   nnoremap <leader>gb :GBrowse<CR>
 ]], false)
 
-
--- function GoAddTags(struct_name, tag_name)
---   local filename = vim.fn.expand('%p')
---   vim.fn.system('gomodifytags -file ' .. filename .. ' -struct ' .. struct_name .. ' -w -add-tags ' .. tag_name)
---   vim.cmd('edit!')
--- end
-
-
-
-
 local ts_utils = require'nvim-treesitter.ts_utils'
 
 local function get_struct_name()
@@ -110,7 +100,7 @@ function GoAddTags(tag_name, transformation, opt)
   local filename = vim.fn.expand('%p')
   local struct_name = get_struct_name()
 
-  transformation = transformation or "camelcase"
+  transformation = transformation or "snakecase"
 
   if opt == "omitempty" then
     vim.fn.system('gomodifytags -file ' .. filename .. ' -struct ' .. struct_name .. ' -w -add-tags ' .. tag_name .. ' -transform ' .. transformation .. ' --skip-unexported' .. ' -add-options json=omitempty')

@@ -4,7 +4,7 @@ local map = vim.api.nvim_set_keymap
 return {
   {
     'echasnovski/mini.statusline',
-    event = { 'VeryLazy' },
+    event = { 'BufEnter' },
     config = function()
       require('mini.statusline').setup()
     end
@@ -23,8 +23,8 @@ return {
       map('n', 'T', ':TroubleToggle<cr>', {})
     end
   },
-  { 'mhartington/formatter.nvim',
-  -- { dir = '~/dev/formatter.nvim',
+  -- { 'mhartington/formatter.nvim',
+  { dir = '~/dev/formatter.nvim',
     event = { 'VeryLazy' },
     cmd = { 'FormatWrite' },
     config = function()
@@ -59,7 +59,7 @@ return {
       }
     end
   },
-	{ 'dstein64/vim-startuptime', cmd = 'StartupTime' },
+	-- { 'dstein64/vim-startuptime', cmd = 'StartupTime' },
   { 'github/copilot.vim', ft = { 'go', 'rust', 'zig' } },
   { 'nvim-treesitter/nvim-treesitter',
     build = ":TSUpdate",
@@ -102,15 +102,13 @@ return {
     config = function()
       require('partials/lsp')
     end,
-    event = { 'VeryLazy' }, -- this one
-    -- lazy = false,
+    event = { 'BufEnter' },
   },
 	{ 'nvim-tree/nvim-tree.lua',
 		dependencies = { 'nvim-tree/nvim-web-devicons' },
 		init = require('partials/nvim_tree').init,
 		config = require('partials/nvim_tree').config,
-		event = { 'VeryLazy' }, -- this one
-    -- lazy = false,
+		cmd = { 'NvimTreeToggle', 'NvimTreeFindFileToggle' },
 	},
   { 'hrsh7th/vim-vsnip-integ', event = { 'VeryLazy' }},
   { 'hrsh7th/vim-vsnip', event = { 'VeryLazy' }},
@@ -122,8 +120,7 @@ return {
       'hrsh7th/cmp-buffer',
     },
     config = require('partials/completion').config,
-    event = { 'VeryLazy' } -- this one
-    -- lazy = false,
+    event = { 'BufEnter' }
   },
   { 'schickling/vim-bufonly',
     init = function()
