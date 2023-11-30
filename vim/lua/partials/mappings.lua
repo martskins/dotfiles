@@ -23,11 +23,6 @@ map('n', '[p', ':pu!<CR>', { silent = true })
 map('t', '<C-o>', '<C-\\><C-n>', {})
 
 vim.api.nvim_exec([[
-  function! SynGroup()
-      let l:s = synID(line('.'), col('.'), 1)
-      echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
-  endfun
-
 	function! ProfileStart()
 		:profile start profile.log
 		:profile func *
@@ -38,8 +33,8 @@ vim.api.nvim_exec([[
 		:profile stop
 	endfunction
 
-  command! -nargs=+ GoAddTags lua GoAddTags(<f-args>)
-  command! PS Lazy sync
+  " command! -nargs=+ GoAddTags lua GoAddTags(<f-args>)
+  " command! PS Lazy sync
 
   " the macro in f converts a struct field to a cli.Flag
   let @f='0wwcw0wPli 0wi&cli.l~eliFlag{Name:lli"ebyweli"bcrkf"li, EnvVars:[]string{"pbcrsgUweli"}, Destination: &cfg.pbeli, Required: true},'
@@ -58,8 +53,8 @@ vim.api.nvim_exec([[
       let g:srchstr = ''
     endif
   endfunction
-  vnoremap <silent> / :<C-U>call RangeSearch('/')<CR>:if strlen(g:srchstr) > 0\|exec '/'.g:srchstr\|endif<CR>
-  vnoremap <silent> ? :<C-U>call RangeSearch('?')<CR>:if strlen(g:srchstr) > 0\|exec '?'.g:srchstr\|endif<CR>
+  vnoremap <silent> ? :<C-U>call RangeSearch('/')<CR>:if strlen(g:srchstr) > 0\|exec '/'.g:srchstr\|endif<CR>
+  " vnoremap <silent> ? :<C-U>call RangeSearch('?')<CR>:if strlen(g:srchstr) > 0\|exec '?'.g:srchstr\|endif<CR>
 
   " fugitive config
   command! -nargs=1 Browse silent execute '!open' shellescape(<q-args>,1)
@@ -96,11 +91,42 @@ local function get_struct_name()
   return struct_name
 end
 
-function GoAddTags(tag_name, transformation, opt)
+local function explode_string(div,str)
+    if (div=='') then return false end
+    local pos,arr = 0,{}
+    for st,sp in function() return string.find(str,div,pos,true) end do
+        table.insert(arr,string.sub(str,pos,st-1))
+        pos = sp + 1
+    end
+    table.insert(arr,string.sub(str,pos))
+    return arr
+end
+
+function GoAddTags(opts)
+  local args = explode_string(' ', opts.args)
+  if not args then
+    return
+  end
+
+  if not args[1] then
+    print('Need at least one argument indicating the tag name to add')
+    return
+  end
+
+  local tag_name = args[1]
+
+  local transformation = 'snakecase'
+  if #args > 1 then
+    transformation = args[2]
+  end
+
+  local opt = ''
+  if #args > 2 then
+    opt = args[3]
+  end
+
   local filename = vim.fn.expand('%p')
   local struct_name = get_struct_name()
-
-  transformation = transformation or "snakecase"
 
   if opt == "omitempty" then
     vim.fn.system('gomodifytags -file ' .. filename .. ' -struct ' .. struct_name .. ' -w -add-tags ' .. tag_name .. ' -transform ' .. transformation .. ' --skip-unexported' .. ' -add-options json=omitempty')
@@ -110,3 +136,6 @@ function GoAddTags(tag_name, transformation, opt)
 
   vim.cmd('edit!')
 end
+
+vim.api.nvim_create_user_command('GoAddTags', GoAddTags, { nargs = '?'})
+vim.api.nvim_create_user_command('PS', 'Lazy sync', {})

@@ -30,8 +30,6 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   buf_set_keymap('n', 'Q', '<cmd>lua vim.diagnostic.setloclist({open_loclist = true, workspace = true})<CR>', opts)
 
-
-
   if client.supports_method 'textDocument/codeLens' then
     vim.api.nvim_command('autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.codelens.refresh()')
   end
@@ -47,25 +45,38 @@ end
 -- do not include test or mocks files in Go
 local original_on_references = vim.lsp.handlers['textDocument/references']
 local original_on_implementation = vim.lsp.handlers['textDocument/implementation']
+local original_register_capability = vim.lsp.handlers['client/registerCapability']
 
 local filter_quickfix_with_callback = function(callback)
-  return function(a, results, ctx, config)
-    if results == nil then
-      return callback(a, results, ctx, config)
+  return function(err, result, ctx, config)
+    if result == nil then
+      return callback(err, result, ctx, config)
     end
 
     local out = {}
-    for _, v in pairs(results) do
+    for _, v in pairs(result) do
       local filename = v['uri']
       if not string.find(filename, '_test.go') and not string.match(filename, "../mocks/") then
         table.insert(out, v)
       end
     end
-    callback(a, out, ctx, config)
+    callback(err, out, ctx, config)
   end
 end
+
+local with_java_register_capability = function(callback)
+  return function(err, result, ctx, config)
+    local ft = vim.bo.filetype
+
+    if result == nil or ft ~= "java" then
+      return callback(err, result, ctx, config)
+    end
+  end
+end
+
 vim.lsp.handlers['textDocument/references'] = vim.lsp.with(filter_quickfix_with_callback(original_on_references), {})
 vim.lsp.handlers['textDocument/implementation'] = vim.lsp.with(filter_quickfix_with_callback(original_on_implementation) , {})
+vim.lsp.handlers['client/registerCapability'] = vim.lsp.with(with_java_register_capability(original_register_capability) , {})
 
 local get_current_gomod = function()
   local file = io.open("go.mod", "r")
@@ -124,7 +135,7 @@ local filetypes_overrides = {
 }
 
 local servers = { "pyright", "rust_analyzer", "gopls", "lua_ls", "clangd", "yamlls", "terraformls",
-  "hls", "vimls", "graphql", "bufls", "tsserver", "zls", "dartls" }
+  "hls", "vimls", "graphql", "bufls", "tsserver", "zls", "dartls", "java_language_server" }
 for _, lsp in ipairs(servers) do
   local settings = {}
   if settings_overrides[lsp] then
@@ -145,6 +156,10 @@ for _, lsp in ipairs(servers) do
 
   if filetypes_overrides[lsp] then
     setup.filetypes = filetypes_overrides[lsp]
+  end
+
+  if lsp == 'java_language_server' then
+    setup.cmd = { '/Users/martinasquino/java-language-server/dist/lang_server_mac.sh' }
   end
 
   nvim_lsp[lsp].setup(setup)

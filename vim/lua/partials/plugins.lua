@@ -3,15 +3,16 @@ vim.g.mapleader = ',' -- setting leader before lazy so mappings are correct
 local map = vim.api.nvim_set_keymap
 return {
   {
-    'echasnovski/mini.statusline',
+    'nvim-lualine/lualine.nvim',
     event = { 'BufEnter' },
-    config = function()
-      require('mini.statusline').setup()
-    end
+    dependencies = {
+      'nvim-tree/nvim-web-devicons',
+      'arkav/lualine-lsp-progress'
+    },
+    config = require('partials/lualine').config,
   },
   {
     'folke/trouble.nvim',
-    -- dependencies = { "nvim-tree/nvim-web-devicons" },
     event = { 'VeryLazy' },
     init = function()
       require('trouble').setup {
@@ -23,8 +24,8 @@ return {
       map('n', 'T', ':TroubleToggle<cr>', {})
     end
   },
-  -- { 'mhartington/formatter.nvim',
-  { dir = '~/dev/formatter.nvim',
+  { 'mhartington/formatter.nvim',
+  -- { dir = '~/dev/formatter.nvim',
     event = { 'VeryLazy' },
     cmd = { 'FormatWrite' },
     config = function()
@@ -46,7 +47,7 @@ return {
             function()
               return {
                 exe = "rustfmt",
-                args = {"--emit=stdout"},
+                args = {"--emit=stdout", '--edition=2021'},
                 stdin = true
               }
             end
@@ -87,6 +88,7 @@ return {
       ]], false)
     end,
   },
+  -- { 'tpope/vim-vinegar', lazy = false},
 	{ 'tpope/vim-abolish', event = { 'VeryLazy' } },
   { 'tpope/vim-surround', event = { 'VeryLazy' } },
   { 'tpope/vim-commentary', event = { 'VeryLazy' } },
@@ -104,13 +106,12 @@ return {
     end,
     event = { 'BufEnter' },
   },
-  { 'tpope/vim-vinegar', lazy = false},
-	-- { 'nvim-tree/nvim-tree.lua',
-	-- 	dependencies = { 'nvim-tree/nvim-web-devicons' },
-	-- 	init = require('partials/nvim_tree').init,
-	-- 	config = require('partials/nvim_tree').config,
-	-- 	cmd = { 'NvimTreeToggle', 'NvimTreeFindFileToggle' },
-	-- },
+	{ 'nvim-tree/nvim-tree.lua',
+		dependencies = { 'nvim-tree/nvim-web-devicons' },
+		init = require('partials/nvim_tree').init,
+		config = require('partials/nvim_tree').config,
+		cmd = { 'NvimTreeToggle', 'NvimTreeFindFileToggle' },
+	},
   { 'hrsh7th/vim-vsnip-integ', event = { 'VeryLazy' }},
   { 'hrsh7th/vim-vsnip', event = { 'VeryLazy' }},
 	{ 'hrsh7th/nvim-cmp',
@@ -145,6 +146,7 @@ return {
     lazy = false,
     config = function()
       require('gruvbox').setup({
+        transparent_mode = false,
         italic = {
           strings = false,
           comments = false,
@@ -152,9 +154,9 @@ return {
           folds = false,
         },
         bold = false,
-        contrast = "high"
+        contrast = "hard"
       })
-      require('gruvbox').load()
+      vim.cmd('colorscheme gruvbox')
     end
   },
 }
