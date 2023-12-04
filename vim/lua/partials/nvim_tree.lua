@@ -80,8 +80,8 @@ function module.config()
       icons = {
         show = {
           git = false,
-          file = false,
-          folder = false,
+          file = true,
+          folder = true,
           folder_arrow = true,
         }
       }
