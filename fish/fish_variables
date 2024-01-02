@@ -1,5 +1,6 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
+SETUVAR DOCKER_HOST:unix\x3a///Users/martinasquino/\x2ecolima/default/docker\x2esock
 SETUVAR --export GOPRIVATE:github\x2ecom/utilitywarehouse/\x2a
 SETUVAR --export NPM_CONFIG_PREFIX:/Users/martin/\x2enpm\x2dglobal
 SETUVAR __fish_initialized:3400
@@ -33,4 +34,4 @@ SETUVAR fish_pager_color_description:B3A06D\x1eyellow
 SETUVAR fish_pager_color_prefix:white\x1e\x2d\x2dbold\x1e\x2d\x2dunderline
 SETUVAR fish_pager_color_progress:brwhite\x1e\x2d\x2dbackground\x3dcyan
 SETUVAR fish_pager_color_selected_background:\x2dr
-SETUVAR fish_user_paths:/usr/local/opt/fzf/bin\x1e/Users/martin/\x2ecargo/bin\x1e/Users/martin/go/bin/\x1e/usr/local/opt/libpq/bin/\x1e/usr/local/opt/llvm/bin/\x1e/Users/martin/\x2edotnet/tools/\x1e/Users/martin/\x2enpm\x2dglobal/bin\x1e/opt/homebrew/bin\x1e/opt/homebrew/opt/fzf/bin\x1e/Users/martinasquino/go/bin/\x1e/Users/martinasquino/\x2ecargo/bin
+SETUVAR fish_user_paths:/usr/local/opt/fzf/bin\x1e/Users/martin/\x2ecargo/bin\x1e/Users/martin/go/bin/\x1e/usr/local/opt/libpq/bin/\x1e/usr/local/opt/llvm/bin/\x1e/Users/martin/\x2edotnet/tools/\x1e/Users/martin/\x2enpm\x2dglobal/bin\x1e/opt/homebrew/bin\x1e/opt/homebrew/opt/fzf/bin\x1e/Users/martinasquino/go/bin/\x1e/Users/martinasquino/\x2ecargo/bin\x1e/opt/local/bin/

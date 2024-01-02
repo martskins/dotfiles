@@ -1,6 +1,7 @@
 font:
   normal:
-    family: LiterationMono Nerd Font
+    # family: LiterationMono Nerd Font
+    family: Cascadia Code
   size: 9
 
 colors:
