@@ -33,12 +33,9 @@ vim.api.nvim_exec([[
 		:profile stop
 	endfunction
 
-  " command! -nargs=+ GoAddTags lua GoAddTags(<f-args>)
-  " command! PS Lazy sync
-
   " the macro in f converts a struct field to a cli.Flag
   let @f='0wwcw0wPli 0wi&cli.l~eliFlag{Name:lli"ebyweli"bcrkf"li, EnvVars:[]string{"pbcrsgUweli"}, Destination: &cfg.pbeli, Required: true},'
-  let g:rooter_patterns = ['.git', 'Makefile', '*.sln', 'build/env.sh']
+  let g:rooter_patterns = ['.git', '*.sln', 'build/env.sh']
   let g:rooter_resolve_links = 0
 
   function! RangeSearch(direction)
@@ -59,47 +56,23 @@ vim.api.nvim_exec([[
   " fugitive config
   command! -nargs=1 Browse silent execute '!open' shellescape(<q-args>,1)
   nnoremap <leader>gb :GBrowse<CR>
+
+  hi Normal guibg=#111111
 ]], false)
 
-local ts_utils = require'nvim-treesitter.ts_utils'
-
-local function get_struct_name()
-  local current_node = ts_utils.get_node_at_cursor()
-
-  if not current_node then return "" end
-
-  local expr = current_node
-
-  while expr do
-      if expr:type() == 'type_declaration' then
-          break
-      end
-      expr = expr:parent()
-  end
-
-  if not expr then return "" end
-
-  local struct_name = ''
-
-  for line in vim.treesitter.get_node_text(expr:child(1), 0):gmatch("([^\n]*)\n?") do
-    if string.find(line, "struct {" ) then
-      struct_name = string.gsub(line, "struct {", "")
-      break
-    end
-  end
-
-  return struct_name
-end
+vim.api.nvim_create_user_command('PS', 'Lazy sync', {})
+vim.api.nvim_create_user_command('ProfileStart', 'call ProfileStart()', {})
+vim.api.nvim_create_user_command('ProfileStop', 'call ProfileStart()', {})
 
 local function explode_string(div,str)
-    if (div=='') then return false end
-    local pos,arr = 0,{}
-    for st,sp in function() return string.find(str,div,pos,true) end do
-        table.insert(arr,string.sub(str,pos,st-1))
-        pos = sp + 1
-    end
-    table.insert(arr,string.sub(str,pos))
-    return arr
+  if (div=='') then return false end
+  local pos,arr = 0,{}
+  for st,sp in function() return string.find(str,div,pos,true) end do
+      table.insert(arr,string.sub(str,pos,st-1))
+      pos = sp + 1
+  end
+  table.insert(arr,string.sub(str,pos))
+  return arr
 end
 
 function GoAddTags(opts)
@@ -109,24 +82,27 @@ function GoAddTags(opts)
   end
 
   if not args[1] then
-    print('Need at least one argument indicating the tag name to add')
-    return
-  end
+    print('Need at least two arguments indicating the struct naem and the tag name to add')
+    return end
 
-  local tag_name = args[1]
+  if not args[2] then
+    print('Need at least one argument indicating the tag name to add')
+    return end
+
+  local struct_name = args[1]
+  local tag_name = args[2]
 
   local transformation = 'snakecase'
-  if #args > 1 then
-    transformation = args[2]
+  if #args > 2 then
+    transformation = args[3]
   end
 
   local opt = ''
-  if #args > 2 then
-    opt = args[3]
+  if #args > 3 then
+    opt = args[4]
   end
 
   local filename = vim.fn.expand('%p')
-  local struct_name = get_struct_name()
 
   if opt == "omitempty" then
     vim.fn.system('gomodifytags -file ' .. filename .. ' -struct ' .. struct_name .. ' -w -add-tags ' .. tag_name .. ' -transform ' .. transformation .. ' --skip-unexported' .. ' -add-options json=omitempty')
@@ -138,4 +114,3 @@ function GoAddTags(opts)
 end
 
 vim.api.nvim_create_user_command('GoAddTags', GoAddTags, { nargs = '?'})
-vim.api.nvim_create_user_command('PS', 'Lazy sync', {})

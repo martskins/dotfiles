@@ -135,12 +135,13 @@ local filetypes_overrides = {
 }
 
 local servers = { "pyright", "rust_analyzer", "gopls", "lua_ls", "clangd", "yamlls", "terraformls",
-  "hls", "vimls", "graphql", "bufls", "tsserver", "zls", "dartls", "java_language_server" }
+  "hls", "vimls", "graphql", "bufls", "tsserver", "zls", "dartls", "java_language_server", "cmake", "glsl_analyzer" }
 for _, lsp in ipairs(servers) do
   local settings = {}
   if settings_overrides[lsp] then
     settings = settings_overrides[lsp]
   end
+
 
   local setup = {
     on_attach = on_attach,
@@ -164,3 +165,19 @@ for _, lsp in ipairs(servers) do
 
   nvim_lsp[lsp].setup(setup)
 end
+
+local path_to_download = '/Users/martinasquino/Downloads/omnisharp-osx'
+nvim_lsp.omnisharp.setup {
+  cmd = {
+    'mono',
+    '--assembly-loader=strict',
+    path_to_download .. '/omnisharp/OmniSharp.exe',
+  },
+
+  -- root_dir = function(fname)
+  --   return nvim_lsp.util.find_git_ancestor(fname) or vim.loop.os_homedir()
+  -- end;
+  -- Assuming you have an on_attach function. Delete this line if you don't.
+  on_attach = on_attach,
+  use_mono = true,
+}

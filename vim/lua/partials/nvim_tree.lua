@@ -79,7 +79,7 @@ function module.config()
       indent_markers = { enable = true },
       icons = {
         show = {
-          git = false,
+          git = true,
           file = true,
           folder = true,
           folder_arrow = true,

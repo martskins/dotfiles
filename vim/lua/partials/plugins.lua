@@ -2,6 +2,14 @@ vim.g.mapleader = ',' -- setting leader before lazy so mappings are correct
 
 local map = vim.api.nvim_set_keymap
 return {
+  { 'mfussenegger/nvim-dap',
+    lazy = false,
+    config = require('partials/ndap').config,
+  },
+  { 'rcarriga/nvim-dap-ui',
+    lazy = false,
+    config = require('partials/dapui').config
+  },
   {
     'nvim-lualine/lualine.nvim',
     event = { 'BufEnter' },
@@ -25,7 +33,6 @@ return {
     end
   },
   { 'mhartington/formatter.nvim',
-  -- { dir = '~/dev/formatter.nvim',
     event = { 'VeryLazy' },
     cmd = { 'FormatWrite' },
     config = function()
@@ -36,6 +43,7 @@ return {
       })
       require('formatter').setup {
         filetype = {
+          cs = { require('formatter.filetypes.cs').clangformat },
           graphql = { require('formatter.filetypes.graphql').prettier },
           proto = { require('formatter.filetypes.proto').buf_format },
           dart = { require('formatter.filetypes.dart').dartformat },
@@ -61,16 +69,28 @@ return {
     end
   },
 	{ 'dstein64/vim-startuptime', cmd = 'StartupTime' },
-  { 'github/copilot.vim', ft = { 'go', 'rust', 'zig' } },
-  { 'nvim-treesitter/nvim-treesitter',
-    build = ":TSUpdate",
-    config = require('partials/treesitter').config,
-    event = { 'VeryLazy' },
-    enabled = true,
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects'
-    }
+  { 'zbirenbaum/copilot.lua',
+    ft = { 'go', 'rust', 'zig', 'cpp'},
+    config = function()
+      require("copilot").setup({
+        suggestion = {
+          auto_trigger = true,
+          keymap = {
+            accept = "<S-Tab>"
+          }
+        }
+      })
+    end,
   },
+  -- { 'nvim-treesitter/nvim-treesitter',
+  --   build = ":TSUpdate",
+  --   config = require('partials/treesitter').config,
+  --   enabled = true,
+  --   ft = { 'go', 'rust', 'zig', 'terraform' },
+  --   dependencies = {
+  --     'nvim-treesitter/nvim-treesitter-textobjects'
+  --   }
+  -- },
   { 'ibhagwan/fzf-lua',
     init = require('partials/fzf').init,
     config = require('partials/fzf').config,
@@ -88,10 +108,10 @@ return {
       ]], false)
     end,
   },
+  { 'tpope/vim-commentary', event = { 'VeryLazy' } },
   -- { 'tpope/vim-vinegar', lazy = false},
 	{ 'tpope/vim-abolish', event = { 'VeryLazy' } },
   { 'tpope/vim-surround', event = { 'VeryLazy' } },
-  { 'tpope/vim-commentary', event = { 'VeryLazy' } },
   { 'tpope/vim-repeat', event = { 'VeryLazy' } },
 	{ 'tpope/vim-projectionist',
     init = require('partials/projectionist').init,
