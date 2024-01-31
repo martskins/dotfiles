@@ -7,3 +7,10 @@ size = 9
 
 [font.normal]
 family = "Hack Nerd Font Mono"
+
+[[keyboard.bindings]]
+key = "NumpadEnter"
+chars = "\n"
+
+[shell]
+program = "/opt/homebrew/bin/fish"

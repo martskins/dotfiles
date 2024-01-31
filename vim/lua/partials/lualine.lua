@@ -15,7 +15,10 @@ function module.config()
       icons_enabled = true,
       theme = theme,
       component_separators = { left = '', right = ''},
-      section_separators = { left = '', right = ''},
+      -- section_separators = { left = '', right = ''},
+      -- NOTE: this is to work around a bug in lualine that kills the nvim intro.
+      --      see: https://github.com/nvim-lualine/lualine.nvim/issues/773
+      section_separators = '',
       disabled_filetypes = {
         statusline = {},
         winbar = {},
@@ -42,7 +45,13 @@ function module.config()
       lualine_b = {},
       lualine_c = {'filename'},
       lualine_x = {'location'},
-      lualine_y = {},
+      lualine_y = {
+          {
+            require("lazy.status").updates,
+            cond = require("lazy.status").has_updates,
+            color = { fg = "#ff9e64" },
+          },
+        },
       lualine_z = {}
     },
     tabline = {},

@@ -3,12 +3,14 @@ vim.g.mapleader = ',' -- setting leader before lazy so mappings are correct
 local map = vim.api.nvim_set_keymap
 return {
   { 'mfussenegger/nvim-dap',
-    lazy = false,
+    cmd = { 'DapContinue', 'DapToggleBreakpoint', 'DapToggleUi' },
     config = require('partials/ndap').config,
+    init = require('partials/ndap').init,
   },
   { 'rcarriga/nvim-dap-ui',
-    lazy = false,
-    config = require('partials/dapui').config
+    cmd = { 'DapContinue', 'DapToggleBreakpoint', 'DapToggleUi' },
+    config = require('partials/dapui').config,
+    init = require('partials/dapui').init,
   },
   {
     'nvim-lualine/lualine.nvim',
@@ -21,26 +23,28 @@ return {
   },
   {
     'folke/trouble.nvim',
-    event = { 'VeryLazy' },
+    cmd = { 'TroubleToggle' },
     init = function()
+      map('n', 'T', ':TroubleToggle<cr>', { silent = true })
+    end,
+    config = function()
       require('trouble').setup {
         icons = false,
         auto_preview = false,
         cycle_results = false,
       }
-
-      map('n', 'T', ':TroubleToggle<cr>', {})
     end
   },
   { 'mhartington/formatter.nvim',
-    event = { 'VeryLazy' },
     cmd = { 'FormatWrite' },
-    config = function()
+    init = function()
       local group = vim.api.nvim_create_augroup('FormatAutogroup', { clear = true })
       vim.api.nvim_create_autocmd('BufWritePost', {
         group = group,
         command = 'FormatWrite'
       })
+    end,
+    config = function()
       require('formatter').setup {
         filetype = {
           cs = { require('formatter.filetypes.cs').clangformat },
@@ -68,7 +72,7 @@ return {
       }
     end
   },
-	{ 'dstein64/vim-startuptime', cmd = 'StartupTime' },
+	{ 'dstein64/vim-startuptime', cmd = { 'StartupTime' }},
   { 'zbirenbaum/copilot.lua',
     ft = { 'go', 'rust', 'zig', 'cpp'},
     config = function()
@@ -76,7 +80,7 @@ return {
         suggestion = {
           auto_trigger = true,
           keymap = {
-            accept = "<S-Tab>"
+            accept = "<C-f>"
           }
         }
       })

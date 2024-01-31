@@ -1,8 +1,8 @@
 local map = vim.api.nvim_set_keymap
 
 map('n', 'gev', ':e ~/.config/nvim/init.lua<CR>', { noremap = true })
-map('n', '<C-h>', ':nohlsearch<C-R>=has(\'diff\')?\'<Bar>diffupdate\':\'\'<CR><CR><C-L>',
-  { noremap = true, silent = true })
+map('n', '<C-h>', ':let @/=""""<CR>', { noremap = true, silent = true })
+-- map('n', '<C-h>', ':nohlsearch<C-R>=has(\'diff\')?\'<Bar>diffupdate\':\'\'<CR><CR><C-L>', { noremap = true, silent = true })
 map('n', '<Up>', ':cprevious<cr>', {})
 map('n', '<Down>', ':cnext<cr>', {})
 map('n', '<Right>', ':cnext<cr>', {})

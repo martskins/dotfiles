@@ -5,9 +5,6 @@ function module.config()
   dapui.setup()
 
   local dap = require('dap')
-  vim.api.nvim_create_user_command('DapToggleUi', 'lua require("dapui").toggle()', {})
-  vim.keymap.set('v', '<leader>k', function() require('dapui').eval() end)
-
   dap.listeners.before.attach.dapui_config = function()
     dapui.open()
   end
@@ -23,6 +20,11 @@ function module.config()
   dap.listeners.before.event_exited.dapui_config = function()
     dapui.close()
   end
+end
+
+function module.init()
+  vim.api.nvim_create_user_command('DapToggleUi', 'lua require("dapui").toggle()', {})
+  vim.keymap.set('v', '<leader>k', function() require('dapui').eval() end)
 end
 
 return module

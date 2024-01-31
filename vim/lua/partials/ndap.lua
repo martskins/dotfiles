@@ -2,7 +2,6 @@ local module = {}
 
 function module.config()
   local dap = require('dap')
-  local widgets = require('dap.ui.widgets')
 
   dap.configurations.cpp = {
     {
@@ -57,28 +56,36 @@ function module.config()
     }
   }
 
-  vim.keymap.set('n', '<Leader>dc', function() require('dap').continue() end)
-  vim.keymap.set('n', '<Leader>do', function() require('dap').step_over() end)
-  vim.keymap.set('n', '<Leader>di', function() require('dap').step_into() end)
-  vim.keymap.set('n', '<Leader>dx', function() require('dap').step_out() end)
-  vim.keymap.set('n', '<Leader>db', function() require('dap').toggle_breakpoint() end)
-  vim.keymap.set('n', '<Leader>dt', function() require('dap').terminate() end)
+  local widgets = require('dap.ui.widgets')
+  vim.keymap.set({'n', 'v'}, '<Leader>dh', function()
+    require('dap.ui.widgets').hover()
+  end)
+
+  vim.keymap.set({'n', 'v'}, '<Leader>dp', function()
+    require('dap.ui.widgets').preview()
+  end)
+
+  vim.keymap.set('n', '<Leader>df', function()
+    widgets.centered_float(widgets.frames)
+  end)
+
+  vim.keymap.set('n', '<Leader>ds', function()
+    widgets.centered_float(widgets.scopes)
+  end)
+end
+
+function module.init()
+  vim.keymap.set('n', '<Leader>dc', ':DapContinue<CR>', { silent = true })
+  vim.keymap.set('n', '<Leader>do', ':DapStepOver<CR>', { silent = true })
+  vim.keymap.set('n', '<Leader>di', ':DapStepInto<CR>', { silent = true })
+  vim.keymap.set('n', '<Leader>dx', ':DapStepOut<CR>', { silent = true })
+  vim.keymap.set('n', '<Leader>db', ':DapToggleBreakpoint<CR>', { silent = true })
+  vim.keymap.set('n', '<Leader>dt', ':DapTerminate<CR>', { silent = true })
   vim.keymap.set('n', '<Leader>B', function() require('dap').set_breakpoint() end)
   vim.keymap.set('n', '<Leader>lp', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
   vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end)
   vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end)
-  vim.keymap.set({'n', 'v'}, '<Leader>dh', function()
-    require('dap.ui.widgets').hover()
-  end)
-  vim.keymap.set({'n', 'v'}, '<Leader>dp', function()
-    require('dap.ui.widgets').preview()
-  end)
-  vim.keymap.set('n', '<Leader>df', function()
-    widgets.centered_float(widgets.frames)
-  end)
-  vim.keymap.set('n', '<Leader>ds', function()
-    widgets.centered_float(widgets.scopes)
-  end)
+
 end
 
 return module

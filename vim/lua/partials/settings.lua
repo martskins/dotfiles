@@ -31,7 +31,6 @@ o.clipboard = 'unnamedplus,unnamed'
 o.ignorecase = true
 o.history = 100
 o.hlsearch = true
-o.showmatch = true
 o.wildmenu = true
 o.updatetime = 300
 o.autoread = true
