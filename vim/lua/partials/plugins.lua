@@ -86,15 +86,15 @@ return {
       })
     end,
   },
-  -- { 'nvim-treesitter/nvim-treesitter',
-  --   build = ":TSUpdate",
-  --   config = require('partials/treesitter').config,
-  --   enabled = true,
-  --   ft = { 'go', 'rust', 'zig', 'terraform' },
-  --   dependencies = {
-  --     'nvim-treesitter/nvim-treesitter-textobjects'
-  --   }
-  -- },
+  { 'nvim-treesitter/nvim-treesitter',
+    build = ":TSUpdate",
+    config = require('partials/treesitter').config,
+    enabled = true,
+    ft = { 'go', 'rust', 'zig', 'terraform' },
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects'
+    }
+  },
   { 'ibhagwan/fzf-lua',
     init = require('partials/fzf').init,
     config = require('partials/fzf').config,
@@ -167,22 +167,35 @@ return {
   { 'martskins/vim-cargo-search', ft = { 'rust' }},
   { 'jparise/vim-graphql', ft = { 'graphql' }},
   { 'cespare/vim-toml', ft = { 'toml' }},
-  { 'ellisonleao/gruvbox.nvim',
+  -- { 'ellisonleao/gruvbox.nvim',
+  --   priority = 1000,
+  --   lazy = false,
+  --   config = function()
+  --     require('gruvbox').setup({
+  --       transparent_mode = false,
+  --       italic = {
+  --         strings = false,
+  --         comments = false,
+  --         operators = false,
+  --         folds = false,
+  --       },
+  --       bold = false,
+  --       contrast = "hard"
+  --     })
+  --     vim.cmd('colorscheme gruvbox')
+  --   end
+  -- },
+  { 'tomasiser/vim-code-dark',
     priority = 1000,
     lazy = false,
     config = function()
-      require('gruvbox').setup({
-        transparent_mode = false,
-        italic = {
-          strings = false,
-          comments = false,
-          operators = false,
-          folds = false,
-        },
-        bold = false,
-        contrast = "hard"
-      })
-      vim.cmd('colorscheme gruvbox')
+      vim.cmd([[
+        let g:codedark_transparent=1
+        let g:codedark_conservative=1
+
+
+        colorscheme codedark
+      ]])
     end
-  },
+  }
 }
