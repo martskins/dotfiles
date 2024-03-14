@@ -14,3 +14,13 @@ chars = "\n"
 
 [shell]
 program = "/opt/homebrew/bin/fish"
+#
+# [window]
+# opacity = 0.5
+# blur = true
+
+# [mouse]
+# hide_when_typing = true
+
+[cursor.style]
+blinking = "Always"

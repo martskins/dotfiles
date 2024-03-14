@@ -62,7 +62,7 @@ vim.api.nvim_exec([[
 
 vim.api.nvim_create_user_command('PS', 'Lazy sync', {})
 vim.api.nvim_create_user_command('ProfileStart', 'call ProfileStart()', {})
-vim.api.nvim_create_user_command('ProfileStop', 'call ProfileStart()', {})
+vim.api.nvim_create_user_command('ProfileStop', 'call ProfileStop()', {})
 
 local function explode_string(div,str)
   if (div=='') then return false end

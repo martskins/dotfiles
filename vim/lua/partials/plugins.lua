@@ -2,15 +2,26 @@ vim.g.mapleader = ',' -- setting leader before lazy so mappings are correct
 
 local map = vim.api.nvim_set_keymap
 return {
+  { 'takac/vim-hardtime',
+    event = { 'VeryLazy' },
+    init = function()
+      -- vim.api.nvim_exec([[ let g:hardtime_default_on = 1 ]], false)
+    end
+  },
   { 'mfussenegger/nvim-dap',
     cmd = { 'DapContinue', 'DapToggleBreakpoint', 'DapToggleUi' },
     config = require('partials/ndap').config,
     init = require('partials/ndap').init,
+    lazy = false,
   },
   { 'rcarriga/nvim-dap-ui',
     cmd = { 'DapContinue', 'DapToggleBreakpoint', 'DapToggleUi' },
     config = require('partials/dapui').config,
     init = require('partials/dapui').init,
+    dependencies = {
+      'nvim-neotest/nvim-nio'
+    },
+    lazy = false,
   },
   {
     'nvim-lualine/lualine.nvim',
@@ -47,6 +58,7 @@ return {
     config = function()
       require('formatter').setup {
         filetype = {
+          terraform = { require('formatter.filetypes.terraform').terraformfmt },
           cs = { require('formatter.filetypes.cs').clangformat },
           graphql = { require('formatter.filetypes.graphql').prettier },
           proto = { require('formatter.filetypes.proto').buf_format },
@@ -73,24 +85,21 @@ return {
     end
   },
 	{ 'dstein64/vim-startuptime', cmd = { 'StartupTime' }},
-  { 'zbirenbaum/copilot.lua',
-    ft = { 'go', 'rust', 'zig', 'cpp'},
+  { 'github/copilot.vim',
+    ft = { 'go', 'rust', 'zig', 'cpp', 'typescript'},
     config = function()
-      require("copilot").setup({
-        suggestion = {
-          auto_trigger = true,
-          keymap = {
-            accept = "<C-f>"
-          }
-        }
+      vim.keymap.set('i', '<C-f>', 'copilot#Accept("\\<CR>")', {
+        expr = true,
+        replace_keycodes = false
       })
-    end,
+      vim.g.copilot_no_tab_map = true
+    end
   },
   { 'nvim-treesitter/nvim-treesitter',
     build = ":TSUpdate",
     config = require('partials/treesitter').config,
     enabled = true,
-    ft = { 'go', 'rust', 'zig', 'terraform' },
+    event = { 'VeryLazy' },
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects'
     }
@@ -104,7 +113,7 @@ return {
     ft = { 'go', 'rust' },
     init = function()
       map('n', '<leader>tt', ':TestNearest<cr>', {})
-      map('n', '<leader>tT', ':TestFile<cr>', {})
+      map('n', '<leader>tp', ':TestFile<cr>', {})
       map('n', '<leader>ta', ':TestSuite<cr>', {})
       vim.api.nvim_exec([[
         let test#strategy = "neovim"
@@ -112,8 +121,6 @@ return {
       ]], false)
     end,
   },
-  { 'tpope/vim-commentary', event = { 'VeryLazy' } },
-  -- { 'tpope/vim-vinegar', lazy = false},
 	{ 'tpope/vim-abolish', event = { 'VeryLazy' } },
   { 'tpope/vim-surround', event = { 'VeryLazy' } },
   { 'tpope/vim-repeat', event = { 'VeryLazy' } },
@@ -154,7 +161,7 @@ return {
     end,
     cmd = { 'BufOnly' }
   },
-  { 'majutsushi/tagbar',
+  { 'preservim/tagbar',
     init = require('partials/tagbar').init,
     config = require('partials/tagbar').config,
     cmd = { 'TagbarToggle' },
@@ -185,17 +192,17 @@ return {
   --     vim.cmd('colorscheme gruvbox')
   --   end
   -- },
-  { 'tomasiser/vim-code-dark',
-    priority = 1000,
-    lazy = false,
-    config = function()
-      vim.cmd([[
-        let g:codedark_transparent=1
-        let g:codedark_conservative=1
+  -- { 'tomasiser/vim-code-dark',
+  --   priority = 1000,
+  --   lazy = false,
+  --   config = function()
+  --     vim.cmd([[
+  --       let g:codedark_transparent=1
+  --       let g:codedark_conservative=1
 
 
-        colorscheme codedark
-      ]])
-    end
-  }
+  --       colorscheme codedark
+  --     ]])
+  --   end
+  -- }
 }

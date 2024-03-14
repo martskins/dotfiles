@@ -27,7 +27,7 @@ o.expandtab = true
 o.backspace = 'indent,eol,start'
 o.autoindent = true
 -- o.pastetoggle = '<leader>z'
-o.clipboard = 'unnamedplus,unnamed'
+-- o.clipboard = 'unnamedplus,unnamed'
 o.ignorecase = true
 o.history = 100
 o.hlsearch = true
@@ -43,6 +43,7 @@ o.background = 'dark'
 o.foldenable = false
 o.cmdheight = 1
 o.cursorline = true
+o.smartcase = true
 
 local wo = vim.wo
 wo.number = true
@@ -73,4 +74,7 @@ g.loaded_netrwFileHandlers = 1
 vim.api.nvim_exec([[
   hi LspReferenceText guibg=grey guifg=red
   hi QuickFixLine guibg=none
+
+  "colorscheme lunaperche
+  syntax off
 ]], false)
