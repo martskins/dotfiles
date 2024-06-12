@@ -32,7 +32,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<leader>h', '<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())<CR>', opts)
 
   if client.supports_method 'textDocument/codeLens' then
-    vim.api.nvim_command('autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.codelens.refresh()')
+    vim.api.nvim_command('autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.codelens.refresh({ bufnr = 0 })')
   end
 
   client.config.flags.allow_incremental_sync = true
@@ -120,6 +120,7 @@ local settings_overrides = {
       },
       codelenses = {
         generate = true,
+        gc_details = true,
         regenerate_cgo = true,
         tidy = true,
         test = false,
@@ -162,6 +163,10 @@ for _, lsp in ipairs(servers) do
 
   if lsp == 'java_language_server' then
     setup.cmd = { '/Users/martinasquino/java-language-server/dist/lang_server_mac.sh' }
+  end
+
+  if lsp == 'gopls' then
+    setup.cmd = { '/Users/martinasquino/dev/tools/gopls/main' }
   end
 
   nvim_lsp[lsp].setup(setup)

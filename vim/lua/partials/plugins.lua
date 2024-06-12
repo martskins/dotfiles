@@ -34,15 +34,16 @@ return {
   },
   {
     'folke/trouble.nvim',
-    cmd = { 'TroubleToggle' },
+    cmd = { 'Trouble' },
     init = function()
-      map('n', 'T', ':TroubleToggle<cr>', { silent = true })
+      map('n', 'T', ':Trouble diagnostics toggle<cr>', { silent = true })
+      map('n', ',.', ':Trouble symbols toggle<cr>', { silent = true })
     end,
     config = function()
       require('trouble').setup {
-        icons = false,
         auto_preview = false,
         cycle_results = false,
+        focus = true,
       }
     end
   },
@@ -146,26 +147,26 @@ return {
   { 'hrsh7th/vim-vsnip-integ', event = { 'VeryLazy' }},
   { 'hrsh7th/vim-vsnip', event = { 'VeryLazy' }},
 	{ 'hrsh7th/nvim-cmp',
-    dependencies = {
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-path',
-      'hrsh7th/cmp-vsnip',
-      'hrsh7th/cmp-buffer',
-    },
-    config = require('partials/completion').config,
-    event = { 'BufEnter' }
-  },
+	   dependencies = {
+	     'hrsh7th/cmp-nvim-lsp',
+	     'hrsh7th/cmp-path',
+	     'hrsh7th/cmp-vsnip',
+	     'hrsh7th/cmp-buffer',
+	   },
+	   config = require('partials/completion').config,
+	   event = { 'BufEnter' }
+	 },
   { 'schickling/vim-bufonly',
     init = function()
       map('n', '<leader>bo', ':BufOnly<CR>', { silent = true })
     end,
     cmd = { 'BufOnly' }
   },
-  { 'preservim/tagbar',
-    init = require('partials/tagbar').init,
-    config = require('partials/tagbar').config,
-    cmd = { 'TagbarToggle' },
-  },
+  -- { 'preservim/tagbar',
+  --   init = require('partials/tagbar').init,
+  --   config = require('partials/tagbar').config,
+  --   cmd = { 'TagbarToggle' },
+  -- },
   { 'airblade/vim-rooter',
     ft = { 'go', 'rust' },
   },
