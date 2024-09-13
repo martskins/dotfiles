@@ -44,6 +44,8 @@ o.foldenable = false
 o.cmdheight = 1
 o.cursorline = true
 o.smartcase = true
+o.colorcolumn='+1'
+o.textwidth = 100
 
 local wo = vim.wo
 wo.number = true
@@ -74,6 +76,7 @@ g.loaded_netrwFileHandlers = 1
 vim.api.nvim_exec([[
   hi LspReferenceText guibg=grey guifg=red
   hi QuickFixLine guibg=none
+  hi ColorColumn guibg=#AA0000
 
   "colorscheme lunaperche
   syntax off

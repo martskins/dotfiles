@@ -137,7 +137,7 @@ local filetypes_overrides = {
 }
 
 local servers = { "pyright", "rust_analyzer", "gopls", "lua_ls", "clangd", "yamlls", "terraformls",
-  "hls", "vimls", "graphql", "bufls", "tsserver", "zls", "dartls", "java_language_server", "cmake", "glsl_analyzer" }
+  "hls", "vimls", "graphql", "bufls", "ts_ls", "zls", "dartls", "java_language_server", "cmake", "glsl_analyzer" }
 for _, lsp in ipairs(servers) do
   local settings = {}
   if settings_overrides[lsp] then
@@ -165,9 +165,9 @@ for _, lsp in ipairs(servers) do
     setup.cmd = { '/Users/martinasquino/java-language-server/dist/lang_server_mac.sh' }
   end
 
-  if lsp == 'gopls' then
-    setup.cmd = { '/Users/martinasquino/dev/tools/gopls/main' }
-  end
+  -- if lsp == 'gopls' then
+  --   setup.cmd = { '/Users/martinasquino/dev/tools/gopls/main' }
+  -- end
 
   nvim_lsp[lsp].setup(setup)
 end

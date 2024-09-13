@@ -9,7 +9,8 @@ function module.config()
         type = "codelldb",
         request = "launch",
         program = function()
-            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+            local dirname =vim.fn.substitute(vim.fn.getcwd(), '^.*/', '', '')
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/build/' .. dirname, 'file')
         end,
         cwd = '${workspaceFolder}',
         stopOnEntry = false,
