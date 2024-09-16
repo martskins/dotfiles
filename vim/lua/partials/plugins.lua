@@ -9,13 +9,13 @@ return {
     end
   },
   { 'mfussenegger/nvim-dap',
-    cmd = { 'DapContinue', 'DapToggleBreakpoint', 'DapToggleUi' },
+    -- cmd = { 'DapContinue', 'DapToggleBreakpoint', 'DapToggleUi' },
     config = require('partials/ndap').config,
     init = require('partials/ndap').init,
     lazy = false,
   },
   { 'rcarriga/nvim-dap-ui',
-    cmd = { 'DapContinue', 'DapToggleBreakpoint', 'DapToggleUi' },
+    -- cmd = { 'DapContinue', 'DapToggleBreakpoint', 'DapToggleUi' },
     config = require('partials/dapui').config,
     init = require('partials/dapui').init,
     dependencies = {
@@ -111,7 +111,7 @@ return {
     cmd = { 'FzfLua' },
   },
   { 'vim-test/vim-test',
-    ft = { 'go', 'rust' },
+    ft = { 'go', 'rust', 'zig', 'cpp'},
     init = function()
       map('n', '<leader>tt', ':TestNearest<cr>', {})
       map('n', '<leader>tp', ':TestFile<cr>', {})
@@ -162,37 +162,37 @@ return {
     end,
     cmd = { 'BufOnly' }
   },
-  -- { 'preservim/tagbar',
-  --   init = require('partials/tagbar').init,
-  --   config = require('partials/tagbar').config,
-  --   cmd = { 'TagbarToggle' },
-  -- },
+  { 'preservim/tagbar',
+    init = require('partials/tagbar').init,
+    config = require('partials/tagbar').config,
+    cmd = { 'TagbarToggle' },
+  },
   { 'airblade/vim-rooter',
-    ft = { 'go', 'rust' },
+    ft = { 'go', 'rust', 'zig' },
   },
   { 'johejo/gomod.vim', ft = { 'gomod' }},
   { 'rhysd/vim-go-impl', ft = { 'go' }},
   { 'martskins/vim-cargo-search', ft = { 'rust' }},
   { 'jparise/vim-graphql', ft = { 'graphql' }},
   { 'cespare/vim-toml', ft = { 'toml' }},
-  -- { 'ellisonleao/gruvbox.nvim',
-  --   priority = 1000,
-  --   lazy = false,
-  --   config = function()
-  --     require('gruvbox').setup({
-  --       transparent_mode = false,
-  --       italic = {
-  --         strings = false,
-  --         comments = false,
-  --         operators = false,
-  --         folds = false,
-  --       },
-  --       bold = false,
-  --       contrast = "hard"
-  --     })
-  --     vim.cmd('colorscheme gruvbox')
-  --   end
-  -- },
+  { 'ellisonleao/gruvbox.nvim',
+    priority = 1000,
+    lazy = false,
+    config = function()
+      require('gruvbox').setup({
+        transparent_mode = false,
+        italic = {
+          strings = false,
+          comments = false,
+          operators = false,
+          folds = false,
+        },
+        bold = false,
+        contrast = "hard"
+      })
+      vim.cmd('colorscheme gruvbox')
+    end
+  },
   -- { 'tomasiser/vim-code-dark',
   --   priority = 1000,
   --   lazy = false,
@@ -200,8 +200,8 @@ return {
   --     vim.cmd([[
   --       let g:codedark_transparent=1
   --       let g:codedark_conservative=1
-
-
+  --
+  --
   --       colorscheme codedark
   --     ]])
   --   end
