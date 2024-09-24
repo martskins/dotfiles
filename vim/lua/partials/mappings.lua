@@ -56,8 +56,6 @@ vim.api.nvim_exec([[
   " fugitive config
   command! -nargs=1 Browse silent execute '!open' shellescape(<q-args>,1)
   nnoremap <leader>gb :GBrowse<CR>
-
-  hi Normal guibg=#111111
 ]], false)
 
 vim.api.nvim_create_user_command('PS', 'Lazy sync', {})

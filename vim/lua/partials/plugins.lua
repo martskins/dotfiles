@@ -27,7 +27,7 @@ return {
     'nvim-lualine/lualine.nvim',
     event = { 'BufEnter' },
     dependencies = {
-      'nvim-tree/nvim-web-devicons',
+      -- 'nvim-tree/nvim-web-devicons',
       'arkav/lualine-lsp-progress'
     },
     config = require('partials/lualine').config,
@@ -139,7 +139,7 @@ return {
     event = { 'BufEnter' },
   },
 	{ 'nvim-tree/nvim-tree.lua',
-		dependencies = { 'nvim-tree/nvim-web-devicons' },
+		-- dependencies = { 'nvim-tree/nvim-web-devicons' },
 		init = require('partials/nvim_tree').init,
 		config = require('partials/nvim_tree').config,
 		cmd = { 'NvimTreeToggle', 'NvimTreeFindFileToggle' },
@@ -188,9 +188,14 @@ return {
           folds = false,
         },
         bold = false,
-        contrast = "hard"
+        contrast = "hard",
+        overrides = {
+            Normal = {bg = "#000000"}
+        }
       })
-      vim.cmd('colorscheme gruvbox')
+      vim.cmd([[
+        colorscheme gruvbox
+      ]])
     end
   },
   -- { 'tomasiser/vim-code-dark',
