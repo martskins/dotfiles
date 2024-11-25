@@ -3,7 +3,7 @@ local module = {}
 function module.config()
   require'nvim-treesitter.configs'.setup {
     -- A list of parser names, or "all"
-    ensure_installed = { "c", "cpp", "lua", "rust", "go", "vim", "terraform", "yaml", "proto", "toml", "graphql", "typescript", "javascript", "sql", "make", "tsx", "json", "cmake"},
+    ensure_installed = { "c", "cpp", "c_sharp", "lua", "rust", "go", "vim", "terraform", "yaml", "proto", "toml", "graphql", "typescript", "javascript", "sql", "make", "tsx", "json", "cmake" },
 
     -- Install parsers synchronously (only applied to `ensure_installed`)
     sync_install = false,

@@ -9,6 +9,7 @@ g.loaded_perl_provider = 0
 g.python3_host_prog = '/usr/local/bin/python3'
 
 local o = vim.o
+o.list = true
 o.binary = true
 o.showmatch = false
 o.modeline = false
@@ -78,6 +79,5 @@ vim.api.nvim_exec([[
   hi QuickFixLine guibg=none
   hi ColorColumn guibg=#AA0000
 
-  "colorscheme lunaperche
   syntax off
 ]], false)
