@@ -3,13 +3,6 @@ vim.g.mapleader = "," -- setting leader before lazy so mappings are correct
 local map = vim.api.nvim_set_keymap
 return {
     {
-        "takac/vim-hardtime",
-        event = {"VeryLazy"},
-        init = function()
-            -- vim.api.nvim_exec([[ let g:hardtime_default_on = 1 ]], false)
-        end
-    },
-    {
         "mfussenegger/nvim-dap",
         cmd = {"DapContinue", "DapToggleBreakpoint", "DapToggleUi"},
         config = require("partials/ndap").config,
@@ -28,7 +21,7 @@ return {
         "nvim-lualine/lualine.nvim",
         event = {"BufEnter"},
         dependencies = {
-            -- 'nvim-tree/nvim-web-devicons',
+            "nvim-tree/nvim-web-devicons",
             "arkav/lualine-lsp-progress"
         },
         config = require("partials/lualine").config
@@ -124,7 +117,6 @@ return {
         config = require("partials/fzf").config,
         cmd = {"FzfLua"}
     },
-    -- from here
     {
         "vim-test/vim-test",
         ft = {"go", "rust", "zig", "cpp"},
@@ -152,7 +144,6 @@ return {
     },
     {"tpope/vim-rhubarb", event = {"VeryLazy"}},
     {"tpope/vim-fugitive", event = {"VeryLazy"}},
-    -- to here
     {
         "neovim/nvim-lspconfig",
         config = function()
@@ -164,18 +155,14 @@ return {
         "stevearc/oil.nvim",
         event = {"VeryLazy"},
         config = function()
-            require("oil").setup()
+            require("oil").setup(
+                {
+                    delete_to_trash = true
+                }
+            )
             vim.keymap.set("n", "-", "<CMD>Oil<CR>", {desc = "Open parent directory"})
         end
     },
-    -- {
-    --     "nvim-tree/nvim-tree.lua",
-    --     -- dependencies = { 'nvim-tree/nvim-web-devicons' },
-    --     init = require("partials/nvim_tree").init,
-    --     config = require("partials/nvim_tree").config,
-    --     cmd = {"NvimTreeToggle", "NvimTreeFindFileToggle"}
-    -- },
-    -- from here
     {"hrsh7th/vim-vsnip-integ", event = {"VeryLazy"}},
     {"hrsh7th/vim-vsnip", event = {"VeryLazy"}},
     {
@@ -189,7 +176,6 @@ return {
         config = require("partials/completion").config,
         event = {"BufEnter"}
     },
-    -- to here
     {
         "schickling/vim-bufonly",
         init = function()
