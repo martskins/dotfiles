@@ -1,12 +1,12 @@
 local g = vim.g
-g.ftplugin_sql_omni_key = '<C-j>'
-g.mapleader = ','
+g.ftplugin_sql_omni_key = "<C-j>"
+g.mapleader = ","
 g.loaded_python_provider = 0
 g.loaded_python3_provider = 0
 g.loaded_ruby_provider = 0
 g.loaded_node_provider = 0
 g.loaded_perl_provider = 0
-g.python3_host_prog = '/usr/local/bin/python3'
+g.python3_host_prog = "/usr/local/bin/python3"
 
 local o = vim.o
 o.list = true
@@ -15,17 +15,17 @@ o.showmatch = false
 o.modeline = false
 o.timeoutlen = 1000
 o.ttimeoutlen = 0
-o.encoding = 'utf-8'
-o.shell = '/bin/bash'
-o.guifont = 'monospace'
+o.encoding = "utf-8"
+o.shell = "/bin/bash"
+o.guifont = "monospace"
 o.backup = false
 o.hidden = true
 o.swapfile = false
-o.belloff = 'all'
+o.belloff = "all"
 o.tabstop = 2
 o.shiftwidth = 2
 o.expandtab = true
-o.backspace = 'indent,eol,start'
+o.backspace = "indent,eol,start"
 o.autoindent = true
 -- o.pastetoggle = '<leader>z'
 -- o.clipboard = 'unnamedplus,unnamed'
@@ -36,22 +36,22 @@ o.wildmenu = true
 o.updatetime = 300
 o.autoread = true
 o.ttyfast = true
-o.shortmess = 'F'
-o.mouse = 'a'
-o.completeopt = 'noinsert,menuone,noselect'
+o.shortmess = "F"
+o.mouse = "a"
+o.completeopt = "noinsert,menuone,noselect"
 o.termguicolors = true
-o.background = 'dark'
+o.background = "dark"
 o.foldenable = false
 o.cmdheight = 1
 o.cursorline = true
 o.smartcase = true
-o.colorcolumn='+1'
+o.colorcolumn = "+1"
 o.textwidth = 100
 
 local wo = vim.wo
 wo.number = true
 wo.relativenumber = true
-wo.signcolumn = 'yes'
+wo.signcolumn = "yes"
 
 -- disable unnecessary builtin plugins
 g.loaded_gzip = 1
@@ -74,10 +74,15 @@ g.loaded_netrwPlugin = 1
 g.loaded_netrwSettings = 1
 g.loaded_netrwFileHandlers = 1
 
-vim.api.nvim_exec([[
-  hi LspReferenceText guibg=grey guifg=red
-  hi QuickFixLine guibg=none
-  hi ColorColumn guibg=#AA0000
+vim.api.nvim_exec(
+    [[
+      hi LspReferenceText guibg=grey guifg=red
+      hi QuickFixLine guibg=none
+      hi ColorColumn guibg=#AA0000
 
-  syntax off
-]], false)
+      autocmd BufNewFile,BufRead *.frag,*.vert set filetype=glsl
+
+      syntax off
+    ]],
+    false
+)
