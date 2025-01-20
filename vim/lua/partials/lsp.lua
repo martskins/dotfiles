@@ -107,6 +107,7 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities.offsetEncoding = {"utf-8"}
+-- capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
 local nvim_lsp = require("lspconfig")
 local settings_overrides = {
@@ -169,6 +170,7 @@ local servers = {
     "cmake",
     "glsl_analyzer"
 }
+
 for _, lsp in ipairs(servers) do
     local settings = {}
     if settings_overrides[lsp] then
@@ -201,18 +203,3 @@ for _, lsp in ipairs(servers) do
 
     nvim_lsp[lsp].setup(setup)
 end
-
-local path_to_download = "/Users/martinasquino/Downloads/omnisharp-osx"
-nvim_lsp.omnisharp.setup {
-    cmd = {
-        "mono",
-        "--assembly-loader=strict",
-        path_to_download .. "/omnisharp/OmniSharp.exe"
-    },
-    -- root_dir = function(fname)
-    --   return nvim_lsp.util.find_git_ancestor(fname) or vim.loop.os_homedir()
-    -- end;
-    -- Assuming you have an on_attach function. Delete this line if you don't.
-    on_attach = on_attach,
-    use_mono = true
-}
