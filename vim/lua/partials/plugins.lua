@@ -19,6 +19,7 @@ return {
     },
     {
         "nvim-lualine/lualine.nvim",
+        enabled = false,
         event = {"BufEnter"},
         dependencies = {
             "nvim-tree/nvim-web-devicons",
@@ -149,7 +150,7 @@ return {
         config = function()
             require("partials/lsp")
         end,
-        event = {"BufEnter"}
+        event = {"FileType"}
     },
     {
         "stevearc/oil.nvim",

@@ -1,22 +1,24 @@
 local module = {}
 
 function module.init()
-  local map = vim.api.nvim_set_keymap
-  map('n', '<leader>aa', ':A<CR>', { silent = true })
-  map('n', '<leader>av', ':AV<CR>', { silent = true })
+    local map = vim.api.nvim_set_keymap
+    map("n", "<leader>aa", ":A<CR>", {silent = true})
+    map("n", "<leader>av", ":AV<CR>", {silent = true})
 end
 
 function module.config()
-  vim.api.nvim_exec([[
+    vim.api.nvim_exec(
+        [[
     augroup projection_extension
       let args = {}
       let args['*.go'] =                                { 'alternate': ['{}_test.go', '{}_integration_test.go'] }
       let args['*_test.go'] =                           { 'alternate': '{}.go' }
       let args['*_integration_test.go'] =               { 'alternate': '{}.go' }
-      let args['*.cpp'] =                               { 'alternate': ['{}.h', '{}.hpp'] }
-      let args['*.hpp'] =                               { 'alternate': ['{}.c', '{}.cpp'] }
-      let args['*.h'] =                                 { 'alternate': ['{}.c', '{}.cpp'] }
-      let args['*.c'] =                                 { 'alternate': ['{}.h', '{}.hpp'] }
+      let args['*_test.cpp'] =                          { 'alternate': ['{}.hpp', '{}.cpp'] }
+      let args['*.cpp'] =                               { 'alternate': '{}.hpp' }
+      let args['*.hpp'] =                               { 'alternate': '{}.cpp' }
+      let args['*.h'] =                                 { 'alternate': '{}.c' }
+      let args['*.c'] =                                 { 'alternate': '{}.h' }
       let args['*.js'] =                                { 'alternate': '{}.spec.js' }
       let args['*.spec.js'] =                           { 'alternate': '{}.js' }
       let args['dev-aws/*'] =                           { 'alternate': 'prod-aws/{}' }
@@ -31,7 +33,9 @@ function module.config()
       let args['okta/enterprise-dev/uw-cbc/*']  =       { 'alternate': 'okta/enterprise-prod/uw-cbc/{}' }
       autocmd User ProjectionistDetect call projectionist#append(getcwd(), args)
     augroup END
-  ]], false)
+  ]],
+        false
+    )
 end
 
 return module
