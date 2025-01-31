@@ -9,6 +9,7 @@ function module.config()
             "lua",
             "rust",
             "go",
+            "gomod",
             "vim",
             "terraform",
             "yaml",
@@ -44,7 +45,7 @@ function module.config()
             }
         },
         incremental_selection = {
-            enable = false,
+            enable = true,
             keymaps = {
                 init_selection = "gnn",
                 node_incremental = "grn",
