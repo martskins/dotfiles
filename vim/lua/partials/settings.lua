@@ -9,7 +9,8 @@ g.loaded_perl_provider = 0
 g.python3_host_prog = "/usr/local/bin/python3"
 
 local o = vim.o
-o.list = true
+-- o.list = true
+o.winborder = "single"
 o.binary = true
 o.showmatch = false
 o.modeline = false
@@ -38,7 +39,7 @@ o.autoread = true
 o.ttyfast = true
 o.shortmess = "F"
 o.mouse = "a"
-o.completeopt = "noinsert,menuone,noselect"
+o.completeopt = "noinsert,menuone,noselect,fuzzy"
 o.termguicolors = true
 o.background = "dark"
 o.foldenable = false
@@ -86,3 +87,13 @@ vim.api.nvim_exec(
     ]],
     false
 )
+
+vim.api.nvim_create_autocmd(
+    "TextYankPost",
+    {
+        pattern = "*",
+        command = "silent! lua vim.highlight.on_yank({ timeout = 300 })"
+    }
+)
+
+require("partials/lsp")

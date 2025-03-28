@@ -46,8 +46,8 @@ local on_attach = function(client, bufnr)
         )
     end
 
-    client.config.flags.allow_incremental_sync = true
-    client.server_capabilities.semanticTokensProvider = nil
+    -- client.config.flags.allow_incremental_sync = true
+    -- client.server_capabilities.semanticTokensProvider = nil
 
     -- if client.server_capabilities.inlayHintProvider then
     --   vim.lsp.inlay_hint(bufnr, true)
@@ -107,99 +107,75 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities.offsetEncoding = {"utf-8"}
--- capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
-local nvim_lsp = require("lspconfig")
-local settings_overrides = {
-    lua_ls = {
+vim.lsp.config.gopls = {
+    cmd = {"gopls"},
+    filetypes = {"go", "gomod", "gowork"},
+    on_attach = on_attach,
+    settings = {
+        ["local"] = get_current_gomod(),
+        gofumpt = true,
+        staticcheck = true,
+        usePlaceholders = true,
+        hints = {
+            assignVariableTypes = false,
+            compositeLiteralFields = true,
+            compositeLiteralTypes = true,
+            constantValues = false,
+            functionTypeParameters = true,
+            parameterNames = true,
+            rangeVariableTypes = true
+        },
+        analyses = {
+            modernize = true
+        },
+        codelenses = {
+            generate = true,
+            gc_details = true,
+            references = true,
+            regenerate_cgo = true,
+            tidy = true,
+            test = false,
+            upgrade_dependency = true,
+            vendor = true,
+            run_govulncheck = true
+        }
+    }
+}
+vim.lsp.enable("gopls")
+
+vim.lsp.config.typescript = {
+    cmd = {"typescript-language-server"},
+    on_attach = on_attach,
+    filetypes = {"typescriptreact", "tsx"}
+}
+vim.lsp.enable("typescript")
+
+vim.lsp.config.rust = {
+    cmd = {"rust-analyzer"},
+    on_attach = on_attach,
+    filetypes = {"rust"}
+}
+vim.lsp.enable("rust")
+
+vim.lsp.config.clangd = {
+    cmd = {"clangd"},
+    on_attach = on_attach,
+    filetypes = {"cpp", "c"}
+}
+vim.lsp.enable("clangd")
+
+vim.lsp.config.luals = {
+    cmd = {"lua-language-server"},
+    on_attach = on_attach,
+    filetypes = {"lua"},
+    settings = {
         Lua = {
             telemetry = {enable = false},
             diagnostics = {globals = {"vim"}}
         }
-    },
-    gopls = {
-        gopls = {
-            ["local"] = get_current_gomod(),
-            gofumpt = true,
-            staticcheck = true,
-            usePlaceholders = true,
-            hints = {
-                assignVariableTypes = false,
-                compositeLiteralFields = true,
-                compositeLiteralTypes = true,
-                constantValues = false,
-                functionTypeParameters = true,
-                parameterNames = true,
-                rangeVariableTypes = true
-            },
-            codelenses = {
-                generate = true,
-                gc_details = true,
-                regenerate_cgo = true,
-                tidy = true,
-                test = false,
-                upgrade_dependency = true,
-                vendor = true,
-                run_govulncheck = true
-            }
-        }
     }
 }
+vim.lsp.enable("luals")
 
-local filetypes_overrides = {
-    clangd = {"c", "cpp", "objc", "objcpp"}
-}
-
-local servers = {
-    "pyright",
-    "rust_analyzer",
-    "gopls",
-    "lua_ls",
-    "clangd",
-    "yamlls",
-    "terraformls",
-    "csharp_ls",
-    "hls",
-    "vimls",
-    "graphql",
-    "buf_ls",
-    "ts_ls",
-    "zls",
-    "dartls",
-    "java_language_server",
-    "cmake",
-    "glsl_analyzer"
-}
-
-for _, lsp in ipairs(servers) do
-    local settings = {}
-    if settings_overrides[lsp] then
-        settings = settings_overrides[lsp]
-    end
-
-    local setup = {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        -- root_dir = function(fname)
-        --   return nvim_lsp.util.find_git_ancestor(fname) or vim.loop.os_homedir()
-        -- end;
-        flags = {
-            debounce_did_change_notify = 250
-        },
-        settings = settings
-    }
-
-    if filetypes_overrides[lsp] then
-        setup.filetypes = filetypes_overrides[lsp]
-    end
-
-    if lsp == "java_language_server" then
-        setup.cmd = {"/Users/martinasquino/java-language-server/dist/lang_server_mac.sh"}
-    end
-
-    -- if lsp == 'gopls' then
-    --   setup.cmd = { '/Users/martinasquino/dev/tools/gopls/main' }
-    -- end
-
-    nvim_lsp[lsp].setup(setup)
-end
+vim.diagnostic.config({virtual_text = {current_line = true}})

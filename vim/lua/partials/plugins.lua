@@ -1,7 +1,22 @@
 vim.g.mapleader = "," -- setting leader before lazy so mappings are correct
 
 local map = vim.api.nvim_set_keymap
+
 return {
+    {
+        "echasnovski/mini.indentscope",
+        version = false,
+        event = {"VeryLazy"},
+        config = function()
+            require("mini.indentscope").setup(
+                {
+                    draw = {
+                        animation = require("mini.indentscope").gen_animation.none()
+                    }
+                }
+            )
+        end
+    },
     {
         "mfussenegger/nvim-dap",
         cmd = {"DapContinue", "DapToggleBreakpoint", "DapToggleUi"},
@@ -64,7 +79,10 @@ return {
                     graphql = {require("formatter.filetypes.graphql").prettier},
                     proto = {require("formatter.filetypes.proto").buf_format},
                     dart = {require("formatter.filetypes.dart").dartformat},
-                    go = {require("formatter.filetypes.go").goimports},
+                    go = {
+                        require("formatter.filetypes.go").goimports,
+                        require("formatter.filetypes.go").gofumpt
+                    },
                     cpp = {require("formatter.filetypes.cpp").clangformat},
                     c = {require("formatter.filetypes.cpp").clangformat},
                     zig = {require("formatter.filetypes.zig").zigfmt},
@@ -88,7 +106,7 @@ return {
     {"dstein64/vim-startuptime", cmd = {"StartupTime"}},
     {
         "github/copilot.vim",
-        ft = {"go", "rust", "zig", "cpp", "typescript"},
+        ft = {"go", "rust", "zig", "cpp", "typescript", "typescriptreact"},
         config = function()
             vim.keymap.set(
                 "i",
@@ -127,9 +145,9 @@ return {
             map("n", "<leader>ta", ":TestSuite<cr>", {})
             vim.api.nvim_exec(
                 [[
-           let test#strategy = "neovim"
-           let test#neovim#start_normal = 1
-         ]],
+                  let test#strategy = "neovim"
+                  let test#neovim#start_normal = 1
+                ]],
                 false
             )
         end
@@ -146,13 +164,6 @@ return {
     {"tpope/vim-rhubarb", event = {"VeryLazy"}},
     {"tpope/vim-fugitive", event = {"VeryLazy"}},
     {
-        "neovim/nvim-lspconfig",
-        config = function()
-            require("partials/lsp")
-        end,
-        event = {"FileType"}
-    },
-    {
         "stevearc/oil.nvim",
         event = {"VeryLazy"},
         config = function()
@@ -161,7 +172,7 @@ return {
                     delete_to_trash = true
                 }
             )
-            vim.keymap.set("n", "-", "<CMD>Oil<CR>", {desc = "Open parent directory"})
+            vim.keymap.set("n", "-", "<CMD>Oil<CR>", {desc = "Open parent directory", silent = true})
         end
     },
     {"hrsh7th/vim-vsnip-integ", event = {"VeryLazy"}},
@@ -192,7 +203,10 @@ return {
     },
     {
         "airblade/vim-rooter",
-        ft = {"go", "rust", "zig"}
+        ft = {"go", "rust", "zig"},
+        config = function()
+            vim.cmd [[ let g:rooter_silent_chdir = 1 ]]
+        end
     },
     {"johejo/gomod.vim", ft = {"gomod"}},
     {"rhysd/vim-go-impl", ft = {"go"}},
@@ -216,7 +230,9 @@ return {
                     bold = false,
                     contrast = "hard",
                     overrides = {
-                        Normal = {bg = "#000000"}
+                        -- Normal = {bg = "#000000"}
+                        -- Comment = {fg = "#AB7441"}
+                        Comment = {fg = "#fc9403"}
                     }
                 }
             )
