@@ -34,6 +34,7 @@ vim.api.nvim_exec(
 
   " the macro in f converts a struct field to a cli.Flag
   let @f='0wwdw0wPli 0wi&cli.lvUeliFlag{Name:lli"ebyweli"bcrkf"li, EnvVars:[]string{"pbcrsgUweli"}, Destination: &cfg.pbeli, Required: true},'
+  let @l='0wwdwdwdw0wPli 0wi&cli.lvUeliFlag{Name:lli"ebyweli"bcrkf"li, EnvVars:[]string{"pbcrsgUweli"}, Destination: &cfg.pbeli, Required: true},'
   let g:rooter_patterns = ['.git', '*.sln', 'build/env.sh']
   let g:rooter_resolve_links = 0
 
@@ -50,7 +51,6 @@ vim.api.nvim_exec(
     endif
   endfunction
   vnoremap <silent> ? :<C-U>call RangeSearch('/')<CR>:if strlen(g:srchstr) > 0\|exec '/'.g:srchstr\|endif<CR>
-  " vnoremap <silent> ? :<C-U>call RangeSearch('?')<CR>:if strlen(g:srchstr) > 0\|exec '?'.g:srchstr\|endif<CR>
 
   " fugitive config
   command! -nargs=1 Browse silent execute '!open' shellescape(<q-args>,1)

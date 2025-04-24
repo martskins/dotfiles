@@ -3,18 +3,56 @@ local module = {}
 function module.config()
     local dap = require("dap")
 
+    dap.configurations.rust = {
+        {
+            name = "Launch",
+            type = "lldb",
+            request = "launch",
+            program = function()
+                -- return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/build/a.out", "file")
+                return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/build/a.out", "file")
+            end,
+            cwd = "${workspaceFolder}",
+            stopOnEntry = false
+        }
+    }
+
+    dap.configurations.c = {
+        {
+            name = "Launch",
+            type = "codelldb",
+            request = "launch",
+            program = function()
+                -- local dirname = vim.fn.substitute(vim.fn.getcwd(), "^.*/", "", "")
+                -- return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/build/" .. dirname, "file")
+                return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/build/a.out", "file")
+            end,
+            cwd = "${workspaceFolder}",
+            stopOnEntry = false,
+            args = function()
+                local args_string = vim.fn.input("Arguments: ")
+                return vim.split(args_string, " ")
+            end,
+            runInTerminal = true
+        }
+    }
+
     dap.configurations.cpp = {
         {
             name = "Launch",
             type = "codelldb",
             request = "launch",
             program = function()
-                local dirname = vim.fn.substitute(vim.fn.getcwd(), "^.*/", "", "")
-                return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/build/" .. dirname, "file")
+                -- local dirname = vim.fn.substitute(vim.fn.getcwd(), "^.*/", "", "")
+                -- return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/build/" .. dirname, "file")
+                return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/build/a.out", "file")
             end,
             cwd = "${workspaceFolder}",
             stopOnEntry = false,
-            args = {},
+            args = function()
+                local args_string = vim.fn.input("Arguments: ")
+                return vim.split(args_string, " ")
+            end,
             runInTerminal = true
         }
     }
@@ -103,6 +141,14 @@ function module.init()
     )
     vim.keymap.set(
         "n",
+        "<down>",
+        function()
+            dap.step_over()
+        end,
+        {silent = true}
+    )
+    vim.keymap.set(
+        "n",
         "<Leader>do",
         function()
             dap.step_over()
@@ -111,9 +157,25 @@ function module.init()
     )
     vim.keymap.set(
         "n",
+        "<right>",
+        function()
+            dap.step_into()
+        end,
+        {silent = true}
+    )
+    vim.keymap.set(
+        "n",
         "<Leader>di",
         function()
             dap.step_into()
+        end,
+        {silent = true}
+    )
+    vim.keymap.set(
+        "n",
+        "<left>",
+        function()
+            dap.step_back()
         end,
         {silent = true}
     )
