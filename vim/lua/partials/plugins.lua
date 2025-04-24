@@ -12,9 +12,16 @@ return {
                 {
                     draw = {
                         animation = require("mini.indentscope").gen_animation.none()
+                    },
+                    options = {
+                        border = "both",
+                        indent_at_cursor = true,
+                        try_as_border = true
                     }
                 }
             )
+
+            vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", {fg = "red"})
         end
     },
     {
@@ -31,16 +38,6 @@ return {
         dependencies = {
             "nvim-neotest/nvim-nio"
         }
-    },
-    {
-        "nvim-lualine/lualine.nvim",
-        enabled = false,
-        event = {"BufEnter"},
-        dependencies = {
-            "nvim-tree/nvim-web-devicons",
-            "arkav/lualine-lsp-progress"
-        },
-        config = require("partials/lualine").config
     },
     {
         "folke/trouble.nvim",
@@ -80,8 +77,14 @@ return {
                     proto = {require("formatter.filetypes.proto").buf_format},
                     dart = {require("formatter.filetypes.dart").dartformat},
                     go = {
-                        require("formatter.filetypes.go").goimports,
-                        require("formatter.filetypes.go").gofumpt
+                        require("formatter.filetypes.go").gofumpt,
+                        function()
+                            return {
+                                exe = "goimports",
+                                stdin = true,
+                                args = {"-local", "github.com/utilitywarehouse/cbc-mono"}
+                            }
+                        end
                     },
                     cpp = {require("formatter.filetypes.cpp").clangformat},
                     c = {require("formatter.filetypes.cpp").clangformat},
@@ -175,31 +178,25 @@ return {
             vim.keymap.set("n", "-", "<CMD>Oil<CR>", {desc = "Open parent directory", silent = true})
         end
     },
-    {"hrsh7th/vim-vsnip-integ", event = {"VeryLazy"}},
-    {"hrsh7th/vim-vsnip", event = {"VeryLazy"}},
-    {
-        "hrsh7th/nvim-cmp",
-        dependencies = {
-            "hrsh7th/cmp-nvim-lsp",
-            "hrsh7th/cmp-path",
-            "hrsh7th/cmp-vsnip",
-            "hrsh7th/cmp-buffer"
-        },
-        config = require("partials/completion").config,
-        event = {"BufEnter"}
-    },
+    -- {"hrsh7th/vim-vsnip-integ", event = {"VeryLazy"}},
+    -- {"hrsh7th/vim-vsnip", event = {"VeryLazy"}},
+    -- {
+    --     "hrsh7th/nvim-cmp",
+    --     dependencies = {
+    --         "hrsh7th/cmp-nvim-lsp",
+    --         "hrsh7th/cmp-path",
+    --         "hrsh7th/cmp-vsnip",
+    --         "hrsh7th/cmp-buffer"
+    --     },
+    --     config = require("partials/completion").config,
+    --     event = {"BufEnter"}
+    -- },
     {
         "schickling/vim-bufonly",
         init = function()
             map("n", "<leader>bo", ":BufOnly<CR>", {silent = true})
         end,
         cmd = {"BufOnly"}
-    },
-    {
-        "preservim/tagbar",
-        init = require("partials/tagbar").init,
-        config = require("partials/tagbar").config,
-        cmd = {"TagbarToggle"}
     },
     {
         "airblade/vim-rooter",

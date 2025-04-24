@@ -39,7 +39,7 @@ o.autoread = true
 o.ttyfast = true
 o.shortmess = "F"
 o.mouse = "a"
-o.completeopt = "noinsert,menuone,noselect,fuzzy"
+o.completeopt = "noinsert,menuone,fuzzy"
 o.termguicolors = true
 o.background = "dark"
 o.foldenable = false
@@ -75,19 +75,19 @@ g.loaded_netrwPlugin = 1
 g.loaded_netrwSettings = 1
 g.loaded_netrwFileHandlers = 1
 
-vim.api.nvim_exec(
-    [[
-      hi LspReferenceText guibg=grey guifg=red
-      hi QuickFixLine guibg=none
-      hi ColorColumn guibg=#AA0000
+vim.api.nvim_exec([[ syntax off ]], false)
 
-      autocmd BufNewFile,BufRead *.frag,*.vert set filetype=glsl
+vim.api.nvim_set_hl(0, "LspReferenceText", {bg = "grey", fg = "red"})
+vim.api.nvim_set_hl(0, "QuickFixLine", {bg = "none"})
+vim.api.nvim_set_hl(0, "ColorColumn", {bg = "red"})
 
-      syntax off
-    ]],
-    false
+vim.api.nvim_create_autocmd(
+    "BufNewFile",
+    {
+        pattern = "*.frag, *.vert",
+        command = "set filetype = glsl"
+    }
 )
-
 vim.api.nvim_create_autocmd(
     "TextYankPost",
     {

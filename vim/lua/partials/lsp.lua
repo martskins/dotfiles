@@ -46,6 +46,20 @@ local on_attach = function(client, bufnr)
         )
     end
 
+    if client.supports_method "textDocument/completion" then
+        vim.lsp.completion.enable(
+            true,
+            client.id,
+            bufnr,
+            {
+                autotrigger = true,
+                convert = function(item)
+                    return {abbr = item.label:gsub("%b()", "")}
+                end
+            }
+        )
+    end
+
     -- client.config.flags.allow_incremental_sync = true
     -- client.server_capabilities.semanticTokensProvider = nil
 
@@ -54,43 +68,32 @@ local on_attach = function(client, bufnr)
     -- end
 end
 
--- do not include test or mocks files in Go
-local original_on_references = vim.lsp.handlers["textDocument/references"]
-local original_on_implementation = vim.lsp.handlers["textDocument/implementation"]
-local original_register_capability = vim.lsp.handlers["client/registerCapability"]
-
-local filter_quickfix_with_callback = function(callback)
-    return function(err, result, ctx, config)
-        if result == nil then
-            return callback(err, result, ctx, config)
-        end
-
-        local out = {}
-        for _, v in pairs(result) do
-            local filename = v["uri"]
-            if not string.find(filename, "_test.go") and not string.match(filename, "../mocks/") then
-                table.insert(out, v)
-            end
-        end
-        callback(err, out, ctx, config)
-    end
+local pummaps = {
+    ["<C-k>"] = "<C-y>"
+}
+for insertKmap, pumKmap in pairs(pummaps) do
+    vim.keymap.set(
+        "i",
+        insertKmap,
+        function()
+            return vim.fn.pumvisible() == 1 and pumKmap or insertKmap
+        end,
+        {expr = true}
+    )
 end
 
-local with_java_register_capability = function(callback)
-    return function(err, result, ctx, config)
-        local ft = vim.bo.filetype
-
-        if result == nil or ft ~= "java" then
-            return callback(err, result, ctx, config)
-        end
-    end
-end
-
-vim.lsp.handlers["textDocument/references"] = vim.lsp.with(filter_quickfix_with_callback(original_on_references), {})
-vim.lsp.handlers["textDocument/implementation"] =
-    vim.lsp.with(filter_quickfix_with_callback(original_on_implementation), {})
-vim.lsp.handlers["client/registerCapability"] =
-    vim.lsp.with(with_java_register_capability(original_register_capability), {})
+-- local implementation = vim.lsp.buf.implementation
+-- vim.lsp.buf.implementation = function(opts)
+--     implementation(
+--         {
+--             on_list = function(opts)
+--                 for k, v in ipairs(opts) do
+--                     print(k, v)
+--                 end
+--             end
+--         }
+--     )
+-- end
 
 local get_current_gomod = function()
     local file = io.open("go.mod", "r")
@@ -105,7 +108,7 @@ local get_current_gomod = function()
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem.snippetSupport = true
+-- capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities.offsetEncoding = {"utf-8"}
 
 vim.lsp.config.gopls = {
@@ -145,7 +148,7 @@ vim.lsp.config.gopls = {
 vim.lsp.enable("gopls")
 
 vim.lsp.config.typescript = {
-    cmd = {"typescript-language-server"},
+    cmd = {"typescript-language-server", "--stdio"},
     on_attach = on_attach,
     filetypes = {"typescriptreact", "tsx"}
 }
