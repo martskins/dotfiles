@@ -66,6 +66,26 @@ local on_attach = function(client, bufnr)
     -- if client.server_capabilities.inlayHintProvider then
     --   vim.lsp.inlay_hint(bufnr, true)
     -- end
+
+    vim.api.nvim_create_autocmd(
+        "TextChangedI",
+        {
+            group = vim.api.nvim_create_augroup("Completion while typing", {}),
+            callback = function()
+                local client = vim.lsp.buf_get_clients(0)[1]
+                if not client or not client.server_capabilities then
+                    return
+                end
+
+                local col = vim.api.nvim_win_get_cursor(0)[2]
+                local char = vim.api.nvim_get_current_line():sub(col, col)
+
+                if vim.fn.pumvisible() and char:match("[a-zA-Z.]") then
+                    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-x><C-o>", true, false, true), "m", true)
+                end
+            end
+        }
+    )
 end
 
 local pummaps = {
@@ -180,5 +200,12 @@ vim.lsp.config.luals = {
     }
 }
 vim.lsp.enable("luals")
+
+vim.lsp.config.pyright = {
+    cmd = {"pyright-langserver", "--stdio"},
+    on_attach = on_attach,
+    filetypes = {"python"}
+}
+vim.lsp.enable("pyright")
 
 vim.diagnostic.config({virtual_text = {current_line = true}})
