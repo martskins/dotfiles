@@ -52,7 +52,7 @@ o.textwidth = 100
 local wo = vim.wo
 wo.number = true
 wo.relativenumber = true
-wo.signcolumn = "yes"
+wo.signcolumn = "no"
 
 -- disable unnecessary builtin plugins
 g.loaded_gzip = 1

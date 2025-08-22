@@ -4,25 +4,18 @@ local map = vim.api.nvim_set_keymap
 
 return {
     {
+        "jbyuki/instant.nvim",
+        event = {"VeryLazy"},
+        config = function()
+            vim.api.nvim_exec([[ let g:instant_username = 'martin' ]], false)
+            -- require("instant").setup({})
+        end
+    },
+    {
         "echasnovski/mini.indentscope",
         version = false,
         event = {"VeryLazy"},
-        config = function()
-            require("mini.indentscope").setup(
-                {
-                    draw = {
-                        animation = require("mini.indentscope").gen_animation.none()
-                    },
-                    options = {
-                        border = "both",
-                        indent_at_cursor = true,
-                        try_as_border = true
-                    }
-                }
-            )
-
-            vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", {fg = "red"})
-        end
+        config = require("partials/mini_indentscope").config
     },
     {
         "mfussenegger/nvim-dap",
@@ -42,86 +35,36 @@ return {
     {
         "folke/trouble.nvim",
         cmd = {"Trouble"},
-        init = function()
-            map("n", "T", ":Trouble diagnostics toggle<cr>", {silent = true})
-            map("n", ",.", ":Trouble symbols toggle<cr>", {silent = true})
-        end,
-        config = function()
-            require("trouble").setup {
-                auto_preview = false,
-                cycle_results = false,
-                focus = true
-            }
-        end
+        init = require("partials/trouble").init,
+        config = require("partials/trouble").config
     },
     {
         "mhartington/formatter.nvim",
         cmd = {"FormatWrite"},
-        init = function()
-            local group = vim.api.nvim_create_augroup("FormatAutogroup", {clear = true})
-            vim.api.nvim_create_autocmd(
-                "BufWritePost",
-                {
-                    group = group,
-                    command = "FormatWrite"
-                }
-            )
-        end,
-        config = function()
-            require("formatter").setup {
-                filetype = {
-                    lua = {require("formatter.filetypes.lua").luafmt},
-                    terraform = {require("formatter.filetypes.terraform").terraformfmt},
-                    cs = {require("formatter.filetypes.cs").clangformat},
-                    graphql = {require("formatter.filetypes.graphql").prettier},
-                    proto = {require("formatter.filetypes.proto").buf_format},
-                    dart = {require("formatter.filetypes.dart").dartformat},
-                    go = {
-                        require("formatter.filetypes.go").gofumpt,
-                        function()
-                            return {
-                                exe = "goimports",
-                                stdin = true,
-                                args = {"-local", "github.com/utilitywarehouse/cbc-mono"}
-                            }
-                        end
-                    },
-                    cpp = {require("formatter.filetypes.cpp").clangformat},
-                    c = {require("formatter.filetypes.cpp").clangformat},
-                    zig = {require("formatter.filetypes.zig").zigfmt},
-                    rust = {
-                        function()
-                            return {
-                                exe = "rustfmt",
-                                args = {"--emit=stdout", "--edition=2021"},
-                                stdin = true
-                            }
-                        end
-                    },
-                    javascript = {require("formatter.filetypes.javascript").prettier},
-                    typescript = {require("formatter.filetypes.typescript").prettier},
-                    javascriptreact = {require("formatter.filetypes.javascript").prettier},
-                    typescriptreact = {require("formatter.filetypes.typescript").prettier}
-                }
-            }
-        end
+        init = require("partials/formatter").init,
+        config = require("partials/formatter").config
     },
     {"dstein64/vim-startuptime", cmd = {"StartupTime"}},
     {
         "github/copilot.vim",
         ft = {"go", "rust", "zig", "cpp", "typescript", "typescriptreact"},
-        config = function()
-            vim.keymap.set(
-                "i",
-                "<C-f>",
-                'copilot#Accept("\\<CR>")',
-                {
-                    expr = true,
-                    replace_keycodes = false
-                }
-            )
-            vim.g.copilot_no_tab_map = true
-        end
+        init = require("partials/copilot").init
+    },
+    {
+        "CopilotC-Nvim/CopilotChat.nvim",
+        lazy = true,
+        cmd = {"CopilotChat", "CopilotChatModels"},
+        dependencies = {
+            {"github/copilot.vim"},
+            {"nvim-lua/plenary.nvim", branch = "master"} -- for curl, log and async functions
+        },
+        build = "make tiktoken",
+        opts = {
+            sticky = {
+                "#buffer"
+            }
+        },
+        config = require("partials/copilot_chat").config
     },
     {
         "nvim-treesitter/nvim-treesitter",
@@ -142,18 +85,7 @@ return {
     {
         "vim-test/vim-test",
         ft = {"go", "rust", "zig", "cpp"},
-        init = function()
-            map("n", "<leader>tt", ":TestNearest<cr>", {})
-            map("n", "<leader>tp", ":TestFile<cr>", {})
-            map("n", "<leader>ta", ":TestSuite<cr>", {})
-            vim.api.nvim_exec(
-                [[
-                  let test#strategy = "neovim"
-                  let test#neovim#start_normal = 1
-                ]],
-                false
-            )
-        end
+        init = require("partials/vim_test").init
     },
     {"tpope/vim-abolish", event = {"VeryLazy"}},
     {"tpope/vim-surround", event = {"VeryLazy"}},
@@ -169,41 +101,17 @@ return {
     {
         "stevearc/oil.nvim",
         event = {"VeryLazy"},
-        config = function()
-            require("oil").setup(
-                {
-                    delete_to_trash = true
-                }
-            )
-            vim.keymap.set("n", "-", "<CMD>Oil<CR>", {desc = "Open parent directory", silent = true})
-        end
+        config = require("partials/oil").config
     },
-    -- {"hrsh7th/vim-vsnip-integ", event = {"VeryLazy"}},
-    -- {"hrsh7th/vim-vsnip", event = {"VeryLazy"}},
-    -- {
-    --     "hrsh7th/nvim-cmp",
-    --     dependencies = {
-    --         "hrsh7th/cmp-nvim-lsp",
-    --         "hrsh7th/cmp-path",
-    --         "hrsh7th/cmp-vsnip",
-    --         "hrsh7th/cmp-buffer"
-    --     },
-    --     config = require("partials/completion").config,
-    --     event = {"BufEnter"}
-    -- },
     {
         "schickling/vim-bufonly",
-        init = function()
-            map("n", "<leader>bo", ":BufOnly<CR>", {silent = true})
-        end,
+        init = require("partials/vim_bufonly").init,
         cmd = {"BufOnly"}
     },
     {
         "airblade/vim-rooter",
         ft = {"go", "rust", "zig"},
-        config = function()
-            vim.cmd [[ let g:rooter_silent_chdir = 1 ]]
-        end
+        init = require("partials/vim_rooter").init
     },
     {"johejo/gomod.vim", ft = {"gomod"}},
     {"rhysd/vim-go-impl", ft = {"go"}},
@@ -227,15 +135,44 @@ return {
                     bold = false,
                     contrast = "hard",
                     overrides = {
-                        -- Normal = {bg = "#000000"}
+                        -- Normal = {bg = "#000000"},
                         -- Comment = {fg = "#AB7441"}
                         Comment = {fg = "#fc9403"}
                     }
                 }
             )
             vim.cmd([[
-        colorscheme gruvbox
-      ]])
+              colorscheme gruvbox
+            ]])
         end
+    },
+    {
+        "epwalsh/obsidian.nvim",
+        version = "*",
+        lazy = true,
+        ft = "markdown",
+        cmd = {
+            "ObsidianNew",
+            "ObsidianOpen"
+        },
+        dependencies = {
+            "nvim-lua/plenary.nvim"
+        },
+        opts = {
+            workspaces = {
+                {
+                    name = "work",
+                    path = "~/Documents/work"
+                }
+            }
+        }
     }
+    -- {
+    --     "yanskun/gotests.nvim",
+    --     event = {"VeryLazy"},
+    --     ft = {"go"},
+    --     config = function()
+    --         require("gotests").setup()
+    --     end
+    -- }
 }

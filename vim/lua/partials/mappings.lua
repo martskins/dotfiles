@@ -50,15 +50,19 @@ vim.api.nvim_exec(
       let g:srchstr = ''
     endif
   endfunction
+
   vnoremap <silent> ? :<C-U>call RangeSearch('/')<CR>:if strlen(g:srchstr) > 0\|exec '/'.g:srchstr\|endif<CR>
 
   " fugitive config
   command! -nargs=1 Browse silent execute '!open' shellescape(<q-args>,1)
   nnoremap <leader>gb :GBrowse<CR>
+
+  iabbrev iferr if err != nil {<cr>}<C-c>k
 ]],
     false
 )
 
-vim.api.nvim_create_user_command("PS", "Lazy sync", {})
+-- vim.api.nvim_create_user_command("PS", "Lazy sync", {})
+vim.api.nvim_create_user_command("PS", "lua vim.pack.update()", {})
 vim.api.nvim_create_user_command("ProfileStart", "call ProfileStart()", {})
 vim.api.nvim_create_user_command("ProfileStop", "call ProfileStop()", {})

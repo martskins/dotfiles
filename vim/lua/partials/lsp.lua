@@ -40,13 +40,13 @@ local on_attach = function(client, bufnr)
         opts
     )
 
-    if client.supports_method "textDocument/codeLens" then
+    if client:supports_method "textDocument/codeLens" then
         vim.api.nvim_command(
             "autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.codelens.refresh({ bufnr = 0 })"
         )
     end
 
-    if client.supports_method "textDocument/completion" then
+    if client:supports_method "textDocument/completion" then
         vim.lsp.completion.enable(
             true,
             client.id,
@@ -58,6 +58,35 @@ local on_attach = function(client, bufnr)
                 end
             }
         )
+
+        vim.api.nvim_create_autocmd(
+            "TextChangedI",
+            {
+                group = vim.api.nvim_create_augroup("Completion while typing", {}),
+                callback = function()
+                    -- do not trigger completion if omnifunc is not set
+                    if vim.api.nvim_buf_get_option(0, "omnifunc") == "" then
+                        return
+                    end
+
+                    local other_client = vim.lsp.buf_get_clients(0)[1]
+                    if not other_client or not other_client.server_capabilities then
+                        return
+                    end
+
+                    local col = vim.api.nvim_win_get_cursor(0)[2]
+                    local char = vim.api.nvim_get_current_line():sub(col, col)
+
+                    if vim.fn.pumvisible() and char:match("[a-zA-Z.]") then
+                        vim.api.nvim_feedkeys(
+                            vim.api.nvim_replace_termcodes("<C-x><C-o>", true, false, true),
+                            "m",
+                            true
+                        )
+                    end
+                end
+            }
+        )
     end
 
     -- client.config.flags.allow_incremental_sync = true
@@ -66,54 +95,18 @@ local on_attach = function(client, bufnr)
     -- if client.server_capabilities.inlayHintProvider then
     --   vim.lsp.inlay_hint(bufnr, true)
     -- end
-
-    vim.api.nvim_create_autocmd(
-        "TextChangedI",
-        {
-            group = vim.api.nvim_create_augroup("Completion while typing", {}),
-            callback = function()
-                local client = vim.lsp.buf_get_clients(0)[1]
-                if not client or not client.server_capabilities then
-                    return
-                end
-
-                local col = vim.api.nvim_win_get_cursor(0)[2]
-                local char = vim.api.nvim_get_current_line():sub(col, col)
-
-                if vim.fn.pumvisible() and char:match("[a-zA-Z.]") then
-                    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-x><C-o>", true, false, true), "m", true)
-                end
-            end
-        }
-    )
 end
 
-local pummaps = {
-    ["<C-k>"] = "<C-y>"
-}
-for insertKmap, pumKmap in pairs(pummaps) do
-    vim.keymap.set(
-        "i",
-        insertKmap,
-        function()
-            return vim.fn.pumvisible() == 1 and pumKmap or insertKmap
-        end,
-        {expr = true}
-    )
-end
-
--- local implementation = vim.lsp.buf.implementation
--- vim.lsp.buf.implementation = function(opts)
---     implementation(
---         {
---             on_list = function(opts)
---                 for k, v in ipairs(opts) do
---                     print(k, v)
---                 end
---             end
---         }
---     )
--- end
+-- configure C-k to accept items from the pummenu when it's visible or to just do whatever <C-k>
+-- does if it's not
+vim.keymap.set(
+    "i",
+    "<C-k>",
+    function()
+        return vim.fn.pumvisible() == 1 and "<C-y>" or "<C-k>"
+    end,
+    {expr = true}
+)
 
 local get_current_gomod = function()
     local file = io.open("go.mod", "r")
@@ -130,6 +123,7 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 -- capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities.offsetEncoding = {"utf-8"}
+capabilities.experimental = {snippetTextEdit = true}
 
 vim.lsp.config.gopls = {
     cmd = {"gopls"},
@@ -144,7 +138,7 @@ vim.lsp.config.gopls = {
             assignVariableTypes = false,
             compositeLiteralFields = true,
             compositeLiteralTypes = true,
-            constantValues = false,
+            constantValues = true,
             functionTypeParameters = true,
             parameterNames = true,
             rangeVariableTypes = true
@@ -170,7 +164,7 @@ vim.lsp.enable("gopls")
 vim.lsp.config.typescript = {
     cmd = {"typescript-language-server", "--stdio"},
     on_attach = on_attach,
-    filetypes = {"typescriptreact", "tsx"}
+    filetypes = {"typescriptreact", "tsx", "ts", "typescript"}
 }
 vim.lsp.enable("typescript")
 
@@ -208,4 +202,9 @@ vim.lsp.config.pyright = {
 }
 vim.lsp.enable("pyright")
 
-vim.diagnostic.config({virtual_text = {current_line = true}})
+vim.diagnostic.config(
+    {
+        virtual_text = {current_line = true}
+        -- virtual_lines = {current_line = true}
+    }
+)

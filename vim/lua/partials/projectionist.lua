@@ -1,14 +1,9 @@
-local module = {}
+local map = vim.api.nvim_set_keymap
+map("n", "<leader>aa", ":A<CR>", {silent = true})
+map("n", "<leader>av", ":AV<CR>", {silent = true})
 
-function module.init()
-    local map = vim.api.nvim_set_keymap
-    map("n", "<leader>aa", ":A<CR>", {silent = true})
-    map("n", "<leader>av", ":AV<CR>", {silent = true})
-end
-
-function module.config()
-    vim.api.nvim_exec(
-        [[
+vim.api.nvim_exec(
+    [[
     augroup projection_extension
       let args = {}
       let args['*.go'] =                                { 'alternate': ['{}_test.go', '{}_integration_test.go'] }
@@ -34,8 +29,5 @@ function module.config()
       autocmd User ProjectionistDetect call projectionist#append(getcwd(), args)
     augroup END
   ]],
-        false
-    )
-end
-
-return module
+    false
+)
